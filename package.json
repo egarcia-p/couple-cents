@@ -1,0 +1,27 @@
+{
+  "name": "couplecents",
+  "version": "1.0.0",
+  "description": "App CoupleCents",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/egarcia-p/CoupleCents.git"
+  },
+  "keywords": [
+    "Couple",
+    "Cents",
+    "CoupleCents"
+  ],
+  "author": "Eugenio Garcia",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/egarcia-p/CoupleCents/issues"
+  },
+  "homepage": "https://github.com/egarcia-p/CoupleCents#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
