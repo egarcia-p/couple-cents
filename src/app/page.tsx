@@ -1,3 +1,3 @@
 export default function Page() {
-  return <h1>Couple Cents App</h1>
+  return <h1>Couple Cents App</h1>;
 }
