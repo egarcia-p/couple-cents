@@ -1,5 +1,6 @@
 import Head from "next/head";
-import { getServerSideProps } from "../../lib/data";
+import { getServerSideProps } from "./lib/data";
+import { SignIn } from "./components/sign-in";
 
 type ConnectionStatus = {
   isConnected: boolean;
@@ -18,7 +19,7 @@ export default async function Home() {
       <main>
         <h1>Couple Cents App</h1>
         {isConnected ? (
-          <h2 className="subtitle">You are connected to MongoDB</h2>
+          <h2 className="subtitle">You are connected to PostgresDB</h2>
         ) : (
           <h2 className="subtitle">
             You are NOT connected to MongoDB. Check the <code>README.md</code>{" "}
@@ -28,6 +29,7 @@ export default async function Home() {
         <p className="description">
           Application to manage your personal finances.
         </p>
+        <SignIn />
       </main>
     </div>
   );

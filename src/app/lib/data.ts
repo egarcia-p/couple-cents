@@ -1,5 +1,4 @@
-import clientPromise from "./mongodb";
-import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
+import { sql } from "@vercel/postgres";
 
 type ConnectionStatus = {
   isConnected: boolean;
@@ -7,7 +6,6 @@ type ConnectionStatus = {
 
 export async function getServerSideProps() {
   try {
-    await clientPromise;
     // `await clientPromise` will use the default database passed in the MONGODB_URI
     // However you can use another database (e.g. myDatabase) by replacing the `await clientPromise` with the following code:
     //
