@@ -21,6 +21,7 @@ export const UsersTable = pgTable(
     emailVerified: timestamp("emailVerified", {
       withTimezone: true,
     }),
+    familyId: integer("familyId"),
 
     image: text("image"),
   },
@@ -70,3 +71,11 @@ export const VerificationTokenTable = pgTable(
     };
   },
 );
+
+export const FamilyTable = pgTable("families", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }),
+  createdAt: timestamp("createdAt", {
+    withTimezone: true,
+  }),
+});
