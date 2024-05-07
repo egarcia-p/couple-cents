@@ -10,6 +10,9 @@ import {
   integer,
   bigint,
   primaryKey,
+  uuid,
+  boolean,
+  numeric,
 } from "drizzle-orm/pg-core";
 
 export const UsersTable = pgTable(
@@ -78,4 +81,18 @@ export const FamilyTable = pgTable("families", {
   createdAt: timestamp("createdAt", {
     withTimezone: true,
   }),
+});
+
+export const TransactionsTable = pgTable("transactions", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  isExpense: boolean("isExpense").notNull(),
+  amount: numeric("amount").notNull(),
+  note: text("note"),
+  establishment: varchar("establishment", { length: 255 }).notNull(),
+  category: varchar("category", { length: 255 }).notNull(),
+  isEssential: boolean("isEssential").notNull(),
+  userId: integer("userId").notNull(),
+  transactionDate: timestamp("transactionDate", {
+    withTimezone: true,
+  }).notNull(),
 });

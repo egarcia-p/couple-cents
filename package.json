@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "node -r dotenv/config ./scripts/seed.js"
+    "seed": "node -r dotenv/config ./scripts/seed.js",
+    "generate": "drizzle-kit generate:pg"
   },
   "dependencies": {
     "@auth/pg-adapter": "^1.0.0",
@@ -33,6 +34,7 @@
     "postcss": "^8.4.38",
     "prettier": "3.2.5",
     "tailwindcss": "^3.4.3",
+    "tsx": "^4.9.3",
     "typescript": "^5.4.5"
   }
 }
