@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1715120751702,
+      "tag": "0000_jazzy_victor_mancha",
+      "breakpoints": true
+    }
+  ]
+}

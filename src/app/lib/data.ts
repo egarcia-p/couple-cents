@@ -1,27 +1,13 @@
-import { sql } from "@vercel/postgres";
+import { transactions } from "../../../drizzle/schema";
+import { db } from "./db";
 
-type ConnectionStatus = {
-  isConnected: boolean;
-};
-
-export async function getServerSideProps() {
+export async function fetchTransactions() {
   try {
-    // `await clientPromise` will use the default database passed in the MONGODB_URI
-    // However you can use another database (e.g. myDatabase) by replacing the `await clientPromise` with the following code:
-    //
-    // `const client = await clientPromise`
-    // `const db = client.db("myDatabase")`
-    //
-    // Then you can execute queries against your database like so:
-    // db.find({}) or any of the MongoDB Node Driver commands
+    const result = await db.select().from(transactions);
 
-    return {
-      isConnected: true,
-    };
-  } catch (e) {
-    console.error(e);
-    return {
-      isConnected: false,
-    };
+    return result;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch transactions data.");
   }
 }
