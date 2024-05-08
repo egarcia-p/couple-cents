@@ -2,22 +2,31 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
+import * as dotenv from "dotenv";
+dotenv.config({ path: "./.env.local" });
 
 async function main() {
   console.log("Migration started");
 
-  const connectionString = process.env.POSTGRES_URL;
+  const env = process.env.NODE_ENV;
+  if (env == "development") {
+    const connectionString = process.env.POSTGRES_URL;
 
-  const migrationsClient = postgres(connectionString, {
-    max: 1,
-  });
-  const db = drizzle(migrationsClient);
+    if (!connectionString) {
+      throw new Error("POSTGRES_URL not found on .env");
+    }
 
-  const dbd = drizzle(migrationsClient);
+    const migrationsClient = postgres(connectionString, {
+      max: 1,
+    });
+    const db = drizzle(migrationsClient);
 
-  await migrate(dbd, { migrationsFolder: "./drizzle" });
+    const dbd = drizzle(migrationsClient);
 
-  console.log("Migration completed");
+    await migrate(dbd, { migrationsFolder: "./drizzle" });
+
+    console.log("Migration completed");
+  }
 
   process.exit(0);
 }
