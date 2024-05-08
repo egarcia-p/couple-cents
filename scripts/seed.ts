@@ -16,8 +16,7 @@ const main = async () => {
   const db = drizzle(client);
   const data: (typeof transactions.$inferInsert)[] = [];
 
-  const result = await db.select().from(users).where(eq(users.id, 1));
-  console.log(result);
+  const user = await db.select().from(users).where(eq(users.id, 1));
 
   for (let i = 0; i < 20; i++) {
     data.push({
@@ -26,7 +25,7 @@ const main = async () => {
       establishment: faker.commerce.productName(),
       category: faker.word.noun(),
       isEssential: faker.datatype.boolean(),
-      userId: result[0].id,
+      userId: user[0].id,
       transactionDate: faker.date.recent(),
     });
   }
