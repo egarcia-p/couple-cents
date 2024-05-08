@@ -15,7 +15,7 @@ import {
   numeric,
 } from "drizzle-orm/pg-core";
 
-export const UsersTable = pgTable(
+export const users = pgTable(
   "users",
   {
     id: serial("id").primaryKey(),
@@ -35,7 +35,7 @@ export const UsersTable = pgTable(
   },
 );
 
-export const AccountsTable = pgTable("accounts", {
+export const accounts = pgTable("accounts", {
   id: serial("id").primaryKey(),
   userId: integer("userId").notNull(),
   type: varchar("type", { length: 255 }).notNull(),
@@ -50,7 +50,7 @@ export const AccountsTable = pgTable("accounts", {
   token_type: text("token_type"),
 });
 
-export const SessionsTable = pgTable("sessions", {
+export const sessions = pgTable("sessions", {
   id: serial("id").primaryKey(),
   userId: integer("userId").notNull(),
   expires: timestamp("expires", {
@@ -59,7 +59,7 @@ export const SessionsTable = pgTable("sessions", {
   sessionToken: varchar("sessionToken", { length: 255 }).notNull(),
 });
 
-export const VerificationTokenTable = pgTable(
+export const verificationTokens = pgTable(
   "verification_token",
   {
     identifier: text("identifier").notNull(),
@@ -75,7 +75,7 @@ export const VerificationTokenTable = pgTable(
   },
 );
 
-export const FamilyTable = pgTable("families", {
+export const families = pgTable("families", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }),
   createdAt: timestamp("createdAt", {
@@ -83,7 +83,7 @@ export const FamilyTable = pgTable("families", {
   }),
 });
 
-export const TransactionsTable = pgTable("transactions", {
+export const transactions = pgTable("transactions", {
   id: uuid("id").defaultRandom().primaryKey(),
   isExpense: boolean("isExpense").notNull(),
   amount: numeric("amount").notNull(),
