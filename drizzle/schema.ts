@@ -100,10 +100,10 @@ export const transactions = pgTable("transactions", {
 
 // ...
 
-export const faimilyRelations = relations(families, ({ many }) => ({
-  users: many(users),
-}));
+// export const faimilyRelations = relations(families, ({ many }) => ({
+//   users: many(users),
+// }));
 
-export const userRelations = relations(users, ({ many }) => ({
-  transactions: many(transactions),
-}));
+// export const userRelations = relations(users, ({ many }) => ({
+//   transactions: many(transactions),
+// }));
