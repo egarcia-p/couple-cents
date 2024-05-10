@@ -8,6 +8,7 @@ export const metadata: Metadata = {
 export default async function Page() {
   return (
     <main>
+      <h1 className="  text-lg">Create Transaction</h1>
       <Form />
     </main>
   );
