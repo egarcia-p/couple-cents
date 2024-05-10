@@ -1,7 +1,5 @@
 import { fetchTransactions } from "@/app/lib/data";
 import { auth } from "../../../auth";
-import { transactions } from "../../../../drizzle/schema";
-import { formatDateToLocal } from "@/app/lib/utils";
 
 export default async function DashboardTable() {
   const session = await auth();
@@ -10,7 +8,7 @@ export default async function DashboardTable() {
 
   if (!session.user) return null;
 
-  const transations = await fetchTransactions();
+  const transactions = await fetchTransactions();
 
   return (
     <div className="mt-6 flow-root">
@@ -40,7 +38,7 @@ export default async function DashboardTable() {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {transations?.map((transaction) => (
+              {transactions?.map((transaction) => (
                 <tr
                   key={transaction.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
