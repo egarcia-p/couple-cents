@@ -1,5 +1,6 @@
 import { fetchTransactions } from "@/app/lib/data";
 import { auth } from "../../../auth";
+import { DeleteTransaction, UpdateTransaction } from "./buttons";
 
 export default async function DashboardTable() {
   const session = await auth();
@@ -63,6 +64,8 @@ export default async function DashboardTable() {
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3"></div>
+                    <UpdateTransaction id={transaction.id} />
+                    <DeleteTransaction id={transaction.id} />
                   </td>
                 </tr>
               ))}

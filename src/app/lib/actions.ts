@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "./db";
 import { transactions } from "../../../drizzle/schema";
+import { eq } from "drizzle-orm";
 import { use } from "react";
 
 const FormSchema = z.object({
@@ -24,6 +25,8 @@ const FormSchema = z.object({
 const CreateTransaction = FormSchema.omit({
   id: true,
 });
+
+const UpdateTransaction = FormSchema.omit({ id: true });
 
 export type State = {
   errors?: {
@@ -70,7 +73,6 @@ export async function createTransaction(prevState: State, formData: FormData) {
   } = validatedFields.data;
 
   const amountInCents = amount * 100;
-  //const transactionDate = new Date().toISOString().split("T")[0];
 
   try {
     const timestamp = new Date(transactionDate);
@@ -96,4 +98,73 @@ export async function createTransaction(prevState: State, formData: FormData) {
 
   revalidatePath("/dashboard/transactions");
   redirect("/dashboard/transactions");
+}
+
+export async function updateInvoice(
+  id: string,
+  prevState: State,
+  formData: FormData,
+) {
+  const validatedFields = UpdateTransaction.safeParse({
+    isExpense: formData.get("isExpense"),
+    amount: formData.get("amount"),
+    note: formData.get("note"),
+    establishment: formData.get("establishment"),
+    category: formData.get("category"),
+    isEssential: formData.get("isEssential"),
+    userId: formData.get("userId"),
+    transactionDate: formData.get("transactionDate"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Update Transaction.",
+    };
+  }
+  const {
+    isExpense,
+    amount,
+    note,
+    establishment,
+    category,
+    isEssential,
+    userId,
+    transactionDate,
+  } = validatedFields.data;
+
+  const amountInCents = amount * 100;
+
+  try {
+    const timestampTransactionDate = new Date(transactionDate);
+
+    const setValues = {
+      isExpense: isExpense,
+      amount: amountInCents.toString(),
+      note: note,
+      establishment: establishment,
+      category: category,
+      isEssential: isEssential,
+      userId: userId,
+      transactionDate: timestampTransactionDate,
+    };
+
+    await db.update(transactions).set(setValues).where(eq(transactions.id, id));
+  } catch (error) {
+    return { message: "Database Error: Failed to Update Transaction." };
+  }
+
+  revalidatePath("/dashboard/transactions");
+  redirect("/dashboard/transactions");
+}
+
+export async function deleteTransaction(id: string) {
+  try {
+    await db.delete(transactions).where(eq(transactions.id, id));
+
+    revalidatePath("/dashboard/transactions");
+    return { message: "Deleted Transaction." };
+  } catch (error) {
+    return { message: "Database Error: Failed to Delete Transaction." };
+  }
 }
