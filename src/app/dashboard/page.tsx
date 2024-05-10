@@ -8,7 +8,6 @@ export const metadata: Metadata = {
 };
 export default async function Page() {
   const session = await auth();
-  console.log(session);
   if (!session) return <div>Not authenticated</div>;
 
   return (
