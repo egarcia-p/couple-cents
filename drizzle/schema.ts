@@ -1,4 +1,5 @@
 import { drizzle } from "drizzle-orm/vercel-postgres";
+import { relations } from "drizzle-orm";
 import { sql } from "@vercel/postgres";
 import {
   pgTable,
@@ -96,3 +97,13 @@ export const transactions = pgTable("transactions", {
     withTimezone: true,
   }).notNull(),
 });
+
+// ...
+
+// export const faimilyRelations = relations(families, ({ many }) => ({
+//   users: many(users),
+// }));
+
+// export const userRelations = relations(users, ({ many }) => ({
+//   transactions: many(transactions),
+// }));

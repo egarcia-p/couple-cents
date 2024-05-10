@@ -1,16 +1,15 @@
-import { fetchTransactions } from "@/app/lib/data";
+import { fetchTransactionsByUserId } from "@/app/lib/data";
 import { auth } from "../../../auth";
-import { transactions } from "../../../../drizzle/schema";
-import { formatDateToLocal } from "@/app/lib/utils";
+import { DeleteTransaction, UpdateTransaction } from "./buttons";
 
-export default async function DashboardTable() {
+export default async function DashboardTable({ userId }: { userId: string }) {
   const session = await auth();
 
   if (!session) return null;
 
   if (!session.user) return null;
 
-  const transations = await fetchTransactions();
+  const transactions = await fetchTransactionsByUserId(userId);
 
   return (
     <div className="mt-6 flow-root">
@@ -40,7 +39,7 @@ export default async function DashboardTable() {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {transations?.map((transaction) => (
+              {transactions?.map((transaction) => (
                 <tr
                   key={transaction.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
@@ -65,6 +64,8 @@ export default async function DashboardTable() {
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3"></div>
+                    <UpdateTransaction id={transaction.id} />
+                    <DeleteTransaction id={transaction.id} />
                   </td>
                 </tr>
               ))}
