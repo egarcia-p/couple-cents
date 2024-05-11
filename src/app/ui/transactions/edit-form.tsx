@@ -11,7 +11,7 @@ export default function Form({
 }: {
   transaction: TransactionForm;
 }) {
-  const initialState = { message: null, errors: {} };
+  const initialState = { message: "", errors: {} };
   const updateInvoiceWithId = updateInvoice.bind(null, transaction.id);
   const [state, dispatch] = useFormState(updateInvoiceWithId, initialState);
 

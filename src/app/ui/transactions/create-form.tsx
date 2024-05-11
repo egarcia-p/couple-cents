@@ -5,11 +5,9 @@ import { useFormState } from "react-dom";
 import { Button } from "../button";
 import Link from "next/link";
 
-export default function Form() {
-  const initialState = { message: null, errors: {} };
+export default function Form({ userId }: { userId: string }) {
+  const initialState = { message: "", errors: {} };
   const [state, dispatch] = useFormState(createTransaction, initialState);
-
-  const userId = "1"; //TODO set this property
 
   return (
     <>
