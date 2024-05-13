@@ -1,10 +1,14 @@
-import { fetchTransactionsByUserId } from "@/app/lib/data";
+import { fetchFilteredTransactions } from "@/app/lib/data";
 import { auth } from "../../../auth";
 import { DeleteTransaction, UpdateTransaction } from "./buttons";
 
 export default async function DashboardTableMobile({
+  query,
+  currentPage,
   userId,
 }: {
+  query: string;
+  currentPage: number;
   userId: string;
 }) {
   const session = await auth();
@@ -13,7 +17,11 @@ export default async function DashboardTableMobile({
 
   if (!session.user) return null;
 
-  const transactions = await fetchTransactionsByUserId(userId);
+  const transactions = await fetchFilteredTransactions(
+    query,
+    currentPage,
+    userId,
+  );
 
   return (
     <div className="mt-2 flex-row ">
