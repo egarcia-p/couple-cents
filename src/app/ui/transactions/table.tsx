@@ -1,15 +1,27 @@
-import { fetchTransactionsByUserId } from "@/app/lib/data";
+import { fetchFilteredTransactions } from "@/app/lib/data";
 import { auth } from "../../../auth";
 import { DeleteTransaction, UpdateTransaction } from "./buttons";
 
-export default async function DashboardTable({ userId }: { userId: string }) {
+export default async function DashboardTable({
+  query,
+  currentPage,
+  userId,
+}: {
+  query: string;
+  currentPage: number;
+  userId: string;
+}) {
   const session = await auth();
 
   if (!session) return null;
 
   if (!session.user) return null;
 
-  const transactions = await fetchTransactionsByUserId(userId);
+  const transactions = await fetchFilteredTransactions(
+    query,
+    currentPage,
+    userId,
+  );
 
   return (
     <div className="mt-6 flow-root">
