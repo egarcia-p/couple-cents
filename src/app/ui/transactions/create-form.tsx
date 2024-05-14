@@ -5,9 +5,14 @@ import { useFormState } from "react-dom";
 import { Button } from "../button";
 import Link from "next/link";
 
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
+import { SetStateAction, useState } from "react";
+
 export default function Form({ userId }: { userId: string }) {
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useFormState(createTransaction, initialState);
+  const [startDate, setStartDate] = useState(new Date());
 
   return (
     <>
@@ -203,18 +208,17 @@ export default function Form({ userId }: { userId: string }) {
               htmlFor="transactionDate"
               className="mb-2 block text-sm font-medium"
             >
-              Choose a Date of Transaction
+              Date of Transaction
             </label>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
-                <input
+                <DatePicker
                   id="transactionDate"
                   name="transactionDate"
-                  type="text"
-                  placeholder="Enter a transaction date"
-                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                  aria-describedby="transactionDate-error"
+                  selected={startDate}
+                  onChange={(date: SetStateAction<Date>) => setStartDate(date)}
                 />
+
                 {/* <  className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}
               </div>
               <div
