@@ -12,7 +12,7 @@ import { SetStateAction, useState } from "react";
 export default function Form({ userId }: { userId: string }) {
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useFormState(createTransaction, initialState);
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
 
   return (
     <>
@@ -216,7 +216,7 @@ export default function Form({ userId }: { userId: string }) {
                   id="transactionDate"
                   name="transactionDate"
                   selected={startDate}
-                  onChange={(date: SetStateAction<Date>) => setStartDate(date)}
+                  onChange={(date) => setStartDate(date)}
                 />
 
                 {/* <  className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}
