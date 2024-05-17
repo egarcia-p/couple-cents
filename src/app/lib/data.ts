@@ -4,6 +4,14 @@ import { db } from "./db";
 import { TransactionForm } from "./definitions";
 import { formatCurrency } from "./utils";
 import { and, or, ilike, sql, eq, count } from "drizzle-orm";
+import _categories from "@/app/lib/data/categories.json";
+
+//Create an interface for categories.json and assign to new var categories
+interface ICategories {
+  [key: string]: string;
+}
+
+const categories: ICategories = _categories;
 
 export async function fetchTransactions() {
   try {
@@ -13,7 +21,12 @@ export async function fetchTransactions() {
         description: transactions.note,
         userId: transactions.userId,
         transactionDate: transactions.transactionDate,
-        category: transactions.category,
+        category: sql<string>`category`.mapWith({
+          mapFromDriverValue: (value: string) => {
+            const mappedValue = categories[value];
+            return mappedValue;
+          },
+        }),
         establishment: transactions.establishment,
         isExpense: transactions.isExpense,
         isEssential: transactions.isEssential,
@@ -42,7 +55,12 @@ export async function fetchTransactionsByUserId(userId: string) {
         description: transactions.note,
         userId: transactions.userId,
         transactionDate: transactions.transactionDate,
-        category: transactions.category,
+        category: sql<string>`category`.mapWith({
+          mapFromDriverValue: (value: any) => {
+            const mappedValue = Object.entries(categories)[value];
+            return mappedValue;
+          },
+        }),
         establishment: transactions.establishment,
         isExpense: transactions.isExpense,
         isEssential: transactions.isEssential,
@@ -108,7 +126,12 @@ export async function fetchFilteredTransactions(
         id: transactions.id,
         userId: transactions.userId,
         transactionDate: transactions.transactionDate,
-        category: transactions.category,
+        category: sql<string>`category`.mapWith({
+          mapFromDriverValue: (value: string) => {
+            const mappedValue = categories[value];
+            return mappedValue;
+          },
+        }),
         establishment: transactions.establishment,
         isExpense: transactions.isExpense,
         isEssential: transactions.isEssential,
