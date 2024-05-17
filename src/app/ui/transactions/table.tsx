@@ -31,16 +31,16 @@ export default async function DashboardTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Id
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Amount
+                  Note
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Establishment
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Note
+                  Amount
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Category
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Transaction Date
@@ -58,17 +58,17 @@ export default async function DashboardTable({
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
-                      <p>{transaction.id}</p>
+                      <p>{transaction.note}</p>
                     </div>
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {transaction.amount}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {transaction.establishment}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {transaction.note}
+                    {transaction.amount}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {transaction.category}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {/* {formatDateToLocal(transaction.transactionDate.timestamp())} */}

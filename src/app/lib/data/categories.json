@@ -1,0 +1,20 @@
+{
+  "GRO": "Groceries",
+  "DIN": "Dining Out",
+  "SHO": "Shopping",
+  "HEA": "Healthcare",
+  "SER": "Services",
+  "VAC": "Vacations",
+  "TRA": "Transportation",
+  "PET": "Pets",
+  "HOU": "Housing",
+  "UTI": "Utilities",
+  "INS": "Insurance",
+  "EDU": "Education",
+  "ENT": "Entertainment",
+  "SAV": "Savings and Investments",
+  "GIF": "Gifts and Donations",
+  "CHI": "Childcare",
+  "FIT": "Fitness and Sports",
+  "PER": "Personal Care"
+}
