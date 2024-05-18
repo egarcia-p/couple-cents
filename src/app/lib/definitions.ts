@@ -9,3 +9,10 @@ export type TransactionForm = {
   userId: number;
   transactionDate: Date;
 };
+
+export type ExpenseDataMonth = [
+  {
+    month: string;
+    total: number;
+  },
+];
