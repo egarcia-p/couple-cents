@@ -8,6 +8,13 @@ import { transactions } from "../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { use } from "react";
 
+const booleanString = z
+  .string()
+  .refine((value) => value === "true" || value === "false", {
+    message: "Value must be a boolean",
+  })
+  .transform((value) => value === "true");
+
 const FormSchema = z.object({
   id: z.string(),
   isExpense: z.coerce.boolean(),
@@ -107,7 +114,7 @@ export async function updateTransaction(
   formData: FormData,
 ) {
   const validatedFields = UpdateTransaction.safeParse({
-    isExpense: formData.get("isExpense"),
+    isExpense: booleanString.parse(formData.get("isExpense")),
     amount: formData.get("amount"),
     note: formData.get("note"),
     establishment: formData.get("establishment"),

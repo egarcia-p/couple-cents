@@ -18,10 +18,8 @@ export default async function Page() {
   if (!session.user) return null;
   if (!session.user.id) return null;
 
-  const { totalMonthSpend, totalYearSpend } = await fetchCardData(
-    session.user.id,
-  );
-  const totalIncomeSpend = "TBD";
+  const { totalMonthSpend, totalYearSpend, totalMonthSpendIncome } =
+    await fetchCardData(session.user.id);
 
   const spendByMonth = await fetchSpendDataByMonth(session.user.id);
   const spendByCategory = await fetchSpendDataByCategory(session.user.id);
@@ -47,7 +45,11 @@ export default async function Page() {
           type="month"
         />
         <Card title="Current Year Spend" value={totalYearSpend} type="year" />
-        <Card title="Income - Spend" value={totalIncomeSpend} type="spend" />
+        <Card
+          title="Income - Spend"
+          value={totalMonthSpendIncome}
+          type="spendIncome"
+        />
       </div>
       <div className="hidden md:block">
         <div className="h-64 mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">

@@ -198,7 +198,16 @@ export async function fetchCardData(userId: string) {
       .from(transactions)
       .where(
         sql`DATE_TRUNC('month',${transactions.transactionDate}) = DATE_TRUNC('month',CURRENT_TIMESTAMP)
-    AND ${transactions.userId} = ${userId}
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true
+    `,
+      );
+
+    const totalMonthIncomeData = db
+      .select({ value: sum(transactions.amount) })
+      .from(transactions)
+      .where(
+        sql`DATE_TRUNC('month',${transactions.transactionDate}) = DATE_TRUNC('month',CURRENT_TIMESTAMP)
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = false
     `,
       );
 
@@ -207,18 +216,26 @@ export async function fetchCardData(userId: string) {
       .from(transactions)
       .where(
         sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
-    AND ${transactions.userId} = ${userId}
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true
     `,
       );
 
-    const data = await Promise.all([totalMonthSpendData, totalYearSpendData]);
+    const data = await Promise.all([
+      totalMonthSpendData,
+      totalYearSpendData,
+      totalMonthIncomeData,
+    ]);
 
     const totalMonthSpend = formatCurrency(Number(data[0][0].value) ?? "0");
     const totalYearSpend = formatCurrency(Number(data[1][0].value) ?? "0");
+    const totalMonthSpendIncome = formatCurrency(
+      Number(data[2][0].value) - Number(data[0][0].value) ?? "0",
+    );
 
     return {
       totalMonthSpend,
       totalYearSpend,
+      totalMonthSpendIncome,
     };
   } catch (error) {
     console.error("Database Error:", error);
@@ -241,7 +258,7 @@ export async function fetchSpendDataByMonth(userId: string) {
       .from(transactions)
       .where(
         sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
-    AND ${transactions.userId} = ${userId}`,
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true`,
       )
       .groupBy(sql`1`);
 
@@ -267,7 +284,7 @@ export async function fetchSpendDataByCategory(userId: string) {
       .from(transactions)
       .where(
         sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
-    AND ${transactions.userId} = ${userId}`,
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true`,
       )
       .groupBy(sql`1`);
 

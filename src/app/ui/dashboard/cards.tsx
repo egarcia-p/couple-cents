@@ -3,7 +3,7 @@ import { BanknotesIcon } from "@heroicons/react/24/outline";
 const iconMap = {
   year: BanknotesIcon,
   month: BanknotesIcon,
-  spend: BanknotesIcon,
+  spendIncome: BanknotesIcon,
 };
 
 export function Card({
@@ -13,7 +13,7 @@ export function Card({
 }: {
   title: string;
   value: number | string;
-  type: "year" | "month" | "spend";
+  type: "year" | "month" | "spendIncome";
 }) {
   const Icon = iconMap[type];
 
