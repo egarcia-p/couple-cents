@@ -4,7 +4,6 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
-import { ExpenseDataMonth } from "@/app/lib/definitions";
 Chart.register(CategoryScale);
 
 const Bar = dynamic(() => import("react-chartjs-2").then((mod) => mod.Bar), {
@@ -13,8 +12,6 @@ const Bar = dynamic(() => import("react-chartjs-2").then((mod) => mod.Bar), {
 
 export default function ExpensesMonthChart({ dataExpenses }: any) {
   //Conver Info into data array
-  console.log("DATAEXPENSES");
-  console.log(dataExpenses);
 
   const monthsDisplay = new Map<number, string>();
   monthsDisplay.set(1, "January");
@@ -37,7 +34,6 @@ export default function ExpensesMonthChart({ dataExpenses }: any) {
     spendArray.push(dataExpenses.get(month) | 0);
     monthArray.push(monthsDisplay.get(month)!);
   });
-  console.log(spendArray);
 
   const data = {
     labels: monthArray,
@@ -76,7 +72,7 @@ export default function ExpensesMonthChart({ dataExpenses }: any) {
           </div>
           <div className="flex items-center pb-2 pt-6">
             <CalendarIcon className="h-5 w-5 text-gray-500" />
-            <h3 className="ml-2 text-sm text-gray-500 ">Last 12 months</h3>
+            <h3 className="ml-2 text-sm text-gray-500 ">Current Year</h3>
           </div>
         </div>
       }

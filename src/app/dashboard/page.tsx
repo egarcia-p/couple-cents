@@ -1,9 +1,13 @@
 import { auth } from "@/auth";
 import { Metadata } from "next";
 import { Card } from "../ui/dashboard/cards";
-import { fetchCardData, fetchSpendDataByMonth } from "../lib/data";
+import {
+  fetchCardData,
+  fetchSpendDataByCategory,
+  fetchSpendDataByMonth,
+} from "../lib/data";
 import ExpensesMonthChart from "../ui/dashboard/expenses-month-chart";
-import { ExpenseDataMonth } from "../lib/definitions";
+import ExpensesCategoryChart from "../ui/dashboard/expenses-category-chart";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -20,12 +24,17 @@ export default async function Page() {
   const totalIncomeSpend = "TBD";
 
   const spendByMonth = await fetchSpendDataByMonth(session.user.id);
+  const spendByCategory = await fetchSpendDataByCategory(session.user.id);
 
   //Convertspendbymonth to type ExpenseDataMonth
 
   //create a map from spendbymonth with key as item.month
   const spendByMonthMap = new Map(
     spendByMonth.map((item) => [item.month, item.total]),
+  );
+
+  const spendByCategoryMap = new Map(
+    spendByCategory.map((item) => [item.category, item.total]),
   );
 
   return (
@@ -40,8 +49,11 @@ export default async function Page() {
         <Card title="Current Year Spend" value={totalYearSpend} type="year" />
         <Card title="Income - Spend" value={totalIncomeSpend} type="spend" />
       </div>
-      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-        <ExpensesMonthChart dataExpenses={spendByMonthMap} />
+      <div className="hidden md:block">
+        <div className="h-64 mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
+          <ExpensesMonthChart dataExpenses={spendByMonthMap} />
+          <ExpensesCategoryChart dataExpenses={spendByCategoryMap} />
+        </div>
         {/* <Suspense fallback={<RevenueChartSkeleton />}>
           <RevenueChart />
         </Suspense>
