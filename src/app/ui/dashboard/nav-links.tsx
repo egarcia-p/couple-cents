@@ -1,6 +1,10 @@
 "use client";
 
-import { BanknotesIcon, HomeIcon } from "@heroicons/react/24/outline";
+import {
+  BanknotesIcon,
+  HomeIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -13,6 +17,7 @@ const links = [
     href: "/dashboard/transactions",
     icon: BanknotesIcon,
   },
+  { name: "Profile", href: "/dashboard/profile", icon: UserCircleIcon },
 ];
 
 export default function NavLinks() {
