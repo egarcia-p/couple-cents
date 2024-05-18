@@ -72,7 +72,8 @@ export async function createTransaction(prevState: State, formData: FormData) {
     transactionDate,
   } = validatedFields.data;
 
-  const amountInCents = amount * 100;
+  let amountInCents = amount * 100;
+  amountInCents = Math.round(amountInCents);
 
   try {
     const timestamp = new Date(transactionDate);
@@ -100,7 +101,7 @@ export async function createTransaction(prevState: State, formData: FormData) {
   redirect("/dashboard/transactions");
 }
 
-export async function updateInvoice(
+export async function updateTransaction(
   id: string,
   prevState: State,
   formData: FormData,
@@ -133,7 +134,8 @@ export async function updateInvoice(
     transactionDate,
   } = validatedFields.data;
 
-  const amountInCents = amount * 100;
+  let amountInCents = amount * 100;
+  amountInCents = Math.round(amountInCents);
 
   try {
     const timestampTransactionDate = new Date(transactionDate);
