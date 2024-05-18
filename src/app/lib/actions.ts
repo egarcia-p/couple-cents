@@ -8,6 +8,13 @@ import { transactions } from "../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { use } from "react";
 
+const booleanString = z
+  .string()
+  .refine((value) => value === "true" || value === "false", {
+    message: "Value must be a boolean",
+  })
+  .transform((value) => value === "true");
+
 const FormSchema = z.object({
   id: z.string(),
   isExpense: z.coerce.boolean(),
@@ -72,7 +79,8 @@ export async function createTransaction(prevState: State, formData: FormData) {
     transactionDate,
   } = validatedFields.data;
 
-  const amountInCents = amount * 100;
+  let amountInCents = amount * 100;
+  amountInCents = Math.round(amountInCents);
 
   try {
     const timestamp = new Date(transactionDate);
@@ -100,13 +108,13 @@ export async function createTransaction(prevState: State, formData: FormData) {
   redirect("/dashboard/transactions");
 }
 
-export async function updateInvoice(
+export async function updateTransaction(
   id: string,
   prevState: State,
   formData: FormData,
 ) {
   const validatedFields = UpdateTransaction.safeParse({
-    isExpense: formData.get("isExpense"),
+    isExpense: booleanString.parse(formData.get("isExpense")),
     amount: formData.get("amount"),
     note: formData.get("note"),
     establishment: formData.get("establishment"),
@@ -133,7 +141,8 @@ export async function updateInvoice(
     transactionDate,
   } = validatedFields.data;
 
-  const amountInCents = amount * 100;
+  let amountInCents = amount * 100;
+  amountInCents = Math.round(amountInCents);
 
   try {
     const timestampTransactionDate = new Date(transactionDate);

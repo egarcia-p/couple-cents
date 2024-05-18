@@ -3,7 +3,7 @@ import { transactions } from "../../../drizzle/schema";
 import { db } from "./db";
 import { TransactionForm } from "./definitions";
 import { formatCurrency } from "./utils";
-import { and, or, ilike, sql, eq, count } from "drizzle-orm";
+import { and, or, ilike, sql, eq, count, sum } from "drizzle-orm";
 import _categories from "@/app/lib/data/categories.json";
 
 //Create an interface for categories.json and assign to new var categories
@@ -188,5 +188,109 @@ export async function fetchTransactionPages(query: string, userId: string) {
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch total number of transactions.");
+  }
+}
+
+export async function fetchCardData(userId: string) {
+  try {
+    const totalMonthSpendData = db
+      .select({ value: sum(transactions.amount) })
+      .from(transactions)
+      .where(
+        sql`DATE_TRUNC('month',${transactions.transactionDate}) = DATE_TRUNC('month',CURRENT_TIMESTAMP)
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true
+    `,
+      );
+
+    const totalMonthIncomeData = db
+      .select({ value: sum(transactions.amount) })
+      .from(transactions)
+      .where(
+        sql`DATE_TRUNC('month',${transactions.transactionDate}) = DATE_TRUNC('month',CURRENT_TIMESTAMP)
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = false
+    `,
+      );
+
+    const totalYearSpendData = db
+      .select({ value: sum(transactions.amount) })
+      .from(transactions)
+      .where(
+        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true
+    `,
+      );
+
+    const data = await Promise.all([
+      totalMonthSpendData,
+      totalYearSpendData,
+      totalMonthIncomeData,
+    ]);
+
+    const totalMonthSpend = formatCurrency(Number(data[0][0].value) ?? "0");
+    const totalYearSpend = formatCurrency(Number(data[1][0].value) ?? "0");
+    const totalMonthSpendIncome = formatCurrency(
+      Number(data[2][0].value) - Number(data[0][0].value) ?? "0",
+    );
+
+    return {
+      totalMonthSpend,
+      totalYearSpend,
+      totalMonthSpendIncome,
+    };
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch card data.");
+  }
+}
+
+export async function fetchSpendDataByMonth(userId: string) {
+  try {
+    const spendDataByMonth = await db
+      .select({
+        month: sql`date_part('month',transactions."transactionDate")`,
+        total: sql`sum(transactions.amount) as total`.mapWith({
+          mapFromDriverValue: (value: any) => {
+            const mappedValue = value / 100;
+            return mappedValue;
+          },
+        }),
+      })
+      .from(transactions)
+      .where(
+        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true`,
+      )
+      .groupBy(sql`1`);
+
+    return spendDataByMonth;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch card data.");
+  }
+}
+
+export async function fetchSpendDataByCategory(userId: string) {
+  try {
+    const spendDataByCategory = await db
+      .select({
+        category: sql`transactions.category`,
+        total: sql`sum(transactions.amount) as total`.mapWith({
+          mapFromDriverValue: (value: any) => {
+            const mappedValue = value / 100;
+            return mappedValue;
+          },
+        }),
+      })
+      .from(transactions)
+      .where(
+        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true`,
+      )
+      .groupBy(sql`1`);
+
+    return spendDataByCategory;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch card data.");
   }
 }

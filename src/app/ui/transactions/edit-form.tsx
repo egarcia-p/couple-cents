@@ -1,6 +1,6 @@
 "use client";
 
-import { createTransaction, updateInvoice } from "@/app/lib/actions";
+import { createTransaction, updateTransaction } from "@/app/lib/actions";
 import { useFormState } from "react-dom";
 import { Button } from "../button";
 import Link from "next/link";
@@ -17,8 +17,8 @@ export default function Form({
   categories: Object;
 }) {
   const initialState = { message: "", errors: {} };
-  const updateInvoiceWithId = updateInvoice.bind(null, transaction.id);
-  const [state, dispatch] = useFormState(updateInvoiceWithId, initialState);
+  const updateTransactionWithId = updateTransaction.bind(null, transaction.id);
+  const [state, dispatch] = useFormState(updateTransactionWithId, initialState);
 
   const [startDate, setStartDate] = useState<Date | null>(
     new Date(transaction.transactionDate),
