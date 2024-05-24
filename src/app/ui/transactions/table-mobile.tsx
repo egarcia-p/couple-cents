@@ -35,7 +35,7 @@ export default async function DashboardTableMobile({
               <span>{transaction.note}</span>
             </div>
             <div className="py-3 pl-6 pr-3 font-bold ">
-              <span>${transaction.amount}</span>
+              <span>{transaction.amount}</span>
             </div>
           </div>
         ))}

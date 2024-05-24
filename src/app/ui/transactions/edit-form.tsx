@@ -83,35 +83,6 @@ export default function Form({
             </div>
           </div>
 
-          {/* Transaction Note  */}
-          <div className="mb-4">
-            <label htmlFor="note" className="mb-2 block text-sm font-medium">
-              Add a note
-            </label>
-            <div className="relative mt-2 rounded-md">
-              <div className="relative">
-                <input
-                  id="note"
-                  name="note"
-                  type="text"
-                  placeholder="Enter a note"
-                  defaultValue={transaction.note}
-                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                  aria-describedby="note-error"
-                />
-                {/* <  className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}
-              </div>
-              <div id="note-error" aria-live="polite" aria-atomic="true">
-                {state.errors?.note &&
-                  state.errors.note.map((error: string) => (
-                    <p className="mt-2 text-sm text-red-500" key={error}>
-                      {error}
-                    </p>
-                  ))}
-              </div>
-            </div>
-          </div>
-
           {/* Establishment Name */}
           <div className="mb-4">
             <label
@@ -180,6 +151,35 @@ export default function Form({
               <div id="category-error" aria-live="polite" aria-atomic="true">
                 {state.errors?.category &&
                   state.errors.category.map((error: string) => (
+                    <p className="mt-2 text-sm text-red-500" key={error}>
+                      {error}
+                    </p>
+                  ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Transaction Note  */}
+          <div className="mb-4">
+            <label htmlFor="note" className="mb-2 block text-sm font-medium">
+              Add a note
+            </label>
+            <div className="relative mt-2 rounded-md">
+              <div className="relative">
+                <input
+                  id="note"
+                  name="note"
+                  type="text"
+                  placeholder="Enter a note"
+                  defaultValue={transaction.note}
+                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                  aria-describedby="note-error"
+                />
+                {/* <  className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}
+              </div>
+              <div id="note-error" aria-live="polite" aria-atomic="true">
+                {state.errors?.note &&
+                  state.errors.note.map((error: string) => (
                     <p className="mt-2 text-sm text-red-500" key={error}>
                       {error}
                     </p>

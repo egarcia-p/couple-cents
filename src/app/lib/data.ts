@@ -3,7 +3,7 @@ import { transactions } from "../../../drizzle/schema";
 import { db } from "./db";
 import { TransactionForm } from "./definitions";
 import { formatCurrency } from "./utils";
-import { and, or, ilike, sql, eq, count, sum } from "drizzle-orm";
+import { and, or, ilike, sql, eq, count, sum, desc } from "drizzle-orm";
 import _categories from "@/app/lib/data/categories.json";
 
 //Create an interface for categories.json and assign to new var categories
@@ -12,75 +12,6 @@ interface ICategories {
 }
 
 const categories: ICategories = _categories;
-
-export async function fetchTransactions() {
-  try {
-    const data = await db
-      .select({
-        id: transactions.id,
-        description: transactions.note,
-        userId: transactions.userId,
-        transactionDate: transactions.transactionDate,
-        category: sql<string>`category`.mapWith({
-          mapFromDriverValue: (value: string) => {
-            const mappedValue = categories[value];
-            return mappedValue;
-          },
-        }),
-        establishment: transactions.establishment,
-        isExpense: transactions.isExpense,
-        isEssential: transactions.isEssential,
-        note: transactions.note,
-        amount: sql<number>`amount`.mapWith({
-          mapFromDriverValue: (value: any) => {
-            const mappedValue = value / 100;
-            return mappedValue;
-          },
-        }),
-      })
-      .from(transactions);
-
-    return data;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch transactions data.");
-  }
-}
-
-export async function fetchTransactionsByUserId(userId: string) {
-  try {
-    const data = await db
-      .select({
-        id: transactions.id,
-        description: transactions.note,
-        userId: transactions.userId,
-        transactionDate: transactions.transactionDate,
-        category: sql<string>`category`.mapWith({
-          mapFromDriverValue: (value: any) => {
-            const mappedValue = Object.entries(categories)[value];
-            return mappedValue;
-          },
-        }),
-        establishment: transactions.establishment,
-        isExpense: transactions.isExpense,
-        isEssential: transactions.isEssential,
-        note: transactions.note,
-        amount: sql<number>`amount`.mapWith({
-          mapFromDriverValue: (value: any) => {
-            const mappedValue = value / 100;
-            return mappedValue;
-          },
-        }),
-      })
-      .from(transactions)
-      .where(eq(transactions.userId, parseInt(userId)));
-
-    return data;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch transactions data.");
-  }
-}
 
 export async function fetchTransactionById(id: string) {
   try {
@@ -136,9 +67,10 @@ export async function fetchFilteredTransactions(
         isExpense: transactions.isExpense,
         isEssential: transactions.isEssential,
         note: transactions.note,
-        amount: sql<number>`amount`.mapWith({
+        amount: sql<string>`amount`.mapWith({
           mapFromDriverValue: (value: any) => {
-            const mappedValue = value / 100;
+            //let mappedValue = value / 100;
+            const mappedValue = formatCurrency(Number(value) ?? "0");
             return mappedValue;
           },
         }),
@@ -156,6 +88,7 @@ export async function fetchFilteredTransactions(
           eq(transactions.userId, parseInt(userId)),
         ),
       )
+      .orderBy(desc(transactions.transactionDate))
       .limit(ITEMS_PER_PAGE)
       .offset(offset);
     return data;
