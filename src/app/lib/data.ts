@@ -136,9 +136,10 @@ export async function fetchFilteredTransactions(
         isExpense: transactions.isExpense,
         isEssential: transactions.isEssential,
         note: transactions.note,
-        amount: sql<number>`amount`.mapWith({
+        amount: sql<string>`amount`.mapWith({
           mapFromDriverValue: (value: any) => {
-            const mappedValue = value / 100;
+            //let mappedValue = value / 100;
+            const mappedValue = formatCurrency(Number(value) ?? "0");
             return mappedValue;
           },
         }),
