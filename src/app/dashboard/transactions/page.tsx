@@ -1,6 +1,7 @@
 import { fetchTransactionPages } from "@/app/lib/data";
 import Search from "@/app/ui/search";
 import { CreateTransaction } from "@/app/ui/transactions/buttons";
+import DatePicker from "@/app/ui/transactions/date-picker";
 import Pagination from "@/app/ui/transactions/pagination";
 import DashboardTable from "@/app/ui/transactions/table";
 import DashboardTableMobile from "@/app/ui/transactions/table-mobile";
@@ -25,6 +26,7 @@ export default async function Page({
 
   return (
     <div className="w-full">
+      <DatePicker placeholder="" />
       <div className="mt-4 flex justify-between gap-2 md:mt-8">
         <div className="justify-start">
           <h1 className="text-lg font-bold">Transactions</h1>
@@ -34,9 +36,16 @@ export default async function Page({
           <CreateTransaction isExpense={false} />
         </div>
       </div>
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search placeholder="Search invoices..." />
+      <div className="hidden w-full md:block">
+        <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+          <Search placeholder="Search invoices..." />
 
+          <div className="">
+            <Pagination totalPages={totalPages} />
+          </div>
+        </div>
+      </div>
+      <div className="block w-full md:hidden">
         <div className="">
           <Pagination totalPages={totalPages} />
         </div>
