@@ -12,9 +12,11 @@ import { SetStateAction, useState } from "react";
 export default function Form({
   userId,
   categories,
+  isExpense,
 }: {
   userId: string;
   categories: Object;
+  isExpense: boolean;
 }) {
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useFormState(createTransaction, initialState);
@@ -39,7 +41,7 @@ export default function Form({
                   id="isExpense"
                   name="isExpense"
                   type="hidden"
-                  value="true"
+                  value={isExpense.toString()}
                   aria-describedby="isExpense-error"
                 />
               </div>
