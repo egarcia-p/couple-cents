@@ -7,16 +7,28 @@ export const metadata: Metadata = {
   title: "Create",
 };
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const session = await auth();
 
   if (!session) return null;
   if (!session.user) return null;
   if (!session.user.id) return null;
+
+  const isExpense = String(searchParams.isExpense).toLowerCase() === "true";
+
   return (
     <main>
-      <h1 className="  text-lg">Create Transaction</h1>
-      <Form userId={session.user.id} categories={categories} />
+      {isExpense && <h1 className="  text-lg">Create Expense</h1>}
+      {!isExpense && <h1 className="  text-lg">Create Income</h1>}
+      <Form
+        userId={session.user.id}
+        categories={categories}
+        isExpense={isExpense}
+      />
     </main>
   );
 }

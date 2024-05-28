@@ -2,10 +2,13 @@ import { deleteTransaction } from "@/app/lib/actions";
 import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
-export function CreateTransaction() {
+export function CreateTransaction({ isExpense }: { isExpense: boolean }) {
   return (
     <Link
-      href="/dashboard/transactions/create"
+      href={{
+        pathname: "/dashboard/transactions/create",
+        query: { isExpense: isExpense },
+      }}
       className="flex h-10 items-center rounded-lg bg-primary-600 px-4 text-sm font-medium text-white transition-colors hover:bg-primary-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
     >
       <span className="hidden md:block">Create Transaction</span>{" "}
