@@ -25,10 +25,14 @@ export default async function Page({
 
   return (
     <div className="w-full">
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <h1 className="text-lg font-bold">Transactions</h1>
-
-        <CreateTransaction />
+      <div className="mt-4 flex justify-between gap-2 md:mt-8">
+        <div className="justify-start">
+          <h1 className="text-lg font-bold">Transactions</h1>
+        </div>
+        <div className="flex justify-end gap-2">
+          <CreateTransaction isExpense={true} />
+          <CreateTransaction isExpense={false} />
+        </div>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Search invoices..." />

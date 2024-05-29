@@ -5,13 +5,14 @@ import { TransactionForm } from "./definitions";
 import { formatCurrency } from "./utils";
 import { and, or, ilike, sql, eq, count, sum, desc } from "drizzle-orm";
 import _categories from "@/app/lib/data/categories.json";
+import _categoriesIncome from "@/app/lib/data/categoriesForIncome.json";
 
 //Create an interface for categories.json and assign to new var categories
 interface ICategories {
   [key: string]: string;
 }
 
-const categories: ICategories = _categories;
+const categoriesMap: ICategories = { ..._categories, ..._categoriesIncome };
 
 export async function fetchTransactionById(id: string) {
   try {
@@ -59,7 +60,7 @@ export async function fetchFilteredTransactions(
         transactionDate: transactions.transactionDate,
         category: sql<string>`category`.mapWith({
           mapFromDriverValue: (value: string) => {
-            const mappedValue = categories[value];
+            const mappedValue = categoriesMap[value];
             return mappedValue;
           },
         }),

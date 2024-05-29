@@ -54,7 +54,7 @@ export default async function DashboardTable({
               {transactions?.map((transaction) => (
                 <tr
                   key={transaction.id}
-                  className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                  className={` ${!transaction.isExpense && "bg-primary-100"} w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg`}
                 >
                   <td className="whitespace-nowrap px-3 py-3">
                     {transaction.establishment}

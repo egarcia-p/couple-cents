@@ -50,7 +50,7 @@ export type State = {
 
 export async function createTransaction(prevState: State, formData: FormData) {
   const validatedFields = CreateTransaction.safeParse({
-    isExpense: formData.get("isExpense"),
+    isExpense: booleanString.parse(formData.get("isExpense")),
     amount: formData.get("amount"),
     note: formData.get("note"),
     establishment: formData.get("establishment"),
