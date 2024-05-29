@@ -9,9 +9,13 @@ export function CreateTransaction({ isExpense }: { isExpense: boolean }) {
         pathname: "/dashboard/transactions/create",
         query: { isExpense: isExpense },
       }}
-      className="flex h-10 items-center rounded-lg bg-primary-600 px-4 text-sm font-medium text-white transition-colors hover:bg-primary-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+      className={`flex h-10 items-center rounded-lg ${!isExpense && "bg-primary-600"} ${isExpense && "bg-red-600"}  px-4 text-sm font-medium text-white transition-colors ${!isExpense && "hover:bg-primary-300"} ${isExpense && "hover:bg-red-300"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2  ${!isExpense && "focus-visible:outline-primary-600"} ${isExpense && "focus-visible:outline-red-600"} `}
     >
-      <span className="hidden md:block">Create Transaction</span>{" "}
+      <span className="hidden md:block">
+        Create
+        {isExpense && " Expense"}
+        {!isExpense && " Income"}
+      </span>{" "}
       <PlusIcon className="h-5 md:ml-4 stroke-2" />
     </Link>
   );
