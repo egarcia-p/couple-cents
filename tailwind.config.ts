@@ -6,7 +6,10 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./node_modules/react-tailwindcss-datepicker/dist/index.esm.js",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       backgroundImage: {
@@ -16,21 +19,13 @@ const config: Config = {
       },
     },
     colors: {
-      transaparent: "transparent",
-      current: "currentColor",
+      ...colors,
       primary: {
         100: "#C1FFCA",
         300: "#378743",
         600: "#225329",
       },
       secondary: "#D6AF57",
-      black: colors.black,
-      white: colors.white,
-      gray: colors.gray,
-      emerald: colors.emerald,
-      indigo: colors.indigo,
-      yellow: colors.yellow,
-      red: colors.red,
     },
   },
   plugins: [],

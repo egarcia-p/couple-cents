@@ -39,7 +39,11 @@ export default function DatePicker({ placeholder }: { placeholder: string }) {
   return (
     <div className="">
       <div className="">
-        <Datepicker value={value} onChange={handleValueChange} />
+        <Datepicker
+          primaryColor={"green"}
+          value={value}
+          onChange={handleValueChange}
+        />
       </div>
     </div>
   );

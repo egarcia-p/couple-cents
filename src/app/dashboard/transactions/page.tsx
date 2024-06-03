@@ -26,7 +26,6 @@ export default async function Page({
 
   return (
     <div className="w-full">
-      <DatePicker placeholder="" />
       <div className="mt-4 flex justify-between gap-2 md:mt-8">
         <div className="justify-start">
           <h1 className="text-lg font-bold">Transactions</h1>
@@ -34,6 +33,11 @@ export default async function Page({
         <div className="flex justify-end gap-2">
           <CreateTransaction isExpense={true} />
           <CreateTransaction isExpense={false} />
+        </div>
+      </div>
+      <div className="hidden flex md:block">
+        <div className=" w-1/2 justify-start">
+          <DatePicker placeholder="" />
         </div>
       </div>
       <div className="hidden w-full md:block">
