@@ -47,10 +47,14 @@ const ITEMS_PER_PAGE = 10;
 
 export async function fetchFilteredTransactions(
   query: string,
+  dates: string,
   currentPage: number,
   userId: string,
 ) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  const dateArray = dates.split("to");
+  const startDate = dateArray[0];
+  const endDate = dateArray[1];
 
   try {
     const data = await db
@@ -87,11 +91,13 @@ export async function fetchFilteredTransactions(
             // ilike(transactions.amount, `%${query}%`),
           ),
           eq(transactions.userId, parseInt(userId)),
+          sql`${transactions.transactionDate} BETWEEN ${startDate} AND ${endDate}`,
         ),
       )
       .orderBy(desc(transactions.transactionDate))
       .limit(ITEMS_PER_PAGE)
       .offset(offset);
+
     return data;
   } catch (error) {
     console.error("Database Error:", error);
@@ -99,8 +105,16 @@ export async function fetchFilteredTransactions(
   }
 }
 
-export async function fetchTransactionPages(query: string, userId: string) {
+export async function fetchTransactionPages(
+  query: string,
+  dates: string,
+  userId: string,
+) {
   try {
+    const dateArray = dates.split("to");
+    const startDate = dateArray[0];
+    const endDate = dateArray[1];
+
     const data = await db
       .select({ count: sql`count(*)` })
       .from(transactions)
@@ -114,6 +128,7 @@ export async function fetchTransactionPages(query: string, userId: string) {
             // ilike(transactions.amount, `%${query}%`),
           ),
           eq(transactions.userId, parseInt(userId)),
+          sql`${transactions.transactionDate} BETWEEN ${startDate} AND ${endDate}`,
         ),
       );
 

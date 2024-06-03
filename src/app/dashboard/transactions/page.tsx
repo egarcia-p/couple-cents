@@ -1,6 +1,7 @@
 import { fetchTransactionPages } from "@/app/lib/data";
 import Search from "@/app/ui/search";
 import { CreateTransaction } from "@/app/ui/transactions/buttons";
+import DatePicker from "@/app/ui/transactions/date-picker";
 import Pagination from "@/app/ui/transactions/pagination";
 import DashboardTable from "@/app/ui/transactions/table";
 import DashboardTableMobile from "@/app/ui/transactions/table-mobile";
@@ -11,6 +12,7 @@ export default async function Page({
 }: {
   searchParams?: {
     query?: string;
+    dates?: string;
     page?: string;
   };
 }) {
@@ -21,7 +23,17 @@ export default async function Page({
 
   const currentPage = Number(searchParams?.page) || 1;
   const query = searchParams?.query || "";
-  const totalPages = await fetchTransactionPages(query, session.user.id);
+  var date = new Date();
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
+    .toISOString()
+    .split("T")[0]
+    .replace(/-/g, " ");
+  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+    .toISOString()
+    .split("T")[0]
+    .replace(/-/g, " ");
+  const dates = searchParams?.dates || firstDay + "to" + lastDay;
+  const totalPages = await fetchTransactionPages(query, dates, session.user.id);
 
   return (
     <div className="w-full">
@@ -34,9 +46,21 @@ export default async function Page({
           <CreateTransaction isExpense={false} />
         </div>
       </div>
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search placeholder="Search invoices..." />
+      <div className="hidden flex md:block">
+        <div className=" w-1/2 justify-start">
+          <DatePicker placeholder="" />
+        </div>
+      </div>
+      <div className="hidden w-full md:block">
+        <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+          <Search placeholder="Search invoices..." />
 
+          <div className="">
+            <Pagination totalPages={totalPages} />
+          </div>
+        </div>
+      </div>
+      <div className="block w-full md:hidden">
         <div className="">
           <Pagination totalPages={totalPages} />
         </div>
@@ -44,6 +68,7 @@ export default async function Page({
       <div className="hidden w-full md:block">
         <DashboardTable
           query={query}
+          dates={dates}
           currentPage={currentPage}
           userId={session.user.id}
         />
@@ -51,6 +76,7 @@ export default async function Page({
       <div className="block w-full md:hidden">
         <DashboardTableMobile
           query={query}
+          dates={dates}
           currentPage={currentPage}
           userId={session.user.id}
         />
