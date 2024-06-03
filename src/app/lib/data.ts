@@ -98,7 +98,6 @@ export async function fetchFilteredTransactions(
       .limit(ITEMS_PER_PAGE)
       .offset(offset);
 
-    console.log(data);
     return data;
   } catch (error) {
     console.error("Database Error:", error);
