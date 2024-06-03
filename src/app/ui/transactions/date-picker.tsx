@@ -23,10 +23,9 @@ export default function DatePicker({ placeholder }: { placeholder: string }) {
   });
 
   const handleValueChange = (newValue: DateValueType) => {
-    console.log("newValue:", newValue);
     setValue(newValue);
     const params = new URLSearchParams(searchParams);
-    if (newValue) {
+    if (newValue?.startDate) {
       params.set("dates", newValue.startDate + "to" + newValue.endDate);
     } else {
       params.delete("dates");
