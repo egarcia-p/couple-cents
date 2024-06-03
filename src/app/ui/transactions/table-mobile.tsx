@@ -4,10 +4,12 @@ import { DeleteTransaction, UpdateTransaction } from "./buttons";
 
 export default async function DashboardTableMobile({
   query,
+  dates,
   currentPage,
   userId,
 }: {
   query: string;
+  dates: string;
   currentPage: number;
   userId: string;
 }) {
@@ -19,6 +21,7 @@ export default async function DashboardTableMobile({
 
   const transactions = await fetchFilteredTransactions(
     query,
+    dates,
     currentPage,
     userId,
   );

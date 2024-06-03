@@ -12,6 +12,7 @@ export default async function Page({
 }: {
   searchParams?: {
     query?: string;
+    dates?: string;
     page?: string;
   };
 }) {
@@ -22,7 +23,17 @@ export default async function Page({
 
   const currentPage = Number(searchParams?.page) || 1;
   const query = searchParams?.query || "";
-  const totalPages = await fetchTransactionPages(query, session.user.id);
+  var date = new Date();
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
+    .toISOString()
+    .split("T")[0]
+    .replace(/-/g, " ");
+  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+    .toISOString()
+    .split("T")[0]
+    .replace(/-/g, " ");
+  const dates = searchParams?.dates || firstDay + "to" + lastDay;
+  const totalPages = await fetchTransactionPages(query, dates, session.user.id);
 
   return (
     <div className="w-full">
@@ -57,6 +68,7 @@ export default async function Page({
       <div className="hidden w-full md:block">
         <DashboardTable
           query={query}
+          dates={dates}
           currentPage={currentPage}
           userId={session.user.id}
         />
@@ -64,6 +76,7 @@ export default async function Page({
       <div className="block w-full md:hidden">
         <DashboardTableMobile
           query={query}
+          dates={dates}
           currentPage={currentPage}
           userId={session.user.id}
         />

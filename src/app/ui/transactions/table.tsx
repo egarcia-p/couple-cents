@@ -4,10 +4,12 @@ import { DeleteTransaction, UpdateTransaction } from "./buttons";
 
 export default async function DashboardTable({
   query,
+  dates,
   currentPage,
   userId,
 }: {
   query: string;
+  dates: string;
   currentPage: number;
   userId: string;
 }) {
@@ -19,6 +21,7 @@ export default async function DashboardTable({
 
   const transactions = await fetchFilteredTransactions(
     query,
+    dates,
     currentPage,
     userId,
   );
@@ -72,7 +75,7 @@ export default async function DashboardTable({
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {/* {formatDateToLocal(transaction.transactionDate.timestamp())} */}
-                    {transaction.transactionDate.toDateString()}
+                    {transaction.transactionDate.toISOString()}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
