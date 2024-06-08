@@ -1,8 +1,14 @@
 # CoupleCents App
 
-App to
+Financial app tool for individuals and/or couples to track their expenses and income. This allows users to have an overview of their current finances and understand where their expenses and incomes are coming from. This is a web application available on all devices.
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+## Features
+
+- CRUD of transactions(expenses and income)
+- Filtering of transactions by text or date
+- Dashboard with summary of current financial status
 
 ## Tech Stack
 
