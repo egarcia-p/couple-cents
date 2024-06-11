@@ -1,6 +1,7 @@
 import { fetchFilteredTransactions } from "@/app/lib/data";
 import { auth } from "../../../auth";
 import { DeleteTransaction, UpdateTransaction } from "./buttons";
+import { formatDateToLocal } from "@/app/lib/utils";
 
 export default async function DashboardTable({
   query,
@@ -74,8 +75,9 @@ export default async function DashboardTable({
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {/* {formatDateToLocal(transaction.transactionDate.timestamp())} */}
-                    {transaction.transactionDate.toISOString()}
+                    {formatDateToLocal(
+                      transaction.transactionDate.toUTCString(),
+                    )}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
