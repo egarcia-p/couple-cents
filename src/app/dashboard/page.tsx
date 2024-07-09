@@ -46,7 +46,7 @@ export default async function Page() {
         />
         <Card title="Current Year Spend" value={totalYearSpend} type="year" />
         <Card
-          title="Income - Spend"
+          title="Monthly(Income - Spend)"
           value={totalMonthSpendIncome}
           type="spendIncome"
         />
