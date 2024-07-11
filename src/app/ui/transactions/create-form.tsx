@@ -23,7 +23,26 @@ export default function Form({
 }) {
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useFormState(createTransaction, initialState);
-  const [startDate, setStartDate] = useState<Dayjs>(dayjs('2022-04-17'));
+
+  //Date state
+  const date = new Date();
+const year = date.getFullYear();
+let month = date.getMonth()+1;
+let dt = date.getDate();
+let monthString = date.getMonth()+1 + ""
+let dayString = date.getDate() + ""
+
+if (dt < 10) {
+  dayString = '0' + dt;
+}
+if (month < 10) {
+  monthString = '0' + month;
+}
+
+  const dateFormatted = year+'-' + monthString + '-'+dayString;
+  console.log(dateFormatted);
+  const [startDate, setStartDate] = useState<Dayjs>(dayjs(dateFormatted));
+  console.log(startDate);
 
   return (
     <>
@@ -248,7 +267,8 @@ export default function Form({
                 /> */}
 <LocalizationProvider dateAdapter={AdapterDayjs}>
 <DatePicker
-                  label="Date picker"
+                  label="Date"
+                  name="transactionDate"
                   value={startDate? startDate: dayjs("2022-04-17")}
                   onChange={(date) => setStartDate(date? date : dayjs("2022-04-17"))}
                 />
