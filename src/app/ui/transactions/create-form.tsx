@@ -6,8 +6,11 @@ import { Button } from "../button";
 import Link from "next/link";
 
 import "react-datepicker/dist/react-datepicker.css";
-import DatePicker from "react-datepicker";
 import { SetStateAction, useState } from "react";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
+import dayjs, { Dayjs } from "dayjs";
 
 export default function Form({
   userId,
@@ -20,7 +23,24 @@ export default function Form({
 }) {
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useFormState(createTransaction, initialState);
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
+
+  //Date state
+  const date = new Date();
+  const year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let dt = date.getDate();
+  let monthString = date.getMonth() + 1 + "";
+  let dayString = date.getDate() + "";
+
+  if (dt < 10) {
+    dayString = "0" + dt;
+  }
+  if (month < 10) {
+    monthString = "0" + month;
+  }
+
+  const dateFormatted = year + "-" + monthString + "-" + dayString;
+  const [startDate, setStartDate] = useState<Dayjs>(dayjs(dateFormatted));
 
   return (
     <>
@@ -237,12 +257,22 @@ export default function Form({
             </label>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
-                <DatePicker
+                {/* <DatePicker
                   id="transactionDate"
                   name="transactionDate"
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
-                />
+                /> */}
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Date"
+                    name="transactionDate"
+                    value={startDate ? startDate : dayjs("2022-04-17")}
+                    onChange={(date) =>
+                      setStartDate(date ? date : dayjs("2022-04-17"))
+                    }
+                  />
+                </LocalizationProvider>
 
                 {/* <  className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}
               </div>
