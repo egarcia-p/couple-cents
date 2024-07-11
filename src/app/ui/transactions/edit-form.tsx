@@ -39,11 +39,9 @@ export default function Form({
   }
 
   const dateFormatted = year + "-" + monthString + "-" + dayString;
-  console.log(dateFormatted);
   const [startDate, setStartDate] = useState<Dayjs>(dayjs(dateFormatted));
 
   const userId = transaction.userId;
-  console.log(transaction.category);
 
   return (
     <>
