@@ -26,7 +26,21 @@ export default function Form({
 
   //Date state
   const date = new Date();
-  const [startDate, setStartDate] = useState<Dayjs>(dayjs(date).utc());
+  const year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let dt = date.getDate();
+  let monthString = date.getMonth() + 1 + "";
+  let dayString = date.getDate() + "";
+
+  if (dt < 10) {
+    dayString = "0" + dt;
+  }
+  if (month < 10) {
+    monthString = "0" + month;
+  }
+
+  const dateFormatted = year + "-" + monthString + "-" + dayString;
+  const [startDate, setStartDate] = useState<Dayjs>(dayjs(dateFormatted));
 
   return (
     <>
