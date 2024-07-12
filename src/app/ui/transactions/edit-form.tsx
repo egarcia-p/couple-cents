@@ -11,6 +11,10 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import dayjs, { Dayjs } from "dayjs";
+var utc = require("dayjs/plugin/utc");
+// import utc from 'dayjs/plugin/utc' // ES 2015
+
+dayjs.extend(utc);
 
 export default function Form({
   transaction,
@@ -23,23 +27,9 @@ export default function Form({
   const updateTransactionWithId = updateTransaction.bind(null, transaction.id);
   const [state, dispatch] = useFormState(updateTransactionWithId, initialState);
 
-  //Date state
-  const date = new Date(transaction.transactionDate);
-  const year = date.getFullYear();
-  let month = date.getMonth() + 1;
-  let dt = date.getDate();
-  let monthString = date.getMonth() + 1 + "";
-  let dayString = date.getDate() + "";
-
-  if (dt < 10) {
-    dayString = "0" + dt;
-  }
-  if (month < 10) {
-    monthString = "0" + month;
-  }
-
-  const dateFormatted = year + "-" + monthString + "-" + dayString;
-  const [startDate, setStartDate] = useState<Dayjs>(dayjs(dateFormatted));
+  const [startDate, setStartDate] = useState<Dayjs>(
+    dayjs(transaction.transactionDate).utc(),
+  );
 
   const userId = transaction.userId;
 
