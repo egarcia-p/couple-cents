@@ -27,9 +27,8 @@ export default function Form({
   const updateTransactionWithId = updateTransaction.bind(null, transaction.id);
   const [state, dispatch] = useFormState(updateTransactionWithId, initialState);
 
-  const [startDate, setStartDate] = useState<Dayjs>(
-    dayjs(transaction.transactionDate).utc(),
-  );
+  const date = dayjs(transaction.transactionDate) as any;
+  const [startDate, setStartDate] = useState<Dayjs>(date.utc());
 
   const userId = transaction.userId;
 
