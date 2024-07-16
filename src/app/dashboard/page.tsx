@@ -8,6 +8,7 @@ import {
 } from "../lib/data";
 import ExpensesMonthChart from "../ui/dashboard/expenses-month-chart";
 import ExpensesCategoryChart from "../ui/dashboard/expenses-category-chart";
+import Toggle from "../ui/dashboard/Toggle";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -66,6 +67,7 @@ export default async function Page({
   return (
     <main>
       <h1 className={`mb-4 text-xl md:text-2xl`}>Dashboard</h1>
+      <Toggle />
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <Card title="Current Spend" value={totalSpendValue} type="month" />
         <Card title="Current Income" value={totalIncomeValue} type="year" />
