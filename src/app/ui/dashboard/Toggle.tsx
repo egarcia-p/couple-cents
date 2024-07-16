@@ -9,7 +9,6 @@ export default function Toggle() {
 
   const handleToggle = (term: boolean) => {
     // Perform search logic here
-    console.log(term);
     const params = new URLSearchParams(searchParams);
     if (term) {
       params.set("period", "Year");

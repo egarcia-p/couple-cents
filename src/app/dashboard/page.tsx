@@ -4,6 +4,7 @@ import { Card } from "../ui/dashboard/cards";
 import {
   fetchCardData,
   fetchSpendDataByCategory,
+  fetchSpendDataByCategoryMonthly,
   fetchSpendDataByMonth,
 } from "../lib/data";
 import ExpensesMonthChart from "../ui/dashboard/expenses-month-chart";
@@ -26,7 +27,6 @@ export default async function Page({
   if (!session.user.id) return null;
 
   const currentPeriod = searchParams?.period || "Month";
-  console.log(searchParams);
 
   const {
     totalMonthSpend,
@@ -37,21 +37,11 @@ export default async function Page({
     totalYearSpendIncome,
   } = await fetchCardData(session.user.id);
 
-  let totalSpendValue;
-  let totalIncomeValue;
-  let totalSpendIncomeValue;
-  if (currentPeriod === "Month") {
-    totalSpendValue = totalMonthSpend;
-    totalIncomeValue = totalMonthIncome;
-    totalSpendIncomeValue = totalMonthSpendIncome;
-  } else {
-    totalSpendValue = totalYearSpend;
-    totalIncomeValue = totalYearIncome;
-    totalSpendIncomeValue = totalYearSpendIncome;
-  }
-
   const spendByMonth = await fetchSpendDataByMonth(session.user.id);
-  const spendByCategory = await fetchSpendDataByCategory(session.user.id);
+  const spendByCategoryYearly = await fetchSpendDataByCategory(session.user.id);
+  const spendByCategoryMonthly = await fetchSpendDataByCategoryMonthly(
+    session.user.id,
+  );
 
   //Convertspendbymonth to type ExpenseDataMonth
 
@@ -60,9 +50,26 @@ export default async function Page({
     spendByMonth.map((item) => [item.month, item.total]),
   );
 
-  const spendByCategoryMap = new Map(
-    spendByCategory.map((item) => [item.category, item.total]),
-  );
+  let spendByCategoryMap;
+
+  let totalSpendValue;
+  let totalIncomeValue;
+  let totalSpendIncomeValue;
+  if (currentPeriod === "Month") {
+    totalSpendValue = totalMonthSpend;
+    totalIncomeValue = totalMonthIncome;
+    totalSpendIncomeValue = totalMonthSpendIncome;
+    spendByCategoryMap = new Map(
+      spendByCategoryMonthly.map((item) => [item.category, item.total]),
+    );
+  } else {
+    totalSpendValue = totalYearSpend;
+    totalIncomeValue = totalYearIncome;
+    totalSpendIncomeValue = totalYearSpendIncome;
+    spendByCategoryMap = new Map(
+      spendByCategoryYearly.map((item) => [item.category, item.total]),
+    );
+  }
 
   return (
     <main>
