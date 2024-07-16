@@ -99,7 +99,7 @@ export default function ExpensesCategoryChart({ dataExpenses }: any) {
           </div>
           <div className="flex items-center pb-2 pt-6">
             <CalendarIcon className="h-5 w-5 text-gray-500" />
-            <h3 className="ml-2 text-sm text-gray-500 ">Current Year</h3>
+            <h3 className="ml-2 text-sm text-gray-500 ">Current Period</h3>
           </div>
         </div>
       }
