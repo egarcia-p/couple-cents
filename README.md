@@ -16,6 +16,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - PostgreSQL
 - DrizzleORM
 - Auth.js
+- TailwindCSS
 - Chart.js
 
 ## Local Development
