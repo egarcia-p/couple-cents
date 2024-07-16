@@ -4,25 +4,44 @@ import { Card } from "../ui/dashboard/cards";
 import {
   fetchCardData,
   fetchSpendDataByCategory,
+  fetchSpendDataByCategoryMonthly,
   fetchSpendDataByMonth,
 } from "../lib/data";
 import ExpensesMonthChart from "../ui/dashboard/expenses-month-chart";
 import ExpensesCategoryChart from "../ui/dashboard/expenses-category-chart";
+import Toggle from "../ui/dashboard/Toggle";
 
 export const metadata: Metadata = {
   title: "Dashboard",
 };
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: {
+    period?: string;
+  };
+}) {
   const session = await auth();
   if (!session) return <div>Not authenticated</div>;
   if (!session.user) return null;
   if (!session.user.id) return null;
 
-  const { totalMonthSpend, totalYearSpend, totalMonthSpendIncome } =
-    await fetchCardData(session.user.id);
+  const currentPeriod = searchParams?.period || "Month";
+
+  const {
+    totalMonthSpend,
+    totalMonthIncome,
+    totalYearSpend,
+    totalYearIncome,
+    totalMonthSpendIncome,
+    totalYearSpendIncome,
+  } = await fetchCardData(session.user.id);
 
   const spendByMonth = await fetchSpendDataByMonth(session.user.id);
-  const spendByCategory = await fetchSpendDataByCategory(session.user.id);
+  const spendByCategoryYearly = await fetchSpendDataByCategory(session.user.id);
+  const spendByCategoryMonthly = await fetchSpendDataByCategoryMonthly(
+    session.user.id,
+  );
 
   //Convertspendbymonth to type ExpenseDataMonth
 
@@ -31,23 +50,37 @@ export default async function Page() {
     spendByMonth.map((item) => [item.month, item.total]),
   );
 
-  const spendByCategoryMap = new Map(
-    spendByCategory.map((item) => [item.category, item.total]),
-  );
+  let spendByCategoryMap;
+
+  let totalSpendValue;
+  let totalIncomeValue;
+  let totalSpendIncomeValue;
+  if (currentPeriod === "Month") {
+    totalSpendValue = totalMonthSpend;
+    totalIncomeValue = totalMonthIncome;
+    totalSpendIncomeValue = totalMonthSpendIncome;
+    spendByCategoryMap = new Map(
+      spendByCategoryMonthly.map((item) => [item.category, item.total]),
+    );
+  } else {
+    totalSpendValue = totalYearSpend;
+    totalIncomeValue = totalYearIncome;
+    totalSpendIncomeValue = totalYearSpendIncome;
+    spendByCategoryMap = new Map(
+      spendByCategoryYearly.map((item) => [item.category, item.total]),
+    );
+  }
 
   return (
     <main>
       <h1 className={`mb-4 text-xl md:text-2xl`}>Dashboard</h1>
+      <Toggle />
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <Card title="Current Spend" value={totalSpendValue} type="month" />
+        <Card title="Current Income" value={totalIncomeValue} type="year" />
         <Card
-          title="Current Month Spend"
-          value={totalMonthSpend}
-          type="month"
-        />
-        <Card title="Current Year Spend" value={totalYearSpend} type="year" />
-        <Card
-          title="Monthly(Income - Spend)"
-          value={totalMonthSpendIncome}
+          title="(Income - Spend)"
+          value={totalSpendIncomeValue}
           type="spendIncome"
         />
       </div>

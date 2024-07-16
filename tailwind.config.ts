@@ -28,6 +28,6 @@ const config: Config = {
       secondary: "#D6AF57",
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
 };
 export default config;

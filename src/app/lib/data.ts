@@ -169,22 +169,40 @@ export async function fetchCardData(userId: string) {
     `,
       );
 
+    const totalYearIncomeData = db
+      .select({ value: sum(transactions.amount) })
+      .from(transactions)
+      .where(
+        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = false
+    `,
+      );
+
     const data = await Promise.all([
       totalMonthSpendData,
       totalYearSpendData,
       totalMonthIncomeData,
+      totalYearIncomeData,
     ]);
 
     const totalMonthSpend = formatCurrency(Number(data[0][0].value) ?? "0");
     const totalYearSpend = formatCurrency(Number(data[1][0].value) ?? "0");
+    const totalMonthIncome = formatCurrency(Number(data[2][0].value) ?? "0");
+    const totalYearIncome = formatCurrency(Number(data[3][0].value) ?? "0");
     const totalMonthSpendIncome = formatCurrency(
       Number(data[2][0].value) - Number(data[0][0].value) ?? "0",
+    );
+    const totalYearSpendIncome = formatCurrency(
+      Number(data[3][0].value) - Number(data[1][0].value) ?? "0",
     );
 
     return {
       totalMonthSpend,
+      totalMonthIncome,
       totalYearSpend,
+      totalYearIncome,
       totalMonthSpendIncome,
+      totalYearSpendIncome,
     };
   } catch (error) {
     console.error("Database Error:", error);
@@ -233,6 +251,32 @@ export async function fetchSpendDataByCategory(userId: string) {
       .from(transactions)
       .where(
         sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true`,
+      )
+      .groupBy(sql`1`);
+
+    return spendDataByCategory;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch card data.");
+  }
+}
+
+export async function fetchSpendDataByCategoryMonthly(userId: string) {
+  try {
+    const spendDataByCategory = await db
+      .select({
+        category: sql`transactions.category`,
+        total: sql`sum(transactions.amount) as total`.mapWith({
+          mapFromDriverValue: (value: any) => {
+            const mappedValue = value / 100;
+            return mappedValue;
+          },
+        }),
+      })
+      .from(transactions)
+      .where(
+        sql`DATE_TRUNC('month',${transactions.transactionDate}) = DATE_TRUNC('month',CURRENT_TIMESTAMP)
     AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true`,
       )
       .groupBy(sql`1`);
