@@ -16,10 +16,10 @@ export default async function Home() {
         <title>CoupleCents</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div id="top" className=" h-32 flex"></div>
+      <div id="top" className="sm:h16 lg:h-32 flex"></div>
 
-      <div className="flex flex-row">
-        <div className=" bg-primary-600 text-secondary pl-12 pr-8 py-12 max-w-md mx-auto gap-2 sm:max-w-xl lg:max-w-full lg:w-1/2 lg:py-24 lg:pl-64 lg:pr-12 lg:rounded-r-lg">
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className=" bg-primary-600 text-secondary pl-12 pr-8 py-12 w-full max-w-md mx-auto gap-2 sm:max-w-xl lg:max-w-full lg:w-1/2 lg:py-24 lg:pl-64 lg:pr-12 lg:rounded-r-lg">
           <div className="w-48    text-white md:w-80">
             <Image src={logo} alt="Logo" />
           </div>
@@ -32,49 +32,53 @@ export default async function Home() {
             </p>
           </div>
         </div>
-        <div className="w-1/2 flex">
+        <div className="w-full lg:w-1/2 flex">
           <div className="m-auto items-center ">
             <SignIn />
           </div>
         </div>
       </div>
 
-      <div className="flex flex-row my-20">
-        <div className="w-1/2 flex px-8 py-12 sm:max-w-xl lg:max-w-full lg:w-1/2 lg:py-24 lg:px-16 lg:rounded-r-lg">
-          <div className="h-[32rem] mx-14 w-full m-auto items-center overflow-hidden">
-            <Image
-              className=" w-full object-cover"
-              src={CreditCards}
-              alt="Credit cards"
-            />
+      <div className="flex flex-row gap-4 lg:my-20">
+        <div className="hidden lg:block">
+          <div className="w-1/2 flex px-8 py-12 sm:max-w-xl lg:max-w-full lg:w-1/2 lg:py-24 lg:px-16 lg:rounded-r-lg">
+            <div className="h-[32rem] mx-14 w-full m-auto items-center overflow-hidden">
+              <Image
+                className=" w-full object-cover"
+                src={CreditCards}
+                alt="Credit cards"
+              />
+            </div>
           </div>
-        </div>
-        <div
-          id="left"
-          className="text-black px-8 py-12 max-w-md mx-auto gap-2 w-1/4 sm:max-w-xl lg:max-w-full lg:w-1/2 lg:py-24 lg:px-16 lg:rounded-r-lg"
-        >
-          <div className="p-8 border-t-black border-t">
-            <h1 className="text-6xl">Take control of your finances</h1>
+          <div
+            id="left"
+            className="text-black px-8 py-12 max-w-md mx-auto gap-2 w-1/4 sm:max-w-xl lg:max-w-full lg:w-1/2 lg:py-24 lg:px-16 lg:rounded-r-lg"
+          >
+            <div className="p-8 border-t-black border-t">
+              <h1 className="text-6xl">Take control of your finances</h1>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-row my-20">
-        <div
-          id="left"
-          className="  text-secondary py-12 max-w-md mx-auto gap-2 sm:max-w-xl lg:max-w-full lg:w-1/2 lg:py-24  lg:rounded-r-lg"
-        >
-          <div className="absolute px-8 bg-primary-600 overflow-auto -mr-16 sm:max-w-xl lg:max-w-full lg:w-1/2 lg:py-24  lg:rounded-r-lg">
-            <h1 className="text-6xl ">Make the most of your money</h1>
+      <div className="flex flex-row lg:my-20">
+        <div className="hidden lg:block">
+          <div
+            id="left"
+            className="  text-secondary py-12 max-w-md mx-auto gap-2 sm:max-w-xl lg:max-w-full lg:w-1/2 lg:py-24  lg:rounded-r-lg"
+          >
+            <div className="absolute px-8 bg-primary-600 overflow-auto -mr-16 sm:max-w-xl lg:max-w-full lg:w-1/2 lg:py-24  lg:rounded-r-lg">
+              <h1 className="text-6xl ">Make the most of your money</h1>
+            </div>
           </div>
-        </div>
-        <div className="w-[96rem] flex ">
-          <div className="h-[54rem] w-full m-auto items-center overflow-hidden">
-            <Image
-              className="w-full object-cover"
-              src={Bench}
-              alt="Credit cards"
-            />
+          <div className="w-[96rem] flex ">
+            <div className="h-[54rem] w-full m-auto items-center overflow-hidden">
+              <Image
+                className="w-full object-cover"
+                src={Bench}
+                alt="Credit cards"
+              />
+            </div>
           </div>
         </div>
       </div>
