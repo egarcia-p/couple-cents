@@ -7,7 +7,25 @@
 <!-- PROJECT LOGO -->
 <br />
 
-# CoupleCents App
+<div align="center">
+  <a href="https://github.com/egarcia-p/couple-cents">
+    <img src="public/logo.svg" alt="Logo" width="160" height="160">
+  </a>
+
+  <h3 align="center">CoupleCents App</h3>
+
+  <p align="center">
+    An awesome financial tool for Couples and Individuals!
+    <br />
+    <a href="https://github.com/egarcia-p/couple-cents">View Demo</a>
+    ·
+    <a href="https://github.com/egarcia-p/couple-cents/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    ·
+    <a href="https://github.com/egarcia-p/couple-cents/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+  </p>
+</div>
+
+# About The Project
 
 Financial app tool for individuals and/or couples to track their expenses and income. This allows users to have an overview of their current finances and understand where their expenses and incomes are coming from. This is a web application available on all devices.
 
