@@ -1,3 +1,12 @@
+<a id="readme-top"></a>
+
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
+
+<!-- PROJECT LOGO -->
+<br />
+
 # CoupleCents App
 
 Financial app tool for individuals and/or couples to track their expenses and income. This allows users to have an overview of their current finances and understand where their expenses and incomes are coming from. This is a web application available on all devices.
@@ -44,3 +53,12 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+<!-- MARKDOWN LINKS & IMAGES -->
+
+[issues-shield]: https://img.shields.io/github/issues/egarcia-p/couple-cents.svg?style=for-the-badge
+[issues-url]: https://github.com/egarcia-p/couple-cents/issues
+[license-shield]: https://img.shields.io/github/license/egarcia-p/couple-cents.svg?style=for-the-badge
+[license-url]: https://github.com/egarcia-p/couple-cents/blob/main/LICENSE
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://www.linkedin.com/in/ergarciag/
