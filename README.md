@@ -17,7 +17,7 @@
   <p align="center">
     An awesome financial tool for Couples and Individuals!
     <br />
-    <a href="https://github.com/egarcia-p/couple-cents">View Demo</a>
+    <a href="https://couple-cents.vercel.app/">View Demo</a>
     ·
     <a href="https://github.com/egarcia-p/couple-cents/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
