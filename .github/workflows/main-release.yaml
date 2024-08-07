@@ -1,0 +1,24 @@
+name: Main branch release
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - ".github/**"
+      - "README.md"
+      - "LICENSE"
+jobs:
+  generateVersion:
+    name: "Generate release"
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Generate version
+        id: generate-version
+        uses: PaulHatch/semantic-version@v5.4.0
+        with:
+          tag_prefix: "v"
+          format: "${major}.${minor}.${patch}"
