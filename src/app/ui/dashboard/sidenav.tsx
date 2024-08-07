@@ -9,12 +9,14 @@ export default function SideNav() {
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
       <Link className="" href="/">
-        <div className="mb-2 flex md:flex-col h-20 items-end justify-start rounded-md bg-primary-600 p-4 md:h-40">
+        <div className="mb-2 flex md:flex-col h-24 items-end justify-start rounded-md bg-primary-600 p-4 md:h-44">
           <div className="w-24 h-auto md:m-auto text-white md:w-40">
             <Image src={logo} alt="Logo" />
           </div>
           <div className="w-full m-auto text-secondary md:w-40 md:text-center">
             <p className=" text-lg">CoupleCents</p>
+          </div>
+          <div className="w-full m-auto text-secondary md:w-40 md:text-center">
             <p className=" text-sm">v0.1</p>
           </div>
         </div>
