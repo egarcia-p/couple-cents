@@ -22,3 +22,5 @@ jobs:
         with:
           tag_prefix: "v"
           format: "${major}.${minor}.${patch}"
+      - name: Create tag and push
+        run: git tag ${{ steps.generate-version.outputs.version }} && git push --tags
