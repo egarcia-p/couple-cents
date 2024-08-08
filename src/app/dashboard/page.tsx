@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { Card } from "../ui/dashboard/cards";
 import {
   fetchCardData,
+  fetchIncomedDataByMonth,
   fetchSpendDataByCategory,
   fetchSpendDataByCategoryMonthly,
   fetchSpendDataByMonth,
@@ -38,6 +39,7 @@ export default async function Page({
   } = await fetchCardData(session.user.id);
 
   const spendByMonth = await fetchSpendDataByMonth(session.user.id);
+  const incomeByMonth = await fetchIncomedDataByMonth(session.user.id);
   const spendByCategoryYearly = await fetchSpendDataByCategory(session.user.id);
   const spendByCategoryMonthly = await fetchSpendDataByCategoryMonthly(
     session.user.id,
@@ -45,9 +47,12 @@ export default async function Page({
 
   //Convertspendbymonth to type ExpenseDataMonth
 
-  //create a map from spendbymonth with key as item.month
+  //create a map from spendbymonth with key as item.month and incomebymonth
   const spendByMonthMap = new Map(
     spendByMonth.map((item) => [item.month, item.total]),
+  );
+  const incomeByMonthMap = new Map(
+    incomeByMonth.map((item) => [item.month, item.total]),
   );
 
   let spendByCategoryMap;
@@ -86,7 +91,10 @@ export default async function Page({
       </div>
       <div className="hidden md:block">
         <div className="h-64 mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-          <ExpensesMonthChart dataExpenses={spendByMonthMap} />
+          <ExpensesMonthChart
+            dataExpenses={spendByMonthMap}
+            dataIncome={incomeByMonthMap}
+          />
           <ExpensesCategoryChart dataExpenses={spendByCategoryMap} />
         </div>
         {/* <Suspense fallback={<RevenueChartSkeleton />}>
