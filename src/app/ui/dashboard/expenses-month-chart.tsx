@@ -10,7 +10,7 @@ const Bar = dynamic(() => import("react-chartjs-2").then((mod) => mod.Bar), {
   ssr: false,
 });
 
-export default function ExpensesMonthChart({ dataExpenses }: any) {
+export default function ExpensesMonthChart({ dataExpenses, dataIncome }: any) {
   //Conver Info into data array
 
   const monthsDisplay = new Map<number, string>();
@@ -29,9 +29,11 @@ export default function ExpensesMonthChart({ dataExpenses }: any) {
 
   const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   let spendArray = new Array<number>();
+  let incomeArray = new Array<number>();
   let monthArray = new Array<string>();
   months.map((month) => {
     spendArray.push(dataExpenses.get(month) | 0);
+    incomeArray.push(dataIncome.get(month) | 0);
     monthArray.push(monthsDisplay.get(month)!);
   });
 
@@ -39,23 +41,20 @@ export default function ExpensesMonthChart({ dataExpenses }: any) {
     labels: monthArray,
     datasets: [
       {
-        label: "Expense Chart",
+        label: "Expenses",
         data: spendArray,
+        backgroundColor: ["rgba(255, 99, 132, 0.2)"],
+        borderColor: ["rgba(255, 99, 132, 1)"],
+        borderWidth: 1,
+      },
+      {
+        label: "Income",
+        data: incomeArray,
         backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
+          "rgba(54, 162, 64, 0.2)", //Green
         ],
         borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
+          "rgba(54, 162, 64, 1)", //Green
         ],
         borderWidth: 1,
       },
