@@ -232,7 +232,33 @@ export async function fetchSpendDataByMonth(userId: string) {
     return spendDataByMonth;
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch card data.");
+    throw new Error("Failed to fetch expense data.");
+  }
+}
+
+export async function fetchIncomedDataByMonth(userId: string) {
+  try {
+    const incomeDataByMonth = await db
+      .select({
+        month: sql`date_part('month',transactions."transactionDate")`,
+        total: sql`sum(transactions.amount) as total`.mapWith({
+          mapFromDriverValue: (value: any) => {
+            const mappedValue = value / 100;
+            return mappedValue;
+          },
+        }),
+      })
+      .from(transactions)
+      .where(
+        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = false`,
+      )
+      .groupBy(sql`1`);
+
+    return incomeDataByMonth;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch income data.");
   }
 }
 
