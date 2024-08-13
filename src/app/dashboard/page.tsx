@@ -3,7 +3,9 @@ import { Metadata } from "next";
 import { Card } from "../ui/dashboard/cards";
 import {
   fetchCardData,
+  fetchEssentialSpendDataByMonth,
   fetchIncomedDataByMonth,
+  fetchNonEssentialSpendDataByMonth,
   fetchSpendDataByCategory,
   fetchSpendDataByCategoryMonthly,
   fetchSpendDataByMonth,
@@ -11,6 +13,7 @@ import {
 import ExpensesMonthChart from "../ui/dashboard/expenses-month-chart";
 import ExpensesCategoryChart from "../ui/dashboard/expenses-category-chart";
 import Toggle from "../ui/dashboard/Toggle";
+import EssentialExpensesMonthChart from "../ui/dashboard/essential-expenses-chart";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -44,6 +47,12 @@ export default async function Page({
   const spendByCategoryMonthly = await fetchSpendDataByCategoryMonthly(
     session.user.id,
   );
+  const spendEssentialByMonth = await fetchEssentialSpendDataByMonth(
+    session.user.id,
+  );
+  const spendNonEssentialByMonth = await fetchNonEssentialSpendDataByMonth(
+    session.user.id,
+  );
 
   //Convertspendbymonth to type ExpenseDataMonth
 
@@ -53,6 +62,12 @@ export default async function Page({
   );
   const incomeByMonthMap = new Map(
     incomeByMonth.map((item) => [item.month, item.total]),
+  );
+  const spendEssentialByMonthMap = new Map(
+    spendEssentialByMonth.map((month) => [month.month, month.total]),
+  );
+  const spendNonEssentialByMonthMap = new Map(
+    spendNonEssentialByMonth.map((month) => [month.month, month.total]),
   );
 
   let spendByCategoryMap;
@@ -94,6 +109,10 @@ export default async function Page({
           <ExpensesMonthChart
             dataExpenses={spendByMonthMap}
             dataIncome={incomeByMonthMap}
+          />
+          <EssentialExpensesMonthChart
+            dataEssentialExpenses={spendEssentialByMonthMap}
+            dataNonEssentialExpenses={spendNonEssentialByMonthMap}
           />
           <ExpensesCategoryChart dataExpenses={spendByCategoryMap} />
         </div>

@@ -5,6 +5,8 @@ import dynamic from "next/dynamic";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
 import categories from "@/app/lib/data/categories.json";
+import options from "./financial-chart-options";
+
 Chart.register(CategoryScale);
 
 interface Category {
