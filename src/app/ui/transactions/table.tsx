@@ -2,6 +2,7 @@ import { fetchFilteredTransactions } from "@/app/lib/data";
 import { auth } from "../../../auth";
 import { DeleteTransaction, UpdateTransaction } from "./buttons";
 import { formatDateToLocal } from "@/app/lib/utils";
+import DownloadCSV from "./download-button";
 
 export default async function DashboardTable({
   query,
@@ -91,6 +92,7 @@ export default async function DashboardTable({
           </table>
         </div>
       </div>
+      <DownloadCSV data={transactions} fileName="transactions_" />
     </div>
   );
 }
