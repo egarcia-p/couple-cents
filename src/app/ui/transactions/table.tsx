@@ -1,4 +1,7 @@
-import { fetchFilteredTransactions } from "@/app/lib/data";
+import {
+  fetchAllTransactions,
+  fetchFilteredTransactions,
+} from "@/app/lib/data";
 import { auth } from "../../../auth";
 import { DeleteTransaction, UpdateTransaction } from "./buttons";
 import { formatDateToLocal } from "@/app/lib/utils";
@@ -27,6 +30,8 @@ export default async function DashboardTable({
     currentPage,
     userId,
   );
+
+  const dataForCSV = await fetchAllTransactions(userId);
 
   return (
     <div className="mt-6 flow-root">
@@ -92,7 +97,7 @@ export default async function DashboardTable({
           </table>
         </div>
       </div>
-      <DownloadCSV userId={userId} fileName="transactions_" />
+      <DownloadCSV data={dataForCSV} userId={userId} fileName="transactions_" />
     </div>
   );
 }
