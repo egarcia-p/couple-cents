@@ -16,9 +16,7 @@ export async function GET(
   request: Request,
   { params }: { params: { userId: string } },
 ) {
-  console.log(params.userId);
   const data = await fetchAllTransactions(params.userId);
-  console.log(data);
 
   return Response.json({ data });
 }
