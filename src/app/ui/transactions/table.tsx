@@ -31,8 +31,6 @@ export default async function DashboardTable({
     userId,
   );
 
-  const dataForCSV = await fetchAllTransactions(userId);
-
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -97,7 +95,7 @@ export default async function DashboardTable({
           </table>
         </div>
       </div>
-      <DownloadCSV data={dataForCSV} userId={userId} fileName="transactions_" />
+      <DownloadCSV userId={userId} fileName="transactions_" />
     </div>
   );
 }
