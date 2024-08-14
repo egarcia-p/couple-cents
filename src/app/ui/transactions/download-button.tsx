@@ -53,18 +53,7 @@ const FetchResults: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
   return <DownloadCSVButton clickHandler={downloadCSV}></DownloadCSVButton>;
 };
 
-//TODO check if we can add a server action that retrieves all the transactions
-// async function getData(userId: string): Promise<Record<string, any>[]> {
-//   const data2 = await fetchAllTransactions(userId);
-
-//   return data2;
-// }
-
 const DownloadCSV: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
-  // const { data, error, isLoading } = useSWR(
-  //   `/api/transactions/${userId}`,
-  //   fetcher,
-  // );
   const [startFetching, setStartFetching] = React.useState(false);
 
   const handleChange = (e: any) => {
