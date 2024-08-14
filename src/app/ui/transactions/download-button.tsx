@@ -22,7 +22,10 @@ interface DownloadCSVProps {
 // }
 
 const DownloadCSV: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
-  const { data, error, isLoading } = useSWR("/api/transactions", fetcher);
+  const { data, error, isLoading } = useSWR(
+    `/api/transactions/${userId}`,
+    fetcher,
+  );
 
   const convertToCSV = (objArray: Record<string, any>[]): string => {
     const array =
@@ -42,7 +45,7 @@ const DownloadCSV: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
   };
 
   const downloadCSV = (): void => {
-    const csvData = new Blob([convertToCSV(data)], { type: "text/csv" });
+    const csvData = new Blob([convertToCSV(data.data)], { type: "text/csv" });
     const csvURL = URL.createObjectURL(csvData);
     const link = document.createElement("a");
     link.href = csvURL;

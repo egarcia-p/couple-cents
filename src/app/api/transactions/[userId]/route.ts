@@ -1,7 +1,7 @@
 import { use } from "react";
-import { transactions } from "../../../../drizzle/schema";
-import { db } from "../../lib/db";
-import { formatCurrency } from "../../lib/utils";
+import { transactions } from "../../../../../drizzle/schema";
+import { db } from "../../../lib/db";
+import { formatCurrency } from "../../../lib/utils";
 import { and, or, ilike, sql, eq, count, sum, desc } from "drizzle-orm";
 import _categories from "@/app/lib/data/categories.json";
 import _categoriesIncome from "@/app/lib/data/categoriesForIncome.json";
@@ -12,8 +12,13 @@ interface ICategories {
 
 const categoriesMap: ICategories = { ..._categories, ..._categoriesIncome };
 
-export async function GET() {
-  const data = await fetchAllTransactions("1");
+export async function GET(
+  request: Request,
+  { params }: { params: { userId: string } },
+) {
+  console.log(params.userId);
+  const data = await fetchAllTransactions(params.userId);
+  console.log(data);
 
   return Response.json({ data });
 }
