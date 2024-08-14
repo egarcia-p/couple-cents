@@ -64,3 +64,15 @@ export function DownloadCSVButton({ clickHandler }: DownloadCSVButtonProps) {
     </button>
   );
 }
+
+export function GenerateCSVButton({ clickHandler }: DownloadCSVButtonProps) {
+  return (
+    <button
+      onClick={clickHandler}
+      className="flex h-10 items-center rounded-md border m-2 p-2 bg-primary-600 hover:bg-primary-300 px-4 text-sm font-medium text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+    >
+      <span className="">Generate CSV</span>
+      <DocumentCurrencyDollarIcon className="w-5" />
+    </button>
+  );
+}

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { DownloadCSVButton } from "./buttons";
+import { DownloadCSVButton, GenerateCSVButton } from "./buttons";
 import { fetchAllTransactions } from "@/app/lib/data";
 
 import useSWR from "swr";
@@ -11,17 +11,9 @@ const fetcher = (...args: [RequestInfo, RequestInit?]): Promise<any> =>
 interface DownloadCSVProps {
   userId: string; // Array of objects with string keys and any type values
   fileName: string;
-  data: Record<string, any>[];
 }
 
-//TODO check if we can add a server action that retrieves all the transactions
-// async function getData(userId: string): Promise<Record<string, any>[]> {
-//   const data2 = await fetchAllTransactions(userId);
-
-//   return data2;
-// }
-
-const DownloadCSV: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
+const FetchResults: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
   const { data, error, isLoading } = useSWR(
     `/api/transactions/${userId}`,
     fetcher,
@@ -56,9 +48,40 @@ const DownloadCSV: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
   };
 
   if (error) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
+  if (!data) return <div>loading...</div>;
 
   return <DownloadCSVButton clickHandler={downloadCSV}></DownloadCSVButton>;
+};
+
+//TODO check if we can add a server action that retrieves all the transactions
+// async function getData(userId: string): Promise<Record<string, any>[]> {
+//   const data2 = await fetchAllTransactions(userId);
+
+//   return data2;
+// }
+
+const DownloadCSV: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
+  // const { data, error, isLoading } = useSWR(
+  //   `/api/transactions/${userId}`,
+  //   fetcher,
+  // );
+  const [startFetching, setStartFetching] = React.useState(false);
+
+  const handleChange = (e: any) => {
+    setStartFetching(false);
+  };
+
+  const handleClick = () => {
+    setStartFetching(true);
+  };
+
+  return (
+    <>
+      <GenerateCSVButton clickHandler={handleClick}></GenerateCSVButton>
+      <br />
+      {startFetching && <FetchResults userId={userId} fileName={fileName} />}
+    </>
+  );
 };
 
 export default DownloadCSV;
