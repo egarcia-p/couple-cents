@@ -92,7 +92,7 @@ export default async function DashboardTable({
           </table>
         </div>
       </div>
-      <DownloadCSV data={transactions} fileName="transactions_" />
+      <DownloadCSV userId={userId} fileName="transactions_" />
     </div>
   );
 }

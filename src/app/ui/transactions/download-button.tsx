@@ -4,16 +4,22 @@ import { DownloadCSVButton } from "./buttons";
 import { fetchAllTransactions } from "@/app/lib/data";
 
 interface DownloadCSVProps {
-  data: Record<string, any>[]; // Array of objects with string keys and any type values
+  userId: string; // Array of objects with string keys and any type values
   fileName: string;
 }
 
 //TODO check if we can add a server action that retrieves all the transactions
-async (userId: string) => {
-  const data2 = fetchAllTransactions(userId);
-};
+async function getData(userId: string): Promise<Record<string, any>[]> {
+  const data2 = await fetchAllTransactions(userId);
 
-const DownloadCSV: React.FC<DownloadCSVProps> = ({ data, fileName }) => {
+  return data2;
+}
+
+const DownloadCSV: React.FC<DownloadCSVProps> = async ({
+  userId,
+  fileName,
+}) => {
+  const data = await getData(userId);
   const convertToCSV = (objArray: Record<string, any>[]): string => {
     const array =
       typeof objArray !== "object" ? JSON.parse(objArray) : objArray;
