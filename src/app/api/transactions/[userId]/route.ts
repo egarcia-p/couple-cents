@@ -26,10 +26,10 @@ export async function GET(
 ) {
   const session = await auth();
 
-  if (!session) {
+  if (!session || !session.user || session.user.id !== params.userId) {
     return Response.json(
       {
-        message: "Unauthenticated user",
+        message: "Unauthenticated user or wrong user",
         data: [],
       },
       { status: 401 },
