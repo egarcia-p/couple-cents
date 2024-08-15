@@ -22,19 +22,23 @@ const categoriesMap: ICategories = { ..._categories, ..._categoriesIncome };
 
 export async function GET(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>,
   { params }: { params: { userId: string } },
 ) {
   const session = await auth();
+
   if (!session) {
-    res.status(401).json({ message: "Unauthenticated user", data: [] });
+    return Response.json(
+      {
+        message: "Unauthenticated user",
+        data: [],
+      },
+      { status: 401 },
+    );
   } else {
     const data = await fetchAllTransactions(params.userId);
 
-    res.status(200).json({ message: "Success", data });
+    return Response.json({ message: "Success", data }, { status: 200 });
   }
-
-  return res;
 }
 
 export async function fetchAllTransactions(userId: string) {
