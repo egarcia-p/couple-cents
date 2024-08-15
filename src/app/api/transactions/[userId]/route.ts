@@ -26,7 +26,7 @@ export async function GET(
 ) {
   const session = await auth();
 
-  if (!session || !session.user || session.user.id !== params.userId) {
+  if (!session || !session.user || session.user.id != params.userId) {
     return Response.json(
       {
         message: "Unauthenticated user or wrong user",
