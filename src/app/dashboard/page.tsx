@@ -3,6 +3,9 @@ import { Metadata } from "next";
 import { Card } from "../ui/dashboard/cards";
 import {
   fetchCardData,
+  fetchEssentialSpendDataByMonth,
+  fetchIncomedDataByMonth,
+  fetchNonEssentialSpendDataByMonth,
   fetchSpendDataByCategory,
   fetchSpendDataByCategoryMonthly,
   fetchSpendDataByMonth,
@@ -10,6 +13,7 @@ import {
 import ExpensesMonthChart from "../ui/dashboard/expenses-month-chart";
 import ExpensesCategoryChart from "../ui/dashboard/expenses-category-chart";
 import Toggle from "../ui/dashboard/Toggle";
+import EssentialExpensesMonthChart from "../ui/dashboard/essential-expenses-chart";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -38,16 +42,32 @@ export default async function Page({
   } = await fetchCardData(session.user.id);
 
   const spendByMonth = await fetchSpendDataByMonth(session.user.id);
+  const incomeByMonth = await fetchIncomedDataByMonth(session.user.id);
   const spendByCategoryYearly = await fetchSpendDataByCategory(session.user.id);
   const spendByCategoryMonthly = await fetchSpendDataByCategoryMonthly(
+    session.user.id,
+  );
+  const spendEssentialByMonth = await fetchEssentialSpendDataByMonth(
+    session.user.id,
+  );
+  const spendNonEssentialByMonth = await fetchNonEssentialSpendDataByMonth(
     session.user.id,
   );
 
   //Convertspendbymonth to type ExpenseDataMonth
 
-  //create a map from spendbymonth with key as item.month
+  //create a map from spendbymonth with key as item.month and incomebymonth
   const spendByMonthMap = new Map(
     spendByMonth.map((item) => [item.month, item.total]),
+  );
+  const incomeByMonthMap = new Map(
+    incomeByMonth.map((item) => [item.month, item.total]),
+  );
+  const spendEssentialByMonthMap = new Map(
+    spendEssentialByMonth.map((month) => [month.month, month.total]),
+  );
+  const spendNonEssentialByMonthMap = new Map(
+    spendNonEssentialByMonth.map((month) => [month.month, month.total]),
   );
 
   let spendByCategoryMap;
@@ -86,7 +106,14 @@ export default async function Page({
       </div>
       <div className="hidden md:block">
         <div className="h-64 mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-          <ExpensesMonthChart dataExpenses={spendByMonthMap} />
+          <ExpensesMonthChart
+            dataExpenses={spendByMonthMap}
+            dataIncome={incomeByMonthMap}
+          />
+          <EssentialExpensesMonthChart
+            dataEssentialExpenses={spendEssentialByMonthMap}
+            dataNonEssentialExpenses={spendNonEssentialByMonthMap}
+          />
           <ExpensesCategoryChart dataExpenses={spendByCategoryMap} />
         </div>
         {/* <Suspense fallback={<RevenueChartSkeleton />}>

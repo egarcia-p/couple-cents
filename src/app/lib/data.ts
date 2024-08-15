@@ -14,6 +14,42 @@ interface ICategories {
 
 const categoriesMap: ICategories = { ..._categories, ..._categoriesIncome };
 
+export async function fetchAllTransactions(userId: string) {
+  try {
+    const data = await db
+      .select({
+        id: transactions.id,
+        userId: transactions.userId,
+        transactionDate: transactions.transactionDate,
+        category: sql<string>`category`.mapWith({
+          mapFromDriverValue: (value: string) => {
+            const mappedValue = categoriesMap[value];
+            return mappedValue;
+          },
+        }),
+        establishment: transactions.establishment,
+        isExpense: transactions.isExpense,
+        isEssential: transactions.isEssential,
+        note: transactions.note,
+        amount: sql<string>`amount`.mapWith({
+          mapFromDriverValue: (value: any) => {
+            //let mappedValue = value / 100;
+            const mappedValue = formatCurrency(Number(value) ?? "0");
+            return mappedValue;
+          },
+        }),
+      })
+      .from(transactions)
+      .where(eq(transactions.userId, parseInt(userId)))
+      .orderBy(desc(transactions.transactionDate));
+
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch transactions.");
+  }
+}
+
 export async function fetchTransactionById(id: string) {
   try {
     const data = await db
@@ -210,6 +246,58 @@ export async function fetchCardData(userId: string) {
   }
 }
 
+export async function fetchEssentialSpendDataByMonth(userId: string) {
+  try {
+    const spendDataByMonth = await db
+      .select({
+        month: sql`date_part('month',transactions."transactionDate")`,
+        total: sql`sum(transactions.amount) as total`.mapWith({
+          mapFromDriverValue: (value: any) => {
+            const mappedValue = value / 100;
+            return mappedValue;
+          },
+        }),
+      })
+      .from(transactions)
+      .where(
+        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true AND ${transactions.isEssential} = true`,
+      )
+      .groupBy(sql`1`);
+
+    return spendDataByMonth;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch expense data.");
+  }
+}
+
+export async function fetchNonEssentialSpendDataByMonth(userId: string) {
+  try {
+    const spendDataByMonth = await db
+      .select({
+        month: sql`date_part('month',transactions."transactionDate")`,
+        total: sql`sum(transactions.amount) as total`.mapWith({
+          mapFromDriverValue: (value: any) => {
+            const mappedValue = value / 100;
+            return mappedValue;
+          },
+        }),
+      })
+      .from(transactions)
+      .where(
+        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true AND ${transactions.isEssential} = false`,
+      )
+      .groupBy(sql`1`);
+
+    return spendDataByMonth;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch expense data.");
+  }
+}
+
 export async function fetchSpendDataByMonth(userId: string) {
   try {
     const spendDataByMonth = await db
@@ -232,7 +320,33 @@ export async function fetchSpendDataByMonth(userId: string) {
     return spendDataByMonth;
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch card data.");
+    throw new Error("Failed to fetch expense data.");
+  }
+}
+
+export async function fetchIncomedDataByMonth(userId: string) {
+  try {
+    const incomeDataByMonth = await db
+      .select({
+        month: sql`date_part('month',transactions."transactionDate")`,
+        total: sql`sum(transactions.amount) as total`.mapWith({
+          mapFromDriverValue: (value: any) => {
+            const mappedValue = value / 100;
+            return mappedValue;
+          },
+        }),
+      })
+      .from(transactions)
+      .where(
+        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = false`,
+      )
+      .groupBy(sql`1`);
+
+    return incomeDataByMonth;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch income data.");
   }
 }
 
