@@ -33,6 +33,8 @@ export async function GET(
 
     res.status(200).json({ message: "Success", data });
   }
+
+  return res;
 }
 
 export async function fetchAllTransactions(userId: string) {
