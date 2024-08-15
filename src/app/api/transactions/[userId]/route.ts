@@ -1,12 +1,7 @@
-import { use } from "react";
-import { transactions } from "../../../../../drizzle/schema";
-import { db } from "../../../lib/db";
-import { formatCurrency } from "../../../lib/utils";
 import { and, or, ilike, sql, eq, count, sum, desc } from "drizzle-orm";
 import _categories from "@/app/lib/data/categories.json";
 import _categoriesIncome from "@/app/lib/data/categoriesForIncome.json";
 import { auth } from "@/auth";
-import { error } from "console";
 import { NextApiRequest, NextApiResponse } from "next";
 import { fetchAllTransactions } from "@/app/lib/data";
 
