@@ -17,7 +17,7 @@ type ResponseData = {
 const categoriesMap: ICategories = { ..._categories, ..._categoriesIncome };
 
 export async function GET(
-  req: NextApiRequest,
+  req: Request,
   { params }: { params: { userId: string } },
 ) {
   const session = await auth();
