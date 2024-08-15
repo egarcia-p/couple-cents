@@ -5,20 +5,34 @@ import { formatCurrency } from "../../../lib/utils";
 import { and, or, ilike, sql, eq, count, sum, desc } from "drizzle-orm";
 import _categories from "@/app/lib/data/categories.json";
 import _categoriesIncome from "@/app/lib/data/categoriesForIncome.json";
+import { auth } from "@/auth";
+import { error } from "console";
+import { NextApiRequest, NextApiResponse } from "next";
 
 interface ICategories {
   [key: string]: string;
 }
 
+type ResponseData = {
+  message: string;
+  data: Record<string, any>[];
+};
+
 const categoriesMap: ICategories = { ..._categories, ..._categoriesIncome };
 
 export async function GET(
-  request: Request,
+  req: NextApiRequest,
+  res: NextApiResponse<ResponseData>,
   { params }: { params: { userId: string } },
 ) {
-  const data = await fetchAllTransactions(params.userId);
+  const session = await auth();
+  if (!session) {
+    res.status(401).json({ message: "Unauthenticated user", data: [] });
+  } else {
+    const data = await fetchAllTransactions(params.userId);
 
-  return Response.json({ data });
+    res.status(200).json({ message: "Success", data });
+  }
 }
 
 export async function fetchAllTransactions(userId: string) {
