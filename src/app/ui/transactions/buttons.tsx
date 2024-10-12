@@ -6,6 +6,9 @@ import {
   DocumentCurrencyDollarIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import IconButton from "./Button/icon-button";
+import ConfirmDialog from "./confirm-dialog";
+import DeleteTransactionModal from "./delete-transaction-modal";
 
 export function CreateTransaction({ isExpense }: { isExpense: boolean }) {
   return (
@@ -39,13 +42,11 @@ export function UpdateTransaction({ id }: { id: string }) {
 
 export function DeleteTransaction({ id }: { id: string }) {
   const deleteTransactionWithId = deleteTransaction.bind(null, id);
+
   return (
-    <form action={deleteTransactionWithId}>
-      <button className="rounded-md border p-2 hover:bg-gray-100">
-        <span className="sr-only">Delete</span>
-        <TrashIcon className="w-5" />
-      </button>
-    </form>
+    <>
+      <DeleteTransactionModal onConfirm={deleteTransactionWithId} />
+    </>
   );
 }
 
