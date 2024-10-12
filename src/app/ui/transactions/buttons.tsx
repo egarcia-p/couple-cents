@@ -8,7 +8,7 @@ import {
 import Link from "next/link";
 import IconButton from "./Button/icon-button";
 import ConfirmDialog from "./confirm-dialog";
-import TableModal from "./table-modal";
+import DeleteTransactionModal from "./delete-transaction-modal";
 
 export function CreateTransaction({ isExpense }: { isExpense: boolean }) {
   return (
@@ -45,7 +45,7 @@ export function DeleteTransaction({ id }: { id: string }) {
 
   return (
     <>
-      <TableModal onConfirm={deleteTransactionWithId} />
+      <DeleteTransactionModal onConfirm={deleteTransactionWithId} />
     </>
   );
 }

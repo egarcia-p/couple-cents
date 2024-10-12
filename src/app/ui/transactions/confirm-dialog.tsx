@@ -21,7 +21,7 @@ export default function Confirm(props: Props) {
         <div className="p-1">
           <Button
             onClick={() => onClose()}
-            className="bg-secondary hover:bg-secondary-light"
+            className="bg-red-600 hover:bg-red-300"
           >
             No
           </Button>
@@ -32,7 +32,7 @@ export default function Confirm(props: Props) {
               onClose();
               onConfirm();
             }}
-            className="bg-green-600 hover:bg-green-300"
+            className="bg-primary-600 hover:bg-primary-300"
           >
             Yes
           </Button>

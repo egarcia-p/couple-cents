@@ -9,7 +9,7 @@ interface Props {
   onConfirm: Function;
 }
 
-export default function TableModal(props: Props) {
+export default function DeleteTransactionModal(props: Props) {
   const { onConfirm } = props;
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
@@ -23,12 +23,12 @@ export default function TableModal(props: Props) {
         <TrashIcon className="w-5" />
       </IconButton>
       <ConfirmDialog
-        title="Delete Post?"
+        title="Delete Transaction?"
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
         onConfirm={() => onConfirm()}
       >
-        Are you sure you want to delete this post?
+        Are you sure you want to delete this transaction?
       </ConfirmDialog>
     </div>
   );
