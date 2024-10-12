@@ -3,6 +3,7 @@
 import React from "react";
 import IconButton from "./Button/icon-button";
 import ConfirmDialog from "./confirm-dialog";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 interface Props {
   onConfirm: Function;
@@ -14,8 +15,12 @@ export default function TableModal(props: Props) {
 
   return (
     <div>
-      <IconButton aria-label="delete" onClick={() => setConfirmOpen(true)}>
-        Delete{" "}
+      <IconButton
+        className="rounded-md border p-2 hover:bg-gray-100"
+        aria-label="delete"
+        onClick={() => setConfirmOpen(true)}
+      >
+        <TrashIcon className="w-5" />
       </IconButton>
       <ConfirmDialog
         title="Delete Post?"
