@@ -4,7 +4,12 @@ import React from "react";
 import IconButton from "./Button/icon-button";
 import ConfirmDialog from "./confirm-dialog";
 
-export default function TableModal() {
+interface Props {
+  onConfirm: Function;
+}
+
+export default function TableModal(props: Props) {
+  const { onConfirm } = props;
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
   return (
@@ -16,7 +21,7 @@ export default function TableModal() {
         title="Delete Post?"
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-        onConfirm={() => console.log("DELETING")}
+        onConfirm={() => onConfirm()}
       >
         Are you sure you want to delete this post?
       </ConfirmDialog>
