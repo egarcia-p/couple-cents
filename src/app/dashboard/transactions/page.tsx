@@ -46,6 +46,11 @@ export default async function Page({
           <CreateTransaction isExpense={false} />
         </div>
       </div>
+      <div className="block md:hidden">
+        <div>
+          <h2>Period: Current Month</h2>
+        </div>
+      </div>
       <div className="hidden flex md:block">
         <div className=" w-1/2 justify-start">
           <DatePicker placeholder="" />
@@ -55,13 +60,13 @@ export default async function Page({
         <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
           <Search placeholder="Search invoices..." />
 
-          <div className="">
+          <div className="flex justify-center">
             <Pagination totalPages={totalPages} />
           </div>
         </div>
       </div>
       <div className="block w-full md:hidden">
-        <div className="">
+        <div className="flex flex-row justify-center items-center">
           <Pagination totalPages={totalPages} />
         </div>
       </div>
