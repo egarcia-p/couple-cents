@@ -34,8 +34,8 @@ export default async function DashboardTableMobile({
             key={transaction.id}
             className="flex flex-row justify-between bg-white m-1 rounded-lg"
           >
-            <div className="py-3 pl-6 pr-3">
-              <span>{transaction.establishment}</span>
+            <div className="py-3 pl-6 pr-3 inline-block w-1/2">
+              <p className="line-clamp-1 ">{transaction.establishment}</p>
             </div>
             <div className="py-3 pl-6 pr-3 font-bold ">
               <span>{transaction.amount}</span>
