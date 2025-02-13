@@ -32,6 +32,9 @@ export default async function Page({
 
   const currentPeriod = searchParams?.period || "Month";
 
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
+
   const {
     totalMonthSpend,
     totalMonthIncome,
@@ -39,7 +42,11 @@ export default async function Page({
     totalYearIncome,
     totalMonthSpendIncome,
     totalYearSpendIncome,
-  } = await fetchCardData(session.user.id);
+  } = await fetchCardData(
+    session.user.id,
+    currentMonth.toString(),
+    currentYear.toString(),
+  );
 
   const spendByMonth = await fetchSpendDataByMonth(session.user.id);
   const incomeByMonth = await fetchIncomedDataByMonth(session.user.id);

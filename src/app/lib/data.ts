@@ -176,13 +176,18 @@ export async function fetchTransactionPages(
   }
 }
 
-export async function fetchCardData(userId: string) {
+export async function fetchCardData(
+  userId: string,
+  month: string,
+  year: string,
+) {
   try {
     const totalMonthSpendData = db
       .select({ value: sum(transactions.amount) })
       .from(transactions)
       .where(
-        sql`DATE_TRUNC('month',${transactions.transactionDate}) = DATE_TRUNC('month',CURRENT_TIMESTAMP)
+        sql`EXTRACT(MONTH FROM ${transactions.transactionDate}) = ${month}
+    AND EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
     AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true
     `,
       );
@@ -191,7 +196,8 @@ export async function fetchCardData(userId: string) {
       .select({ value: sum(transactions.amount) })
       .from(transactions)
       .where(
-        sql`DATE_TRUNC('month',${transactions.transactionDate}) = DATE_TRUNC('month',CURRENT_TIMESTAMP)
+        sql`EXTRACT(MONTH FROM ${transactions.transactionDate}) = ${month}
+    AND EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
     AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = false
     `,
       );
@@ -200,7 +206,7 @@ export async function fetchCardData(userId: string) {
       .select({ value: sum(transactions.amount) })
       .from(transactions)
       .where(
-        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
     AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true
     `,
       );
@@ -209,7 +215,7 @@ export async function fetchCardData(userId: string) {
       .select({ value: sum(transactions.amount) })
       .from(transactions)
       .where(
-        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
     AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = false
     `,
       );
