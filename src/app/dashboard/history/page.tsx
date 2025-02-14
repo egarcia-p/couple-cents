@@ -12,7 +12,6 @@ import {
 } from "../../lib/data";
 import ExpensesMonthChart from "@/app/ui/dashboard/expenses-month-chart";
 import ExpensesCategoryChart from "@/app/ui/dashboard/expenses-category-chart";
-import Toggle from "@/app/ui/dashboard/Toggle";
 import EssentialExpensesMonthChart from "@/app/ui/dashboard/essential-expenses-chart";
 import Filter from "@/app/ui/dashboard/month-year-filter";
 import months from "@/app/lib/data/months.json";
