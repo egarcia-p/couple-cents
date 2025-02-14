@@ -17,6 +17,11 @@ const links = [
     href: "/dashboard/transactions",
     icon: BanknotesIcon,
   },
+  {
+    name: "History",
+    href: "/dashboard/history",
+    icon: BanknotesIcon,
+  },
   { name: "Profile", href: "/dashboard/profile", icon: UserCircleIcon },
 ];
 

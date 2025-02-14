@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { Metadata } from "next";
-import { Card } from "../ui/dashboard/cards";
+import { Card } from "../../ui/dashboard/cards";
 import {
   fetchCardData,
   fetchEssentialSpendDataByMonth,
@@ -9,20 +9,25 @@ import {
   fetchSpendDataByCategory,
   fetchSpendDataByCategoryMonthly,
   fetchSpendDataByMonth,
-} from "../lib/data";
-import ExpensesMonthChart from "../ui/dashboard/expenses-month-chart";
-import ExpensesCategoryChart from "../ui/dashboard/expenses-category-chart";
-import Toggle from "../ui/dashboard/Toggle";
-import EssentialExpensesMonthChart from "../ui/dashboard/essential-expenses-chart";
+} from "../../lib/data";
+import ExpensesMonthChart from "@/app/ui/dashboard/expenses-month-chart";
+import ExpensesCategoryChart from "@/app/ui/dashboard/expenses-category-chart";
+import Toggle from "@/app/ui/dashboard/Toggle";
+import EssentialExpensesMonthChart from "@/app/ui/dashboard/essential-expenses-chart";
+import Filter from "@/app/ui/dashboard/month-year-filter";
+import months from "@/app/lib/data/months.json";
+import years from "@/app/lib/data/years.json";
 
 export const metadata: Metadata = {
-  title: "Dashboard",
+  title: "History",
 };
 export default async function Page({
   searchParams,
 }: {
   searchParams?: {
     period?: string;
+    year?: string;
+    month?: string;
   };
 }) {
   const session = await auth();
@@ -30,10 +35,14 @@ export default async function Page({
   if (!session.user) return null;
   if (!session.user.id) return null;
 
-  const currentPeriod = searchParams?.period || "Month";
+  let currentPeriod = "Month";
 
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
+  if (searchParams?.month == "00") {
+    currentPeriod = "Year";
+  }
+
+  const currentYear = searchParams?.year || new Date().getFullYear();
+  const currentMonth = searchParams?.month || new Date().getMonth() + 1;
 
   const {
     totalMonthSpend,
@@ -112,8 +121,8 @@ export default async function Page({
 
   return (
     <main>
-      <h1 className={`mb-4 text-xl md:text-2xl`}>Dashboard</h1>
-      <Toggle />
+      <h1 className={`mb-4 text-xl md:text-2xl`}>History</h1>
+      <Filter months={months} years={years} />
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <Card title="Current Spend" value={totalSpendValue} type="month" />
         <Card title="Current Income" value={totalIncomeValue} type="year" />
