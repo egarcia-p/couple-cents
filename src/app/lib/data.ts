@@ -176,13 +176,18 @@ export async function fetchTransactionPages(
   }
 }
 
-export async function fetchCardData(userId: string) {
+export async function fetchCardData(
+  userId: string,
+  month: string,
+  year: string,
+) {
   try {
     const totalMonthSpendData = db
       .select({ value: sum(transactions.amount) })
       .from(transactions)
       .where(
-        sql`DATE_TRUNC('month',${transactions.transactionDate}) = DATE_TRUNC('month',CURRENT_TIMESTAMP)
+        sql`EXTRACT(MONTH FROM ${transactions.transactionDate}) = ${month}
+    AND EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
     AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true
     `,
       );
@@ -191,7 +196,8 @@ export async function fetchCardData(userId: string) {
       .select({ value: sum(transactions.amount) })
       .from(transactions)
       .where(
-        sql`DATE_TRUNC('month',${transactions.transactionDate}) = DATE_TRUNC('month',CURRENT_TIMESTAMP)
+        sql`EXTRACT(MONTH FROM ${transactions.transactionDate}) = ${month}
+    AND EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
     AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = false
     `,
       );
@@ -200,7 +206,7 @@ export async function fetchCardData(userId: string) {
       .select({ value: sum(transactions.amount) })
       .from(transactions)
       .where(
-        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
     AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true
     `,
       );
@@ -209,7 +215,7 @@ export async function fetchCardData(userId: string) {
       .select({ value: sum(transactions.amount) })
       .from(transactions)
       .where(
-        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
     AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = false
     `,
       );
@@ -246,7 +252,10 @@ export async function fetchCardData(userId: string) {
   }
 }
 
-export async function fetchEssentialSpendDataByMonth(userId: string) {
+export async function fetchEssentialSpendDataByMonth(
+  userId: string,
+  year: string,
+) {
   try {
     const spendDataByMonth = await db
       .select({
@@ -260,7 +269,7 @@ export async function fetchEssentialSpendDataByMonth(userId: string) {
       })
       .from(transactions)
       .where(
-        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
     AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true AND ${transactions.isEssential} = true`,
       )
       .groupBy(sql`1`);
@@ -272,7 +281,10 @@ export async function fetchEssentialSpendDataByMonth(userId: string) {
   }
 }
 
-export async function fetchNonEssentialSpendDataByMonth(userId: string) {
+export async function fetchNonEssentialSpendDataByMonth(
+  userId: string,
+  year: string,
+) {
   try {
     const spendDataByMonth = await db
       .select({
@@ -286,7 +298,7 @@ export async function fetchNonEssentialSpendDataByMonth(userId: string) {
       })
       .from(transactions)
       .where(
-        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
     AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true AND ${transactions.isEssential} = false`,
       )
       .groupBy(sql`1`);
@@ -298,7 +310,7 @@ export async function fetchNonEssentialSpendDataByMonth(userId: string) {
   }
 }
 
-export async function fetchSpendDataByMonth(userId: string) {
+export async function fetchSpendDataByMonth(userId: string, year: string) {
   try {
     const spendDataByMonth = await db
       .select({
@@ -312,7 +324,7 @@ export async function fetchSpendDataByMonth(userId: string) {
       })
       .from(transactions)
       .where(
-        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
     AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true`,
       )
       .groupBy(sql`1`);
@@ -324,7 +336,7 @@ export async function fetchSpendDataByMonth(userId: string) {
   }
 }
 
-export async function fetchIncomedDataByMonth(userId: string) {
+export async function fetchIncomedDataByMonth(userId: string, year: string) {
   try {
     const incomeDataByMonth = await db
       .select({
@@ -338,7 +350,7 @@ export async function fetchIncomedDataByMonth(userId: string) {
       })
       .from(transactions)
       .where(
-        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
     AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = false`,
       )
       .groupBy(sql`1`);
@@ -350,7 +362,7 @@ export async function fetchIncomedDataByMonth(userId: string) {
   }
 }
 
-export async function fetchSpendDataByCategory(userId: string) {
+export async function fetchSpendDataByCategory(userId: string, year: string) {
   try {
     const spendDataByCategory = await db
       .select({
@@ -364,7 +376,7 @@ export async function fetchSpendDataByCategory(userId: string) {
       })
       .from(transactions)
       .where(
-        sql`DATE_TRUNC('year',${transactions.transactionDate}) = DATE_TRUNC('year',CURRENT_TIMESTAMP)
+        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
     AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true`,
       )
       .groupBy(sql`1`);
@@ -376,7 +388,10 @@ export async function fetchSpendDataByCategory(userId: string) {
   }
 }
 
-export async function fetchSpendDataByCategoryMonthly(userId: string) {
+export async function fetchSpendDataByCategoryMonthly(
+  userId: string,
+  month: string,
+) {
   try {
     const spendDataByCategory = await db
       .select({
@@ -390,7 +405,7 @@ export async function fetchSpendDataByCategoryMonthly(userId: string) {
       })
       .from(transactions)
       .where(
-        sql`DATE_TRUNC('month',${transactions.transactionDate}) = DATE_TRUNC('month',CURRENT_TIMESTAMP)
+        sql`EXTRACT(MONTH FROM ${transactions.transactionDate}) = ${month}
     AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true`,
       )
       .groupBy(sql`1`);

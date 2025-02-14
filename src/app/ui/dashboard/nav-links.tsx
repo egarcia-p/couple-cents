@@ -2,6 +2,7 @@
 
 import {
   BanknotesIcon,
+  ChartBarSquareIcon,
   HomeIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
@@ -16,6 +17,11 @@ const links = [
     name: "Transactions",
     href: "/dashboard/transactions",
     icon: BanknotesIcon,
+  },
+  {
+    name: "History",
+    href: "/dashboard/history",
+    icon: ChartBarSquareIcon,
   },
   { name: "Profile", href: "/dashboard/profile", icon: UserCircleIcon },
 ];
