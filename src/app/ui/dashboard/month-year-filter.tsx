@@ -8,7 +8,7 @@ export default function Filter({
   months,
   years,
 }: {
-  months: [[string, string]];
+  months: [string, string][];
   years: Object;
 }) {
   const searchParams = useSearchParams();
