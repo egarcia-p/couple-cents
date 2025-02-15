@@ -8,7 +8,7 @@ export default function Filter({
   months,
   years,
 }: {
-  months: Object;
+  months: [[string, string]];
   years: Object;
 }) {
   const searchParams = useSearchParams();
@@ -44,9 +44,9 @@ export default function Filter({
           <option value="" disabled>
             Select a month
           </option>
-          {Object.entries(months).map(([key, value]: [string, string]) => (
+          {months.map(([key, month]: [string, string]) => (
             <option key={key} value={key}>
-              {value}
+              {month}
             </option>
           ))}
         </select>
