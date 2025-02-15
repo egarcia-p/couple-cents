@@ -14,7 +14,7 @@ import ExpensesMonthChart from "@/app/ui/dashboard/expenses-month-chart";
 import ExpensesCategoryChart from "@/app/ui/dashboard/expenses-category-chart";
 import EssentialExpensesMonthChart from "@/app/ui/dashboard/essential-expenses-chart";
 import Filter from "@/app/ui/dashboard/month-year-filter";
-import months from "@/app/lib/data/months.json";
+import { months } from "@/app/lib/data/months";
 import years from "@/app/lib/data/years.json";
 
 export const metadata: Metadata = {
@@ -118,10 +118,14 @@ export default async function Page({
     );
   }
 
+  const sortedMonths = Object.entries(months).sort(([keyA], [keyB]) =>
+    keyA.localeCompare(keyB),
+  );
+
   return (
     <main>
       <h1 className={`mb-4 text-xl md:text-2xl`}>History</h1>
-      <Filter months={months} years={years} />
+      <Filter months={sortedMonths} years={years} />
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <Card title="Current Spend" value={totalSpendValue} type="month" />
         <Card title="Current Income" value={totalIncomeValue} type="year" />

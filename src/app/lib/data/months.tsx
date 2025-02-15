@@ -1,4 +1,4 @@
-{
+export const months = {
   "00": "All",
   "01": "January",
   "02": "February",
@@ -11,5 +11,5 @@
   "09": "September",
   "10": "October",
   "11": "November",
-  "12": "December"
-}
+  "12": "December",
+};
