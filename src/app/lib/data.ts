@@ -2,7 +2,7 @@ import { use } from "react";
 import { transactions } from "../../../drizzle/schema";
 import { db } from "./db";
 import { TransactionForm } from "./definitions";
-import { formatCurrency } from "./utils";
+import { formatCurrency, formatPercentage } from "./utils";
 import { and, or, ilike, sql, eq, count, sum, desc } from "drizzle-orm";
 import _categories from "@/app/lib/data/categories.json";
 import _categoriesIncome from "@/app/lib/data/categoriesForIncome.json";
@@ -227,15 +227,40 @@ export async function fetchCardData(
       totalYearIncomeData,
     ]);
 
-    const totalMonthSpend = formatCurrency(Number(data[0][0].value) ?? "0");
-    const totalYearSpend = formatCurrency(Number(data[1][0].value) ?? "0");
-    const totalMonthIncome = formatCurrency(Number(data[2][0].value) ?? "0");
-    const totalYearIncome = formatCurrency(Number(data[3][0].value) ?? "0");
+    const totalMonthSpendDB = Number(data[0][0].value);
+    const totalYearSpendDB = Number(data[1][0].value);
+    const totalMonthIncomeDB = Number(data[2][0].value);
+    const totalYearIncomeDB = Number(data[3][0].value);
+
+    let percentageOfIncomeSpentMonth: number | string;
+    let percentageOfIncomeSpentYear: number | string;
+    if (totalMonthIncomeDB > 0) {
+      percentageOfIncomeSpentMonth = totalMonthSpendDB / totalMonthIncomeDB;
+      percentageOfIncomeSpentMonth = formatPercentage(
+        Number(percentageOfIncomeSpentMonth),
+      );
+    } else {
+      percentageOfIncomeSpentMonth = "No Income";
+    }
+
+    if (totalYearIncomeDB > 0) {
+      percentageOfIncomeSpentYear = totalYearSpendDB / totalYearIncomeDB;
+      percentageOfIncomeSpentYear = formatPercentage(
+        Number(percentageOfIncomeSpentYear),
+      );
+    } else {
+      percentageOfIncomeSpentYear = "No Income";
+    }
+
+    const totalMonthSpend = formatCurrency(totalMonthSpendDB ?? "0");
+    const totalYearSpend = formatCurrency(totalYearSpendDB ?? "0");
+    const totalMonthIncome = formatCurrency(totalMonthIncomeDB ?? "0");
+    const totalYearIncome = formatCurrency(totalYearIncomeDB ?? "0");
     const totalMonthSpendIncome = formatCurrency(
-      Number(data[2][0].value) - Number(data[0][0].value) ?? "0",
+      totalMonthIncomeDB - totalMonthSpendDB,
     );
     const totalYearSpendIncome = formatCurrency(
-      Number(data[3][0].value) - Number(data[1][0].value) ?? "0",
+      totalYearIncomeDB - totalYearSpendDB,
     );
 
     return {
@@ -245,6 +270,8 @@ export async function fetchCardData(
       totalYearIncome,
       totalMonthSpendIncome,
       totalYearSpendIncome,
+      percentageOfIncomeSpentMonth,
+      percentageOfIncomeSpentYear,
     };
   } catch (error) {
     console.error("Database Error:", error);

@@ -16,6 +16,7 @@ import EssentialExpensesMonthChart from "@/app/ui/dashboard/essential-expenses-c
 import Filter from "@/app/ui/dashboard/month-year-filter";
 import { months } from "@/app/lib/data/months";
 import years from "@/app/lib/data/years.json";
+import dashboardMessages from "../../lib/data/messages/dashboard.json";
 
 export const metadata: Metadata = {
   title: "History",
@@ -50,6 +51,8 @@ export default async function Page({
     totalYearIncome,
     totalMonthSpendIncome,
     totalYearSpendIncome,
+    percentageOfIncomeSpentMonth,
+    percentageOfIncomeSpentYear,
   } = await fetchCardData(
     session.user.id,
     currentMonth.toString(),
@@ -102,6 +105,7 @@ export default async function Page({
   let totalSpendValue;
   let totalIncomeValue;
   let totalSpendIncomeValue;
+  let totalSpendIncomePercentage;
   if (currentPeriod === "Month") {
     totalSpendValue = totalMonthSpend;
     totalIncomeValue = totalMonthIncome;
@@ -109,6 +113,7 @@ export default async function Page({
     spendByCategoryMap = new Map(
       spendByCategoryMonthly.map((item) => [item.category, item.total]),
     );
+    totalSpendIncomePercentage = percentageOfIncomeSpentMonth;
   } else {
     totalSpendValue = totalYearSpend;
     totalIncomeValue = totalYearIncome;
@@ -116,6 +121,7 @@ export default async function Page({
     spendByCategoryMap = new Map(
       spendByCategoryYearly.map((item) => [item.category, item.total]),
     );
+    totalSpendIncomePercentage = percentageOfIncomeSpentYear;
   }
 
   const sortedMonths = Object.entries(months).sort(([keyA], [keyB]) =>
@@ -127,12 +133,25 @@ export default async function Page({
       <h1 className={`mb-4 text-xl md:text-2xl`}>History</h1>
       <Filter months={sortedMonths} years={years} />
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <Card title="Current Spend" value={totalSpendValue} type="month" />
-        <Card title="Current Income" value={totalIncomeValue} type="year" />
         <Card
-          title="(Income - Spend)"
+          title={dashboardMessages.dashboard.cards.currentSpend}
+          value={totalSpendValue}
+          type="month"
+        />
+        <Card
+          title={dashboardMessages.dashboard.cards.currentIncome}
+          value={totalIncomeValue}
+          type="year"
+        />
+        <Card
+          title={dashboardMessages.dashboard.cards.savings}
           value={totalSpendIncomeValue}
           type="spendIncome"
+        />
+        <Card
+          title={dashboardMessages.dashboard.cards.percentage}
+          value={totalSpendIncomePercentage}
+          type="percentage"
         />
       </div>
       <div className="hidden md:block">

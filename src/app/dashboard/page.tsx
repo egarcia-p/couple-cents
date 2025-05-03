@@ -43,6 +43,8 @@ export default async function Page({
     totalYearIncome,
     totalMonthSpendIncome,
     totalYearSpendIncome,
+    percentageOfIncomeSpentMonth,
+    percentageOfIncomeSpentYear,
   } = await fetchCardData(
     session.user.id,
     currentMonth.toString(),
@@ -95,6 +97,7 @@ export default async function Page({
   let totalSpendValue;
   let totalIncomeValue;
   let totalSpendIncomeValue;
+  let totalSpendIncomePercentage;
   if (currentPeriod === "Month") {
     totalSpendValue = totalMonthSpend;
     totalIncomeValue = totalMonthIncome;
@@ -102,6 +105,9 @@ export default async function Page({
     spendByCategoryMap = new Map(
       spendByCategoryMonthly.map((item) => [item.category, item.total]),
     );
+    const totalMonthSpendValue = Number(totalMonthSpend);
+    const totalMonthIncomeValue = Number(totalMonthIncome);
+    totalSpendIncomePercentage = percentageOfIncomeSpentMonth;
   } else {
     totalSpendValue = totalYearSpend;
     totalIncomeValue = totalYearIncome;
@@ -109,6 +115,9 @@ export default async function Page({
     spendByCategoryMap = new Map(
       spendByCategoryYearly.map((item) => [item.category, item.total]),
     );
+    const totalYearSpendValue = Number(totalYearSpend);
+    const totalYearIncomeValue = Number(totalYearIncome);
+    totalSpendIncomePercentage = percentageOfIncomeSpentYear;
   }
 
   return (
@@ -122,6 +131,11 @@ export default async function Page({
           title={dashboardMessages.dashboard.cards.savings}
           value={totalSpendIncomeValue}
           type="spendIncome"
+        />
+        <Card
+          title={dashboardMessages.dashboard.cards.percentage}
+          value={totalSpendIncomePercentage}
+          type="percentage"
         />
       </div>
       <div className="hidden md:block">
