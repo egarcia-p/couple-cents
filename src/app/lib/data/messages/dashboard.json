@@ -5,7 +5,8 @@
     "cards": {
       "currentSpend": "Current Spend",
       "currentIncome": "Current Income",
-      "savings": "Savings(Income - Spend)"
+      "savings": "Savings(Income - Spend)",
+      "percentage": "Income Spent"
     }
   }
 }
