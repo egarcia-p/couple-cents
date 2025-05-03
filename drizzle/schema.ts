@@ -98,6 +98,13 @@ export const transactions = pgTable("transactions", {
   }).notNull(),
 });
 
+export const userBudgetSettings = pgTable("user_budget_settings", {
+  id: serial("id").primaryKey(),
+  userId: integer("userId").notNull(),
+  category: varchar("category", { length: 255 }).notNull(),
+  budget: numeric("budget").notNull(),
+});
+
 // ...
 
 // export const faimilyRelations = relations(families, ({ many }) => ({
