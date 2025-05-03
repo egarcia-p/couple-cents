@@ -14,6 +14,7 @@ import ExpensesMonthChart from "../ui/dashboard/expenses-month-chart";
 import ExpensesCategoryChart from "../ui/dashboard/expenses-category-chart";
 import Toggle from "../ui/dashboard/Toggle";
 import EssentialExpensesMonthChart from "../ui/dashboard/essential-expenses-chart";
+import dashboardMessages from "../lib/data/messages/dashboard.json";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -118,7 +119,7 @@ export default async function Page({
         <Card title="Current Spend" value={totalSpendValue} type="month" />
         <Card title="Current Income" value={totalIncomeValue} type="year" />
         <Card
-          title="(Income - Spend)"
+          title={dashboardMessages.dashboard.cards.savings}
           value={totalSpendIncomeValue}
           type="spendIncome"
         />
