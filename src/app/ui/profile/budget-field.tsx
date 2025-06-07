@@ -1,9 +1,11 @@
 export function BudgetField({
+  categoryId,
   category,
   budget,
 }: {
+  categoryId: string;
   category: string;
-  budget: number;
+  budget: string;
 }) {
   return (
     <div className="grid grid-cols-2 w-1/4 content-start gap-4">
@@ -12,8 +14,11 @@ export function BudgetField({
       </div>
       <div className="flex w-full">
         <input
+          id={`budget-${categoryId}`}
+          name={`budget-${categoryId}`}
           type="number"
-          value={budget}
+          defaultValue={budget}
+          step="1"
           className="ml-4 rounded border border-gray-300 p-1"
         />
       </div>

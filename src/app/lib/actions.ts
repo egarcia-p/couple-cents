@@ -4,9 +4,10 @@ import z from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "./db";
-import { transactions } from "../../../drizzle/schema";
-import { eq } from "drizzle-orm";
+import { transactions, userBudgetSettings } from "../../../drizzle/schema";
+import { and, eq } from "drizzle-orm";
 import { use } from "react";
+import { set } from "zod";
 
 const booleanString = z
   .string()
@@ -34,6 +35,24 @@ const CreateTransaction = FormSchema.omit({
 });
 
 const UpdateTransaction = FormSchema.omit({ id: true });
+
+const UserBudgetSettings = z.object({
+  id: z.coerce.number(),
+  userId: z.coerce.number(),
+  category: z.string(),
+  budget: z.coerce.number().gt(-1, {
+    message: "Please enter a budget that is greater or equal to $0",
+  }),
+});
+const UserBudgetSettingsUpdate = UserBudgetSettings.extend({
+  id: z.coerce.number().optional(),
+  userId: z.coerce.number().optional(),
+  category: z.string().optional(),
+  budget: z.coerce.number().gt(-1, {
+    message: "Please enter a budget that is greater or equal to $0",
+  }),
+});
+const UserBudgetSettingsCreate = UserBudgetSettings.omit({ id: true });
 
 export type State = {
   errors?: {
@@ -176,4 +195,77 @@ export async function deleteTransaction(id: string) {
   } catch (error) {
     return { message: "Database Error: Failed to Delete Transaction." };
   }
+}
+
+export async function saveBudgetSettings(prevState: State, formData: FormData) {
+  try {
+    console.log("Form Data: ", formData);
+    // create or save budget settings
+    const userId = Number(formData.get("userId"));
+    // Get all entries and filter for budget settings
+    const budgetSettings = Array.from(formData.entries())
+      .filter(([key]) => key.startsWith("budget-"))
+      .map(([key, value]) => ({
+        userId,
+        category: key.replace("budget-", ""),
+        budget: value,
+      }));
+
+    console.log("User ID: ", userId);
+    console.log("Budget Settings: ", budgetSettings);
+
+    const parsedBudgetSettings = budgetSettings.map((setting) => {
+      const parsedSetting = UserBudgetSettingsCreate.safeParse(setting);
+      if (!parsedSetting.success) {
+        throw new Error(
+          `Invalid budget setting: ${setting}. Error: ${parsedSetting.error}`,
+        );
+      }
+      return parsedSetting.data;
+    });
+    const budgetSettingsToSave = parsedBudgetSettings.map((setting) => ({
+      userId: Number(userId),
+      category: setting.category,
+      budget: Number(setting.budget).toString(),
+    }));
+
+    for (const setting of budgetSettingsToSave) {
+      // Check if the setting already exists
+      const existingSetting = await db
+        .select()
+        .from(userBudgetSettings)
+        .where(
+          and(
+            eq(userBudgetSettings.userId, userId),
+            eq(userBudgetSettings.category, setting.category),
+          ),
+        )
+        .limit(1)
+        .execute();
+      if (existingSetting.length === 0) {
+        await db.insert(userBudgetSettings).values(setting);
+      } else {
+        // If it exists, update the budge
+        const setValues = {
+          budget: setting.budget.toString(),
+        };
+        await db
+          .update(userBudgetSettings)
+          .set(setValues)
+          .where(
+            and(
+              eq(userBudgetSettings.userId, userId),
+              eq(userBudgetSettings.category, setting.category),
+            ),
+          );
+      }
+    }
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to Save Budget Settings.",
+    };
+  }
+
+  revalidatePath("/dashboard");
+  redirect("/dashboard");
 }

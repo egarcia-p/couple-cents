@@ -1,27 +1,41 @@
 "use client";
 
 import { saveBudgetSettings } from "@/app/lib/actions";
+import { fetchUserBudgetSettings } from "@/app/lib/data";
 import profileMessages from "@/app/lib/data/messages/profile.json";
 import { Button } from "@/app/ui/button";
 import { BudgetField } from "@/app/ui/profile/budget-field";
 import { int } from "drizzle-orm/mysql-core";
 import { useFormState } from "react-dom";
+import { use } from "react";
+import categories from "@/app/lib/data/categories.json";
+import {
+  UserBudgetSetting,
+  UserBudgetSettingForm,
+} from "../../lib/definitions";
 
-export default function UserSettings() {
-  const budgetSettings = [
-    {
-      user_id: "userId",
-      category_id: "categoryId",
-      budget: 100,
-    },
-    {
-      user_id: "userId",
-      category_id: "categoryId2",
-      budget: 200,
-    },
-  ];
+export default function UserSettings({
+  userId,
+  budgetSettings,
+}: {
+  userId: string;
+  budgetSettings: UserBudgetSetting[];
+}) {
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useFormState(saveBudgetSettings, initialState);
+
+  const budgetsPerCategorySettings = Object.keys(categories).map(
+    (category) => ({
+      categoryId: category,
+      category: categories[category as keyof typeof categories],
+      budget: budgetSettings.find((setting) => setting.category === category)
+        ? budgetSettings.find((setting) => setting.category === category)
+            ?.budget
+        : 0,
+    }),
+  );
+
+  const categoriesMap = Object.entries(categories);
 
   return (
     <div className="mt-6 flow-root">
@@ -32,12 +46,14 @@ export default function UserSettings() {
               {profileMessages.settings.budget.title}
             </h1>
             <form action={dispatch}>
+              <input type="hidden" name="userId" value={userId} />
               <div className="ml-4 flex flex-col gap-2">
-                {budgetSettings.map((setting) => (
+                {budgetsPerCategorySettings.map((setting) => (
                   <BudgetField
-                    key={setting.category_id}
-                    category={setting.category_id}
-                    budget={setting.budget}
+                    key={setting.category}
+                    categoryId={setting.categoryId}
+                    category={setting.category}
+                    budget={String(setting.budget ?? "")}
                   />
                 ))}
                 <div className="flex w-full justify-center">

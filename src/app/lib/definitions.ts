@@ -10,9 +10,23 @@ export type TransactionForm = {
   transactionDate: Date;
 };
 
+export type UserBudgetSettingForm = {
+  id: number;
+  userId: number;
+  category: string;
+  budget: number;
+};
+
 export type ExpenseDataMonth = [
   {
     month: string;
     total: number;
   },
 ];
+
+export type UserBudgetSetting = {
+  id: number;
+  userId: number;
+  category: string;
+  budget: string;
+};
