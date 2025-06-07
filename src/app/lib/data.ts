@@ -220,17 +220,24 @@ export async function fetchCardData(
     `,
       );
 
+    const totalMonthBudgetData = db
+      .select({ value: sum(userBudgetSettings.budget) })
+      .from(userBudgetSettings)
+      .where(sql`${userBudgetSettings.userId} = ${userId}`);
+
     const data = await Promise.all([
       totalMonthSpendData,
       totalYearSpendData,
       totalMonthIncomeData,
       totalYearIncomeData,
+      totalMonthBudgetData,
     ]);
 
     const totalMonthSpendDB = Number(data[0][0].value);
     const totalYearSpendDB = Number(data[1][0].value);
     const totalMonthIncomeDB = Number(data[2][0].value);
     const totalYearIncomeDB = Number(data[3][0].value);
+    const totalMonthBudgetDB = Number(data[4][0].value);
 
     let percentageOfIncomeSpentMonth: number | string;
     let percentageOfIncomeSpentYear: number | string;
@@ -263,6 +270,14 @@ export async function fetchCardData(
       totalYearIncomeDB - totalYearSpendDB,
     );
 
+    const totalMonthBudget = totalMonthBudgetDB
+      ? formatCurrency(totalMonthBudgetDB * 100) //convert from cents to dollars
+      : formatCurrency(0);
+    //Calculate total year budget
+    const totalYearBudget = totalMonthBudgetDB
+      ? formatCurrency(totalMonthBudgetDB * 12)
+      : formatCurrency(0);
+
     return {
       totalMonthSpend,
       totalMonthIncome,
@@ -272,6 +287,8 @@ export async function fetchCardData(
       totalYearSpendIncome,
       percentageOfIncomeSpentMonth,
       percentageOfIncomeSpentYear,
+      totalMonthBudget,
+      totalYearBudget,
     };
   } catch (error) {
     console.error("Database Error:", error);

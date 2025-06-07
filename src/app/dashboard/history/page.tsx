@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { Metadata } from "next";
-import { Card } from "../../ui/dashboard/cards";
+import { Card, Cards } from "../../ui/dashboard/cards";
 import {
   fetchCardData,
   fetchEssentialSpendDataByMonth,
@@ -16,7 +16,6 @@ import EssentialExpensesMonthChart from "@/app/ui/dashboard/essential-expenses-c
 import Filter from "@/app/ui/dashboard/month-year-filter";
 import { months } from "@/app/lib/data/months";
 import years from "@/app/lib/data/years.json";
-import dashboardMessages from "../../lib/data/messages/dashboard.json";
 
 export const metadata: Metadata = {
   title: "History",
@@ -43,21 +42,6 @@ export default async function Page({
 
   const currentYear = searchParams?.year || new Date().getFullYear();
   const currentMonth = searchParams?.month || new Date().getMonth() + 1;
-
-  const {
-    totalMonthSpend,
-    totalMonthIncome,
-    totalYearSpend,
-    totalYearIncome,
-    totalMonthSpendIncome,
-    totalYearSpendIncome,
-    percentageOfIncomeSpentMonth,
-    percentageOfIncomeSpentYear,
-  } = await fetchCardData(
-    session.user.id,
-    currentMonth.toString(),
-    currentYear.toString(),
-  );
 
   const spendByMonth = await fetchSpendDataByMonth(
     session.user.id,
@@ -102,26 +86,14 @@ export default async function Page({
 
   let spendByCategoryMap;
 
-  let totalSpendValue;
-  let totalIncomeValue;
-  let totalSpendIncomeValue;
-  let totalSpendIncomePercentage;
   if (currentPeriod === "Month") {
-    totalSpendValue = totalMonthSpend;
-    totalIncomeValue = totalMonthIncome;
-    totalSpendIncomeValue = totalMonthSpendIncome;
     spendByCategoryMap = new Map(
       spendByCategoryMonthly.map((item) => [item.category, item.total]),
     );
-    totalSpendIncomePercentage = percentageOfIncomeSpentMonth;
   } else {
-    totalSpendValue = totalYearSpend;
-    totalIncomeValue = totalYearIncome;
-    totalSpendIncomeValue = totalYearSpendIncome;
     spendByCategoryMap = new Map(
       spendByCategoryYearly.map((item) => [item.category, item.total]),
     );
-    totalSpendIncomePercentage = percentageOfIncomeSpentYear;
   }
 
   const sortedMonths = Object.entries(months).sort(([keyA], [keyB]) =>
@@ -132,26 +104,12 @@ export default async function Page({
     <main>
       <h1 className={`mb-4 text-xl md:text-2xl`}>History</h1>
       <Filter months={sortedMonths} years={years} />
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <Card
-          title={dashboardMessages.dashboard.cards.currentSpend}
-          value={totalSpendValue}
-          type="month"
-        />
-        <Card
-          title={dashboardMessages.dashboard.cards.currentIncome}
-          value={totalIncomeValue}
-          type="year"
-        />
-        <Card
-          title={dashboardMessages.dashboard.cards.savings}
-          value={totalSpendIncomeValue}
-          type="spendIncome"
-        />
-        <Card
-          title={dashboardMessages.dashboard.cards.percentage}
-          value={totalSpendIncomePercentage}
-          type="percentage"
+      <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+        <Cards
+          currentPeriod={currentPeriod}
+          currentMonth={currentMonth}
+          currentYear={currentYear}
+          userId={session.user.id}
         />
       </div>
       <div className="hidden md:block">
