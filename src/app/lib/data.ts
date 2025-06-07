@@ -1,5 +1,5 @@
 import { use } from "react";
-import { transactions } from "../../../drizzle/schema";
+import { transactions, userBudgetSettings } from "../../../drizzle/schema";
 import { db } from "./db";
 import { TransactionForm } from "./definitions";
 import { formatCurrency, formatPercentage } from "./utils";
@@ -441,5 +441,23 @@ export async function fetchSpendDataByCategoryMonthly(
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch card data.");
+  }
+}
+
+export async function fetchUserBudgetSettings(userId: string) {
+  try {
+    const data = await db
+      .select({
+        id: userBudgetSettings.id,
+        userId: userBudgetSettings.userId,
+        category: userBudgetSettings.category,
+        budget: userBudgetSettings.budget,
+      })
+      .from(userBudgetSettings)
+      .where(eq(userBudgetSettings.userId, parseInt(userId)));
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch user budget settings.");
   }
 }
