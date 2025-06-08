@@ -275,7 +275,7 @@ export async function fetchCardData(
       : formatCurrency(0);
     //Calculate total year budget
     const totalYearBudget = totalMonthBudgetDB
-      ? formatCurrency(totalMonthBudgetDB * 12)
+      ? formatCurrency(totalMonthBudgetDB * 100 * 12)
       : formatCurrency(0);
 
     return {
