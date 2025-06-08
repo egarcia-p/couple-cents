@@ -40,6 +40,10 @@ export default async function Page({
     currentPeriod = "Year";
   }
 
+  const sortedMonths = Object.entries(months).sort(([keyA], [keyB]) =>
+    keyA.localeCompare(keyB),
+  );
+
   //if year and month are not provided, return <h1>Select a year and month</h1>
   if (!searchParams?.year && !searchParams?.month) {
     return (
@@ -47,7 +51,7 @@ export default async function Page({
         <h1 className={`mb-4 text-xl md:text-2xl`}>
           Please select a year and month
         </h1>
-        <Filter months={Object.entries(months)} years={years} />
+        <Filter months={sortedMonths} years={years} />
       </main>
     );
   }
@@ -107,10 +111,6 @@ export default async function Page({
       spendByCategoryYearly.map((item) => [item.category, item.total]),
     );
   }
-
-  const sortedMonths = Object.entries(months).sort(([keyA], [keyB]) =>
-    keyA.localeCompare(keyB),
-  );
 
   return (
     <main>
