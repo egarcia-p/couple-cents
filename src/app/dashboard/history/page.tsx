@@ -40,6 +40,18 @@ export default async function Page({
     currentPeriod = "Year";
   }
 
+  //if year and month are not provided, return <h1>Select a year and month</h1>
+  if (!searchParams?.year && !searchParams?.month) {
+    return (
+      <main>
+        <h1 className={`mb-4 text-xl md:text-2xl`}>
+          Please select a year and month
+        </h1>
+        <Filter months={Object.entries(months)} years={years} />
+      </main>
+    );
+  }
+
   const currentYear = searchParams?.year || new Date().getFullYear();
   const currentMonth = searchParams?.month || new Date().getMonth() + 1;
 
