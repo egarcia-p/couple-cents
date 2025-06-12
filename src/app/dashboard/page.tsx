@@ -9,6 +9,7 @@ import {
   fetchSpendDataByCategory,
   fetchSpendDataByCategoryMonthly,
   fetchSpendDataByMonth,
+  fetchUserBudgetByMonth,
 } from "../lib/data";
 import ExpensesMonthChart from "../ui/dashboard/expenses-month-chart";
 import ExpensesCategoryChart from "../ui/dashboard/expenses-category-chart";
@@ -34,6 +35,9 @@ export default async function Page({
 
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
+
+  //get budget
+  const totalBudgetByMonth = await fetchUserBudgetByMonth(session.user.id);
 
   const spendByMonth = await fetchSpendDataByMonth(
     session.user.id,
@@ -105,6 +109,7 @@ export default async function Page({
           <ExpensesMonthChart
             dataExpenses={spendByMonthMap}
             dataIncome={incomeByMonthMap}
+            budget={Number(totalBudgetByMonth)} // Replace with your budget value
           />
           <EssentialExpensesMonthChart
             dataEssentialExpenses={spendEssentialByMonthMap}

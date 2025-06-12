@@ -478,3 +478,19 @@ export async function fetchUserBudgetSettings(userId: string) {
     throw new Error("Failed to fetch user budget settings.");
   }
 }
+
+export async function fetchUserBudgetByMonth(userId: string) {
+  try {
+    const data = await db
+      .select({
+        total: sql`sum(budget)`,
+      })
+      .from(userBudgetSettings)
+      .where(eq(userBudgetSettings.userId, parseInt(userId)));
+
+    return data ? data[0].total : 0;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch user budget settings by month.");
+  }
+}

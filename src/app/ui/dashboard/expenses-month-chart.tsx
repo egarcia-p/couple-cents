@@ -5,16 +5,20 @@ import dynamic from "next/dynamic";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
 import options from "./financial-chart-options";
+import type { ChartData } from "chart.js";
 
 Chart.register(CategoryScale);
 
-const Bar = dynamic(() => import("react-chartjs-2").then((mod) => mod.Bar), {
-  ssr: false,
-});
+const ChartComponent = dynamic(
+  () => import("react-chartjs-2").then((mod) => mod.Chart),
+  { ssr: false },
+);
 
-export default function ExpensesMonthChart({ dataExpenses, dataIncome }: any) {
-  //Conver Info into data array
-
+export default function ExpensesMonthChart({
+  dataExpenses,
+  dataIncome,
+  budget,
+}: any) {
   const monthsDisplay = new Map<number, string>();
   monthsDisplay.set(1, "January");
   monthsDisplay.set(2, "February");
@@ -39,10 +43,11 @@ export default function ExpensesMonthChart({ dataExpenses, dataIncome }: any) {
     monthArray.push(monthsDisplay.get(month)!);
   });
 
-  const data = {
+  const data: ChartData<"bar" | "line"> = {
     labels: monthArray,
     datasets: [
       {
+        type: "bar",
         label: "Expenses",
         data: spendArray,
         backgroundColor: ["rgba(255, 99, 132, 0.2)"],
@@ -50,6 +55,7 @@ export default function ExpensesMonthChart({ dataExpenses, dataIncome }: any) {
         borderWidth: 1,
       },
       {
+        type: "bar",
         label: "Income",
         data: incomeArray,
         backgroundColor: [
@@ -60,6 +66,16 @@ export default function ExpensesMonthChart({ dataExpenses, dataIncome }: any) {
         ],
         borderWidth: 1,
       },
+      {
+        type: "line",
+        label: "Budget",
+        data: new Array(12).fill(budget),
+        borderColor: "rgba(75, 92, 192, 1)",
+        borderDash: [5, 5], // This creates the dotted effect
+        borderWidth: 2,
+        fill: false,
+        tension: 0.1,
+      },
     ],
   };
   return (
@@ -69,7 +85,7 @@ export default function ExpensesMonthChart({ dataExpenses, dataIncome }: any) {
       {
         <div className="rounded-xl bg-gray-50 p-4">
           <div className="sm:grid-cols-13 mt-0 grid grid-cols-12 items-end gap-2 rounded-md bg-white p-4 md:gap-4">
-            <Bar data={data} options={options} />
+            <ChartComponent type="bar" data={data} options={options} />
           </div>
           <div className="flex items-center pb-2 pt-6">
             <CalendarIcon className="h-5 w-5 text-gray-500" />
