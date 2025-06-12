@@ -14,11 +14,17 @@ const ChartComponent = dynamic(
   { ssr: false },
 );
 
+interface ExpensesMonthChartProps {
+  dataExpenses: Map<number, number>;
+  dataIncome: Map<number, number>;
+  budget: number;
+}
+
 export default function ExpensesMonthChart({
   dataExpenses,
   dataIncome,
   budget,
-}: any) {
+}: ExpensesMonthChartProps) {
   const monthsDisplay = new Map<number, string>();
   monthsDisplay.set(1, "January");
   monthsDisplay.set(2, "February");
@@ -38,8 +44,8 @@ export default function ExpensesMonthChart({
   let incomeArray = new Array<number>();
   let monthArray = new Array<string>();
   months.map((month) => {
-    spendArray.push(dataExpenses.get(month) | 0);
-    incomeArray.push(dataIncome.get(month) | 0);
+    spendArray.push(dataExpenses.get(month) ?? 0);
+    incomeArray.push(dataIncome.get(month) ?? 0);
     monthArray.push(monthsDisplay.get(month)!);
   });
 

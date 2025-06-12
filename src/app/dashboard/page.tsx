@@ -68,16 +68,16 @@ export default async function Page({
 
   //create a map from spendbymonth with key as item.month and incomebymonth
   const spendByMonthMap = new Map(
-    spendByMonth.map((item) => [item.month, item.total]),
+    spendByMonth.map((item) => [Number(item.month), item.total]),
   );
   const incomeByMonthMap = new Map(
-    incomeByMonth.map((item) => [item.month, item.total]),
+    incomeByMonth.map((item) => [Number(item.month), item.total]),
   );
   const spendEssentialByMonthMap = new Map(
-    spendEssentialByMonth.map((month) => [month.month, month.total]),
+    spendEssentialByMonth.map((month) => [Number(month.month), month.total]),
   );
   const spendNonEssentialByMonthMap = new Map(
-    spendNonEssentialByMonth.map((month) => [month.month, month.total]),
+    spendNonEssentialByMonth.map((month) => [Number(month.month), month.total]),
   );
 
   let spendByCategoryMap;
