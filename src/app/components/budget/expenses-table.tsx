@@ -6,6 +6,7 @@ import {
   getBudgetsExpensesPerCategorySettings,
   getBudgetsPerCategorySettings,
 } from "@/app/lib/helpers/budget";
+import { formatCurrency, formatPercentage } from "@/app/lib/utils";
 
 export default function ExpensesTable({
   budgetSettings,
@@ -69,10 +70,11 @@ export default function ExpensesTable({
             <tbody className="bg-white">
               {budgetVsExpenses.map((category) => {
                 const variance = Number(category.budget) - category.expense;
-                const percentage = category.budget
-                  ? ((variance / Number(category.budget)) * 100).toFixed(2)
-                  : "0.00";
-
+                const percentage = // Percentage for formatPercentage in 0.00 to 1.00
+                  category.budget && Number(category.budget) !== 0
+                    ? variance / Number(category.budget)
+                    : 0;
+                console.log(percentage);
                 return (
                   <tr
                     key={category.category}
@@ -82,24 +84,24 @@ export default function ExpensesTable({
                       {category.category}
                     </td>
                     <td className="whitespace-nowrap px-3 py-3">
-                      {category.expense}
+                      {formatCurrency(Number(category.expense) ?? "0", false)}
                     </td>
                     <td className="whitespace-nowrap px-3 py-3">
-                      {category.budget}
+                      {formatCurrency(Number(category.budget) ?? "0", false)}
                     </td>
                     <td
                       className={`whitespace-nowrap px-3 py-3 ${
                         variance < 0 ? "text-red-500" : "text-green-500"
                       }`}
                     >
-                      {variance}
+                      {formatCurrency(Number(variance) ?? "0", false)}
                     </td>
                     <td
                       className={`whitespace-nowrap px-3 py-3 ${
                         variance < 0 ? "text-red-500" : "text-green-500"
                       }`}
                     >
-                      {percentage}%
+                      {formatPercentage(percentage)}
                     </td>
                   </tr>
                 );

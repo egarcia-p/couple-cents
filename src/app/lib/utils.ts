@@ -1,5 +1,9 @@
-export const formatCurrency = (amount: number) => {
-  return (amount / 100).toLocaleString("en-US", {
+export const formatCurrency = (amount: number, isCents: boolean = true) => {
+  if (isCents) {
+    // If the amount is in cents, convert it to $ base 100
+    amount = amount / 100;
+  }
+  return amount.toLocaleString("en-US", {
     style: "currency",
     currency: "MXN",
   });
