@@ -24,7 +24,7 @@ const links = [
     href: "/dashboard/history",
     icon: ChartBarSquareIcon,
   },
-  { name: "Budget", href: "/dashboard/budget", icon: TableCellsIcon },
+  { name: "Budget Tracker", href: "/dashboard/budget", icon: TableCellsIcon },
   { name: "Profile", href: "/dashboard/profile", icon: UserCircleIcon },
 ];
 
