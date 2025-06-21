@@ -410,7 +410,7 @@ export async function fetchSpendDataByCategory(userId: string, year: string) {
   try {
     const spendDataByCategory = await db
       .select({
-        category: sql`transactions.category`,
+        category: sql<string>`transactions.category`,
         total: sql`sum(transactions.amount) as total`.mapWith({
           mapFromDriverValue: (value: any) => {
             const mappedValue = value / 100;
@@ -439,7 +439,7 @@ export async function fetchSpendDataByCategoryMonthly(
   try {
     const spendDataByCategory = await db
       .select({
-        category: sql`transactions.category`,
+        category: sql<string>`transactions.category`,
         total: sql`sum(transactions.amount) as total`.mapWith({
           mapFromDriverValue: (value: any) => {
             const mappedValue = value / 100;

@@ -1,0 +1,13 @@
+{
+  "budget": {
+    "title": "Budget Tracker Dashboard",
+    "expenseTable": {
+      "title": "Expenses by Category",
+      "columns": {
+        "category": "Category",
+        "expense": "Actual Expense",
+        "budget": "Budget Target"
+      }
+    }
+  }
+}
