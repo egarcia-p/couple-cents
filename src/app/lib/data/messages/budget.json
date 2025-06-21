@@ -8,6 +8,13 @@
         "expense": "Actual Expense",
         "budget": "Budget Target"
       }
+    },
+    "varianceTable": {
+      "title": "Variance to Budget",
+      "columns": {
+        "variance": "Variance",
+        "percentage": "Percentage of Budget"
+      }
     }
   }
 }
