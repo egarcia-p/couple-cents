@@ -4,6 +4,7 @@ import {
   BanknotesIcon,
   ChartBarSquareIcon,
   HomeIcon,
+  TableCellsIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
@@ -23,6 +24,7 @@ const links = [
     href: "/dashboard/history",
     icon: ChartBarSquareIcon,
   },
+  { name: "Budget Tracker", href: "/dashboard/budget", icon: TableCellsIcon },
   { name: "Profile", href: "/dashboard/profile", icon: UserCircleIcon },
 ];
 
