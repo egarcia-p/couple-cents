@@ -1,8 +1,8 @@
 import { use } from "react";
-import { transactions } from "../../../drizzle/schema";
+import { transactions, userBudgetSettings } from "../../../drizzle/schema";
 import { db } from "./db";
 import { TransactionForm } from "./definitions";
-import { formatCurrency } from "./utils";
+import { formatCurrency, formatPercentage } from "./utils";
 import { and, or, ilike, sql, eq, count, sum, desc } from "drizzle-orm";
 import _categories from "@/app/lib/data/categories.json";
 import _categoriesIncome from "@/app/lib/data/categoriesForIncome.json";
@@ -220,23 +220,63 @@ export async function fetchCardData(
     `,
       );
 
+    const totalMonthBudgetData = db
+      .select({ value: sum(userBudgetSettings.budget) })
+      .from(userBudgetSettings)
+      .where(sql`${userBudgetSettings.userId} = ${userId}`);
+
     const data = await Promise.all([
       totalMonthSpendData,
       totalYearSpendData,
       totalMonthIncomeData,
       totalYearIncomeData,
+      totalMonthBudgetData,
     ]);
 
-    const totalMonthSpend = formatCurrency(Number(data[0][0].value) ?? "0");
-    const totalYearSpend = formatCurrency(Number(data[1][0].value) ?? "0");
-    const totalMonthIncome = formatCurrency(Number(data[2][0].value) ?? "0");
-    const totalYearIncome = formatCurrency(Number(data[3][0].value) ?? "0");
+    const totalMonthSpendDB = Number(data[0][0].value);
+    const totalYearSpendDB = Number(data[1][0].value);
+    const totalMonthIncomeDB = Number(data[2][0].value);
+    const totalYearIncomeDB = Number(data[3][0].value);
+    const totalMonthBudgetDB = Number(data[4][0].value);
+
+    let percentageOfIncomeSpentMonth: number | string;
+    let percentageOfIncomeSpentYear: number | string;
+    if (totalMonthIncomeDB > 0) {
+      percentageOfIncomeSpentMonth = totalMonthSpendDB / totalMonthIncomeDB;
+      percentageOfIncomeSpentMonth = formatPercentage(
+        Number(percentageOfIncomeSpentMonth),
+      );
+    } else {
+      percentageOfIncomeSpentMonth = "No Income";
+    }
+
+    if (totalYearIncomeDB > 0) {
+      percentageOfIncomeSpentYear = totalYearSpendDB / totalYearIncomeDB;
+      percentageOfIncomeSpentYear = formatPercentage(
+        Number(percentageOfIncomeSpentYear),
+      );
+    } else {
+      percentageOfIncomeSpentYear = "No Income";
+    }
+
+    const totalMonthSpend = formatCurrency(totalMonthSpendDB ?? "0");
+    const totalYearSpend = formatCurrency(totalYearSpendDB ?? "0");
+    const totalMonthIncome = formatCurrency(totalMonthIncomeDB ?? "0");
+    const totalYearIncome = formatCurrency(totalYearIncomeDB ?? "0");
     const totalMonthSpendIncome = formatCurrency(
-      Number(data[2][0].value) - Number(data[0][0].value) ?? "0",
+      totalMonthIncomeDB - totalMonthSpendDB,
     );
     const totalYearSpendIncome = formatCurrency(
-      Number(data[3][0].value) - Number(data[1][0].value) ?? "0",
+      totalYearIncomeDB - totalYearSpendDB,
     );
+
+    const totalMonthBudget = totalMonthBudgetDB
+      ? formatCurrency(totalMonthBudgetDB * 100) //convert from cents to dollars
+      : formatCurrency(0);
+    //Calculate total year budget
+    const totalYearBudget = totalMonthBudgetDB
+      ? formatCurrency(totalMonthBudgetDB * 100 * 12)
+      : formatCurrency(0);
 
     return {
       totalMonthSpend,
@@ -245,6 +285,10 @@ export async function fetchCardData(
       totalYearIncome,
       totalMonthSpendIncome,
       totalYearSpendIncome,
+      percentageOfIncomeSpentMonth,
+      percentageOfIncomeSpentYear,
+      totalMonthBudget,
+      totalYearBudget,
     };
   } catch (error) {
     console.error("Database Error:", error);
@@ -366,7 +410,7 @@ export async function fetchSpendDataByCategory(userId: string, year: string) {
   try {
     const spendDataByCategory = await db
       .select({
-        category: sql`transactions.category`,
+        category: sql<string>`transactions.category`,
         total: sql`sum(transactions.amount) as total`.mapWith({
           mapFromDriverValue: (value: any) => {
             const mappedValue = value / 100;
@@ -395,7 +439,7 @@ export async function fetchSpendDataByCategoryMonthly(
   try {
     const spendDataByCategory = await db
       .select({
-        category: sql`transactions.category`,
+        category: sql<string>`transactions.category`,
         total: sql`sum(transactions.amount) as total`.mapWith({
           mapFromDriverValue: (value: any) => {
             const mappedValue = value / 100;
@@ -414,5 +458,39 @@ export async function fetchSpendDataByCategoryMonthly(
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch card data.");
+  }
+}
+
+export async function fetchUserBudgetSettings(userId: string) {
+  try {
+    const data = await db
+      .select({
+        id: userBudgetSettings.id,
+        userId: userBudgetSettings.userId,
+        category: userBudgetSettings.category,
+        budget: userBudgetSettings.budget,
+      })
+      .from(userBudgetSettings)
+      .where(eq(userBudgetSettings.userId, parseInt(userId)));
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch user budget settings.");
+  }
+}
+
+export async function fetchUserBudgetByMonth(userId: string) {
+  try {
+    const data = await db
+      .select({
+        total: sql`sum(budget)`,
+      })
+      .from(userBudgetSettings)
+      .where(eq(userBudgetSettings.userId, parseInt(userId)));
+
+    return data ? data[0].total : 0;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch user budget settings by month.");
   }
 }

@@ -111,6 +111,13 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
+### Database Migrations
+
+1. Edit the schema under `schema.ts`
+2. run `npm run generate` if there is an error with migration not up to date run `npx drizzle-kit up`
+3. then apply migrations by runnint `npx drizzle-kit migrate`
+4. confirm changes in the database
+
 ### Testing
 
 ### Deploy on Vercel

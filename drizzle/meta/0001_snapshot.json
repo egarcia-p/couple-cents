@@ -1,4 +1,6 @@
 {
+  "id": "2726a274-7cfc-42b5-af84-4b4f60938149",
+  "prevId": "84e4d38b-85a3-49e0-8ea1-9bcf850d03b9",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
@@ -211,6 +213,40 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+    "public.user_budget_settings": {
+      "name": "user_budget_settings",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "budget": {
+          "name": "budget",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.users": {
       "name": "users",
       "schema": "",
@@ -305,10 +341,8 @@
   "enums": {},
   "schemas": {},
   "_meta": {
+    "columns": {},
     "schemas": {},
-    "tables": {},
-    "columns": {}
-  },
-  "id": "84e4d38b-85a3-49e0-8ea1-9bcf850d03b9",
-  "prevId": "00000000-0000-0000-0000-000000000000"
+    "tables": {}
+  }
 }
