@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { DownloadCSVButton, GenerateCSVButton } from "./buttons";
-import { fetchAllTransactions } from "@/app/lib/data";
 
 import useSWR from "swr";
 
@@ -27,7 +26,7 @@ const FetchResults: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
     for (let i = 0; i < array.length; i++) {
       let line = "";
       for (let index in array[i]) {
-        if (line !== "") line += ",";
+        if (line !== "") line += "|";
 
         line += array[i][index];
       }

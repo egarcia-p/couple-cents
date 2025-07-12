@@ -33,8 +33,11 @@ export async function fetchAllTransactions(userId: string) {
         note: transactions.note,
         amount: sql<string>`amount`.mapWith({
           mapFromDriverValue: (value: any) => {
-            //let mappedValue = value / 100;
-            const mappedValue = formatCurrency(Number(value) ?? "0");
+            if (value === null || value === undefined) {
+              return "0";
+            }
+            let mappedValue = value / 100;
+
             return mappedValue;
           },
         }),

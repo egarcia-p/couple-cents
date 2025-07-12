@@ -1,7 +1,4 @@
-import {
-  fetchAllTransactions,
-  fetchFilteredTransactions,
-} from "@/app/lib/data";
+import { fetchFilteredTransactions } from "@/app/lib/data";
 import { auth } from "../../../auth";
 import { DeleteTransaction, UpdateTransaction } from "./buttons";
 import { formatDateToLocal } from "@/app/lib/utils";
