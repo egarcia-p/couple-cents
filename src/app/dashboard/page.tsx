@@ -54,6 +54,7 @@ export default async function Page({
   const spendByCategoryMonthly = await fetchSpendDataByCategoryMonthly(
     session.user.id,
     currentMonth.toString(),
+    currentYear.toString(),
   );
   const spendEssentialByMonth = await fetchEssentialSpendDataByMonth(
     session.user.id,
