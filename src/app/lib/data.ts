@@ -438,6 +438,7 @@ export async function fetchSpendDataByCategory(userId: string, year: string) {
 export async function fetchSpendDataByCategoryMonthly(
   userId: string,
   month: string,
+  year: string,
 ) {
   try {
     const spendDataByCategory = await db
@@ -453,10 +454,10 @@ export async function fetchSpendDataByCategoryMonthly(
       .from(transactions)
       .where(
         sql`EXTRACT(MONTH FROM ${transactions.transactionDate}) = ${month}
-    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true`,
+        AND EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
+        AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true`,
       )
       .groupBy(sql`1`);
-
     return spendDataByCategory;
   } catch (error) {
     console.error("Database Error:", error);
@@ -475,6 +476,8 @@ export async function fetchUserBudgetSettings(userId: string) {
       })
       .from(userBudgetSettings)
       .where(eq(userBudgetSettings.userId, parseInt(userId)));
+
+    console.log("User Budget Settings Data:", data);
     return data;
   } catch (error) {
     console.error("Database Error:", error);
