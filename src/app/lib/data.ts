@@ -477,7 +477,6 @@ export async function fetchUserBudgetSettings(userId: string) {
       .from(userBudgetSettings)
       .where(eq(userBudgetSettings.userId, parseInt(userId)));
 
-    console.log("User Budget Settings Data:", data);
     return data;
   } catch (error) {
     console.error("Database Error:", error);
