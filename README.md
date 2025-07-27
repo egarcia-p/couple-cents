@@ -143,6 +143,15 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<!-- Versioning -->
+
+This project follows the versioning using tags with [semantic-version](https://github.com/PaulHatch/semantic-version).
+
+Use any of these tags in your final commit in the featre or bug branch to be merged:
+`(PATCH)`
+`(MINOR)`
+`(MAJOR)`
+
 <!-- LICENSE -->
 
 ## License
