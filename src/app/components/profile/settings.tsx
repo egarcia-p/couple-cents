@@ -54,10 +54,11 @@ export default function UserSettings({
   };
 
   useEffect(() => {
-    const total = Object.values(budgetValues).reduce(
+    let total = Object.values(budgetValues).reduce(
       (sum, value) => sum + value,
       0,
     );
+    total *= 12;
     setTotalBudget(total);
   }, [budgetValues]);
 
