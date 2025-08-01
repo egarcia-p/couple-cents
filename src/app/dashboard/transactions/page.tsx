@@ -26,20 +26,15 @@ export default async function Page({
   const query = searchParams?.query || "";
   var date = new Date();
   const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
-    .toISOString()
+    .toLocaleDateString()
     .split("T")[0]
     .replace(/-/g, " ");
   const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
-    .toISOString()
+    .toLocaleDateString()
     .split("T")[0]
     .replace(/-/g, " ");
   const dates = searchParams?.dates || firstDay + "to" + lastDay;
   const totalPages = await fetchTransactionPages(query, dates, session.user.id);
-
-  console.warn("Date: new Date()", date);
-  console.warn("Date: firstDay", firstDay);
-  console.warn("Date: lastDay", lastDay);
-  console.warn("Date: dates", dates);
 
   return (
     <div className="w-full">
