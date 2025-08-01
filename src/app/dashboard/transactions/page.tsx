@@ -36,6 +36,11 @@ export default async function Page({
   const dates = searchParams?.dates || firstDay + "to" + lastDay;
   const totalPages = await fetchTransactionPages(query, dates, session.user.id);
 
+  console.warn("Date: new Date()", date);
+  console.warn("Date: firstDay", firstDay);
+  console.warn("Date: lastDay", lastDay);
+  console.warn("Date: dates", dates);
+
   return (
     <div className="w-full">
       <div className="mt-4 flex justify-between gap-2 md:mt-8">
