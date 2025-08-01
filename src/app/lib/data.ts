@@ -95,6 +95,10 @@ export async function fetchFilteredTransactions(
   const startDate = dateArray[0];
   const endDate = dateArray[1];
 
+  const matchingCodes = Object.entries(categoriesMap)
+    .filter(([code, name]) => name.toLowerCase().includes(query.toLowerCase()))
+    .map(([code]) => code);
+
   try {
     const data = await db
       .select({
@@ -124,7 +128,7 @@ export async function fetchFilteredTransactions(
         and(
           or(
             // ilike(transactions.transactionDate, `%${query}%`),
-            ilike(transactions.category, `%${query}%`),
+            ...matchingCodes.map((code) => eq(transactions.category, code)),
             ilike(transactions.establishment, `%${query}%`),
             ilike(transactions.note, `%${query}%`),
             // ilike(transactions.amount, `%${query}%`),
