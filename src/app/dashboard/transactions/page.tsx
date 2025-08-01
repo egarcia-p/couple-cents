@@ -7,6 +7,7 @@ import DashboardTable from "@/app/ui/transactions/table";
 import DashboardTableMobile from "@/app/ui/transactions/table-mobile";
 import { auth } from "@/auth";
 import messages from "@/app/lib/data/messages/transactions.json";
+import { toZonedTime, format } from "date-fns-tz";
 
 export default async function Page({
   searchParams,
@@ -24,7 +25,21 @@ export default async function Page({
 
   const currentPage = Number(searchParams?.page) || 1;
   const query = searchParams?.query || "";
-  var date = new Date();
+
+  //TBD Fix according to the user's timezone
+  const timeZone = "America/Mexico_City";
+  const utcDate = new Date();
+  const mexicoDate = toZonedTime(utcDate, timeZone);
+  const formattedMexicoDate = format(mexicoDate, "yyyy-MM-dd'T'HH:mm:ssXXX", {
+    timeZone,
+  });
+  const formattedMexicoDateParts = formattedMexicoDate.split("T")[0];
+  // Create first and last day of the month based on the user's timezone
+  // This will ensure that the date range is correct regardless of the user's timezone
+  // This is a temporary fix, ideally we should use the user's timezone to get the correct
+  // first and last day of the month.
+  const date = new Date(formattedMexicoDateParts);
+
   const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
     .toLocaleDateString()
     .split("T")[0]
@@ -36,7 +51,9 @@ export default async function Page({
   const dates = searchParams?.dates || firstDay + "to" + lastDay;
   const totalPages = await fetchTransactionPages(query, dates, session.user.id);
 
-  console.warn("Date: new Date()", date);
+  console.warn("Date: new Date()", utcDate);
+  console.warn("Date: mexicoDate", mexicoDate);
+  console.warn("Definitive date:", date);
   console.warn("Date: firstDay", firstDay);
   console.warn("Date: lastDay", lastDay);
   console.warn("Date: dates", dates);
