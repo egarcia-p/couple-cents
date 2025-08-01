@@ -6,6 +6,7 @@ import Pagination from "@/app/ui/transactions/pagination";
 import DashboardTable from "@/app/ui/transactions/table";
 import DashboardTableMobile from "@/app/ui/transactions/table-mobile";
 import { auth } from "@/auth";
+import messages from "@/app/lib/data/messages/transactions.json";
 
 export default async function Page({
   searchParams,
@@ -58,7 +59,7 @@ export default async function Page({
       </div>
       <div className="hidden w-full md:block">
         <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-          <Search placeholder="Search invoices..." />
+          <Search placeholder={`${messages.transactions.searchPlaceholder}`} />
 
           <div className="flex justify-center">
             <Pagination totalPages={totalPages} />
@@ -66,10 +67,9 @@ export default async function Page({
         </div>
       </div>
       <div className="block w-full md:hidden">
-        <div className="flex flex-row justify-center items-center">
-          <Pagination totalPages={totalPages} />
-        </div>
+        <Search placeholder={`${messages.transactions.searchPlaceholder}`} />
       </div>
+
       <div className="hidden w-full md:block">
         <DashboardTable
           query={query}
@@ -85,6 +85,9 @@ export default async function Page({
           currentPage={currentPage}
           userId={session.user.id}
         />
+        <div className="flex flex-row p-2 justify-center items-center">
+          <Pagination totalPages={totalPages} />
+        </div>
       </div>
     </div>
   );
