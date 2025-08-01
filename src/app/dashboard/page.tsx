@@ -36,6 +36,9 @@ export default async function Page({
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
 
+  console.warn("Dasboard: currentMonth", currentMonth);
+  console.warn("Dasboard: currentYear", currentYear);
+
   //get budget
   const totalBudgetByMonth = await fetchUserBudgetByMonth(session.user.id);
 
