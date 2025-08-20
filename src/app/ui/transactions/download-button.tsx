@@ -10,11 +10,18 @@ const fetcher = (...args: [RequestInfo, RequestInit?]): Promise<any> =>
 interface DownloadCSVProps {
   userId: string; // Array of objects with string keys and any type values
   fileName: string;
+  dates: string;
+  query: string;
 }
 
-const FetchResults: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
-  const { data, error, isLoading } = useSWR(
-    `/api/transactions/${userId}`,
+const FetchResults: React.FC<DownloadCSVProps> = ({
+  userId,
+  fileName,
+  dates,
+  query,
+}) => {
+  const { data, error } = useSWR(
+    `/api/transactions/${userId}/?query=${query}&dates=${dates}`,
     fetcher,
   );
 
@@ -52,7 +59,12 @@ const FetchResults: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
   return <DownloadCSVButton clickHandler={downloadCSV}></DownloadCSVButton>;
 };
 
-const DownloadCSV: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
+const DownloadCSV: React.FC<DownloadCSVProps> = ({
+  userId,
+  fileName,
+  dates,
+  query,
+}) => {
   const [startFetching, setStartFetching] = React.useState(false);
 
   const handleChange = (e: any) => {
@@ -67,7 +79,14 @@ const DownloadCSV: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
     <>
       <GenerateCSVButton clickHandler={handleClick}></GenerateCSVButton>
       <br />
-      {startFetching && <FetchResults userId={userId} fileName={fileName} />}
+      {startFetching && (
+        <FetchResults
+          userId={userId}
+          fileName={fileName}
+          dates={dates}
+          query={query}
+        />
+      )}
     </>
   );
 };
