@@ -9,6 +9,7 @@ import Link from "next/link";
 import IconButton from "./Button/icon-button";
 import ConfirmDialog from "./confirm-dialog";
 import DeleteTransactionModal from "./delete-transaction-modal";
+import messages from "@/app/lib/data/messages/buttons.json";
 
 export function CreateTransaction({ isExpense }: { isExpense: boolean }) {
   return (
@@ -20,7 +21,7 @@ export function CreateTransaction({ isExpense }: { isExpense: boolean }) {
       className={`flex h-10 items-center rounded-lg ${!isExpense && "bg-primary-600"} ${isExpense && "bg-red-600"}  px-4 text-sm font-medium text-white transition-colors ${!isExpense && "hover:bg-primary-300"} ${isExpense && "hover:bg-red-300"} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2  ${!isExpense && "focus-visible:outline-primary-600"} ${isExpense && "focus-visible:outline-red-600"} `}
     >
       <span className="hidden md:block">
-        Create
+        {messages.buttons.create}
         {isExpense && " Expense"}
         {!isExpense && " Income"}
       </span>{" "}
@@ -60,19 +61,7 @@ export function DownloadCSVButton({ clickHandler }: DownloadCSVButtonProps) {
       onClick={clickHandler}
       className="flex h-10 items-center rounded-md border m-2 p-2 bg-primary-600 hover:bg-primary-300 px-4 text-sm font-medium text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
     >
-      <span className="">Download CSV</span>
-      <DocumentCurrencyDollarIcon className="w-5" />
-    </button>
-  );
-}
-
-export function GenerateCSVButton({ clickHandler }: DownloadCSVButtonProps) {
-  return (
-    <button
-      onClick={clickHandler}
-      className="flex h-10 items-center rounded-md border m-2 p-2 bg-primary-600 hover:bg-primary-300 px-4 text-sm font-medium text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-    >
-      <span className="">Generate CSV</span>
+      <span className="">{messages.buttons.downloadCsv}</span>
       <DocumentCurrencyDollarIcon className="w-5" />
     </button>
   );
