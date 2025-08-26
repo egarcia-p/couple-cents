@@ -20,8 +20,8 @@ export default async function Home() {
 
       <div className="flex flex-col md:flex-row gap-4">
         <div className=" bg-primary-600 text-secondary pl-12 pr-8 py-12 w-full max-w-md mx-auto gap-2 sm:max-w-xl lg:max-w-full lg:w-1/2 lg:py-24 lg:pl-64 lg:pr-12 lg:rounded-r-lg">
-          <div className="w-48    text-white md:w-80">
-            <Image src={logo} alt="Logo" />
+          <div className="w-48 text-white md:w-80">
+            <Image src={logo} alt="Logo" width={0} height={0} />
           </div>
           <div>
             <h1 className="text-4xl">Couple Cents App</h1>
@@ -46,6 +46,8 @@ export default async function Home() {
               className=" w-full object-cover"
               src={CreditCards}
               alt="Credit cards"
+              width={0}
+              height={0}
             />
           </div>
         </div>
@@ -74,6 +76,8 @@ export default async function Home() {
               className="w-full object-cover"
               src={Bench}
               alt="Credit cards"
+              width={0}
+              height={0}
             />
           </div>
         </div>
