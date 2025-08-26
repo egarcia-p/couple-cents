@@ -3,7 +3,7 @@ import _categories from "@/app/lib/data/categories.json";
 import _categoriesIncome from "@/app/lib/data/categoriesForIncome.json";
 import { auth } from "@/auth";
 import { NextApiRequest, NextApiResponse } from "next";
-import { fetchAllTransactions } from "@/app/lib/data";
+import { fetchAllFilteredTransactions } from "@/app/lib/data";
 
 interface ICategories {
   [key: string]: string;
@@ -31,7 +31,15 @@ export async function GET(
       { status: 401 },
     );
   } else {
-    const data = await fetchAllTransactions(params.userId);
+    const { searchParams } = new URL(req.url);
+    const query = searchParams.get("query") || "";
+    const dates = searchParams.get("dates") || "";
+
+    const data = await fetchAllFilteredTransactions({
+      query: query,
+      userId: params.userId,
+      dates: dates,
+    });
 
     return Response.json({ message: "Success", data }, { status: 200 });
   }

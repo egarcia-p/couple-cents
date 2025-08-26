@@ -14,6 +14,8 @@ interface ICategories {
 
 const categoriesMap: ICategories = { ..._categories, ..._categoriesIncome };
 
+const ITEMS_PER_PAGE = 10;
+
 export async function fetchAllTransactions(userId: string) {
   try {
     const data = await db
@@ -82,7 +84,67 @@ export async function fetchTransactionById(id: string) {
   }
 }
 
-const ITEMS_PER_PAGE = 10;
+export async function fetchAllFilteredTransactions({
+  query,
+  dates,
+  userId,
+}: {
+  query: string;
+  dates: string;
+  userId: string;
+}) {
+  const dateArray = dates.split("to");
+  const startDate = dateArray[0];
+  const endDate = dateArray[1];
+
+  const matchingCodes = Object.entries(categoriesMap)
+    .filter(([code, name]) => name.toLowerCase().includes(query.toLowerCase()))
+    .map(([code]) => code);
+
+  try {
+    const data = await db
+      .select({
+        id: transactions.id,
+        userId: transactions.userId,
+        transactionDate: transactions.transactionDate,
+        category: sql<string>`category`.mapWith({
+          mapFromDriverValue: (value: string) => {
+            const mappedValue = categoriesMap[value];
+            return mappedValue;
+          },
+        }),
+        establishment: transactions.establishment,
+        isExpense: transactions.isExpense,
+        isEssential: transactions.isEssential,
+        note: transactions.note,
+        amount: sql<string>`amount`.mapWith({
+          mapFromDriverValue: (value: any) => {
+            //let mappedValue = value / 100;
+            const mappedValue = formatCurrency(Number(value) ?? "0");
+            return mappedValue;
+          },
+        }),
+      })
+      .from(transactions)
+      .where(
+        and(
+          or(
+            ...matchingCodes.map((code) => eq(transactions.category, code)),
+            ilike(transactions.establishment, `%${query}%`),
+            ilike(transactions.note, `%${query}%`),
+          ),
+          eq(transactions.userId, parseInt(userId)),
+          sql`${transactions.transactionDate} BETWEEN ${startDate} AND ${endDate}`,
+        ),
+      )
+      .orderBy(desc(transactions.transactionDate));
+
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch all transactions filtered.");
+  }
+}
 
 export async function fetchFilteredTransactions(
   query: string,

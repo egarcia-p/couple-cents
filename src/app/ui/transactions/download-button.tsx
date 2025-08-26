@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import { DownloadCSVButton, GenerateCSVButton } from "./buttons";
-
+import { DownloadCSVButton } from "./buttons";
 import useSWR from "swr";
 
 const fetcher = (...args: [RequestInfo, RequestInit?]): Promise<any> =>
@@ -10,12 +9,20 @@ const fetcher = (...args: [RequestInfo, RequestInit?]): Promise<any> =>
 interface DownloadCSVProps {
   userId: string; // Array of objects with string keys and any type values
   fileName: string;
+  dates: string;
+  query: string;
 }
 
-const FetchResults: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
-  const { data, error, isLoading } = useSWR(
-    `/api/transactions/${userId}`,
+const DownloadCSV: React.FC<DownloadCSVProps> = ({
+  userId,
+  fileName,
+  dates,
+  query,
+}) => {
+  const { data, error, mutate } = useSWR(
+    `/api/transactions/${userId}/?query=${query}&dates=${dates}`,
     fetcher,
+    { revalidateOnMount: false }, // Prevent automatic fetching if needed
   );
 
   const convertToCSV = (objArray: Record<string, any>[]): string => {
@@ -27,7 +34,6 @@ const FetchResults: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
       let line = "";
       for (let index in array[i]) {
         if (line !== "") line += "|";
-
         line += array[i][index];
       }
       str += line + "\r\n";
@@ -35,41 +41,25 @@ const FetchResults: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
     return str;
   };
 
-  const downloadCSV = (): void => {
-    const csvData = new Blob([convertToCSV(data.data)], { type: "text/csv" });
-    const csvURL = URL.createObjectURL(csvData);
-    const link = document.createElement("a");
-    link.href = csvURL;
-    link.download = `${fileName}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownload = async () => {
+    // Fetch data only when button is clicked
+    const result = await mutate();
+
+    if (result && result.data) {
+      const csvData = new Blob([convertToCSV(result.data)], {
+        type: "text/csv",
+      });
+      const csvURL = URL.createObjectURL(csvData);
+      const link = document.createElement("a");
+      link.href = csvURL;
+      link.download = `${fileName}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
-  if (error) return <div>failed to load</div>;
-  if (!data) return <div>loading...</div>;
-
-  return <DownloadCSVButton clickHandler={downloadCSV}></DownloadCSVButton>;
-};
-
-const DownloadCSV: React.FC<DownloadCSVProps> = ({ userId, fileName }) => {
-  const [startFetching, setStartFetching] = React.useState(false);
-
-  const handleChange = (e: any) => {
-    setStartFetching(false);
-  };
-
-  const handleClick = () => {
-    setStartFetching(true);
-  };
-
-  return (
-    <>
-      <GenerateCSVButton clickHandler={handleClick}></GenerateCSVButton>
-      <br />
-      {startFetching && <FetchResults userId={userId} fileName={fileName} />}
-    </>
-  );
+  return <DownloadCSVButton clickHandler={handleDownload} />;
 };
 
 export default DownloadCSV;
