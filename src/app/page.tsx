@@ -86,9 +86,9 @@ export default async function Home() {
       <div className="flex flex-row my-20 items-center justify-center">
         <div className="flex">
           <p className="text-xl text-justify">
-            © 2024 CoupleCents App. This project is licensed under the Apache
-            license - see the LICENSE file for details. For contributions and
-            support, visit our{" "}
+            © {new Date().getFullYear()} CoupleCents App. This project is
+            licensed under the Apache license - see the LICENSE file for
+            details. For contributions and support, visit our{" "}
             <a
               className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
               href="https://github.com/egarcia-p/couple-cents"
