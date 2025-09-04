@@ -118,6 +118,12 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 3. then apply migrations by runnint `npx drizzle-kit migrate`
 4. confirm changes in the database
 
+How to Delete a Migration:
+
+1. Delete the sql file of the migration
+2. delete the Meta snapshot json file inside "meta"
+3. Delete manually the entry on the journal.json
+
 ### Testing
 
 ### Deploy on Vercel

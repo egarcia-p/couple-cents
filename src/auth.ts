@@ -1,28 +1,30 @@
-import NextAuth from "next-auth";
-import GitHub from "next-auth/providers/github";
-import PostgresAdapter from "@auth/pg-adapter";
-import { Pool } from "pg";
-import authConfig from "./auth.config";
-
-const pool = new Pool({
-  host: process.env.POSTGRES_HOST,
-  user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DATABASE,
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-  ssl: true,
-});
-
-export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: PostgresAdapter(pool),
-  session: { strategy: "database" },
-  callbacks: {
-    session({ session, user }) {
-      session.user.id = user.id;
-      return session;
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { db } from "./app/lib/db"; // your drizzle instance
+export const auth = betterAuth({
+  database: drizzleAdapter(db, {
+    provider: "pg",
+  }),
+  session: {
+    fields: {
+      expiresAt: "expires", // Map your existing `expires` field to Better Auth's `expiresAt`
+      token: "sessionToken", // Map your existing `sessionToken` field to Better Auth's `token`
     },
   },
-  ...authConfig,
+  account: {
+    fields: {
+      providerId: "provider",
+      accountId: "providerAccountId",
+      refreshToken: "refresh_token",
+      accessToken: "access_token",
+      accessTokenExpiresAt: "expires_at",
+      idToken: "id_token",
+    },
+  },
+  socialProviders: {
+    github: {
+      clientId: process.env.AUTH_GITHUB_ID as string,
+      clientSecret: process.env.AUTH_GITHUB_SECRET as string,
+    },
+  },
 });

@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { headers } from "next/headers";
 import { Metadata } from "next";
 import { Card, Cards } from "../ui/dashboard/cards";
 import {
@@ -26,7 +27,9 @@ export default async function Page({
     period?: string;
   };
 }) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
   if (!session) return <div>Not authenticated</div>;
   if (!session.user) return null;
   if (!session.user.id) return null;

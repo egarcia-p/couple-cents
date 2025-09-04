@@ -1,13 +1,20 @@
-import { signIn } from "@/auth";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { signIn } from "@/app/lib/auth-client";
+
+export const signInGithub = async () => {
+  const data = await signIn.social({
+    provider: "github",
+  });
+  return data;
+};
 
 export function SignIn() {
   return (
     <form
       action={async () => {
         "use server";
-        await signIn("github", { redirectTo: "/dashboard" });
+        await signInGithub();
       }}
     >
       <button

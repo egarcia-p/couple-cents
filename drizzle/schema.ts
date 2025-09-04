@@ -16,30 +16,19 @@ import {
   numeric,
 } from "drizzle-orm/pg-core";
 
-export const users = pgTable(
-  "users",
-  {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 255 }),
-    email: varchar("email", { length: 255 }),
-    emailVerified: timestamp("emailVerified", {
-      withTimezone: true,
-    }),
-    familyId: integer("familyId"),
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("email_verified").default(false).notNull(),
+  familyId: integer("familyId"),
 
-    image: text("image"),
-  },
-  (users) => {
-    return {
-      uniqueIdx: uniqueIndex("unique_idx").on(users.email),
-    };
-  },
-);
+  image: text("image"),
+});
 
 export const accounts = pgTable("accounts", {
   id: serial("id").primaryKey(),
   userId: integer("userId").notNull(),
-  type: varchar("type", { length: 255 }).notNull(),
   provider: varchar("provider", { length: 255 }).notNull(),
   providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
   refresh_token: text("refresh_token"),
@@ -47,8 +36,11 @@ export const accounts = pgTable("accounts", {
   expires_at: bigint("expires_at", { mode: "bigint" }),
   id_token: text("id_token"),
   scope: text("scope"),
-  session_state: text("session_state"),
-  token_type: text("token_type"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull()
+    .defaultNow(),
 });
 
 export const sessions = pgTable("sessions", {
@@ -58,6 +50,11 @@ export const sessions = pgTable("sessions", {
     withTimezone: true,
   }).notNull(),
   sessionToken: varchar("sessionToken", { length: 255 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull()
+    .defaultNow(),
 });
 
 export const verificationTokens = pgTable(
@@ -103,6 +100,18 @@ export const userBudgetSettings = pgTable("user_budget_settings", {
   userId: integer("userId").notNull(),
   category: varchar("category", { length: 255 }).notNull(),
   budget: numeric("budget").notNull(),
+});
+
+export const verification = pgTable("verification", {
+  id: text("id").primaryKey(),
+  identifier: text("identifier").notNull(),
+  value: text("value").notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
 });
 
 // ...
