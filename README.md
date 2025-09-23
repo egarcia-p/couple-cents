@@ -95,6 +95,12 @@ npm install
 
 ### Running the Development Server
 
+Run Docker container with Posgtres Image 16
+
+```bash
+docker run -d --name couple-cents-db -p 5432:5432 -e POSTGRES_PASSWORD=<pass> postgres
+```
+
 Then run the development server:
 
 ```bash
