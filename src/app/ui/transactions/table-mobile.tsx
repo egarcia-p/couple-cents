@@ -1,6 +1,6 @@
 import { fetchFilteredTransactions } from "@/app/lib/data";
-import { auth } from "../../../auth";
 import { DeleteTransaction, UpdateTransaction } from "./buttons";
+import { verifySession } from "@/app/lib/dal";
 
 export default async function DashboardTableMobile({
   query,
@@ -13,11 +13,8 @@ export default async function DashboardTableMobile({
   currentPage: number;
   userId: string;
 }) {
-  const session = await auth();
-
+  const session = await verifySession();
   if (!session) return null;
-
-  if (!session.user) return null;
 
   const transactions = await fetchFilteredTransactions(
     query,
