@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import { Metadata } from "next";
 import { Card, Cards } from "../../ui/dashboard/cards";
 import {
@@ -17,6 +16,7 @@ import EssentialExpensesMonthChart from "@/app/ui/dashboard/essential-expenses-c
 import Filter from "@/app/ui/dashboard/month-year-filter";
 import { months } from "@/app/lib/data/months";
 import years from "@/app/lib/data/years.json";
+import { verifySession } from "@/app/lib/dal";
 
 export const metadata: Metadata = {
   title: "History",
@@ -30,10 +30,8 @@ export default async function Page({
     month?: string;
   };
 }) {
-  const session = await auth();
-  if (!session) return <div>Not authenticated</div>;
-  if (!session.user) return null;
-  if (!session.user.id) return null;
+  const session = await verifySession();
+  if (!session) return null;
 
   let currentPeriod = "Month";
 
