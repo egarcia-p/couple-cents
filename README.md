@@ -126,6 +126,10 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 3. then apply migrations by runnint `npx drizzle-kit migrate`
 4. confirm changes in the database
 
+For manual migrations:
+
+1. Create an empty sql migration using `npx drizzle-kit generate --custom --name=<name of migration>`
+
 ### Testing
 
 ### Deploy on Vercel
