@@ -45,7 +45,7 @@ export async function fetchAllTransactions(userId: string) {
         }),
       })
       .from(transactions)
-      .where(eq(transactions.userId, parseInt(userId)))
+      .where(eq(transactions.userId, userId))
       .orderBy(desc(transactions.transactionDate));
 
     return data;
@@ -133,7 +133,7 @@ export async function fetchAllFilteredTransactions({
             ilike(transactions.establishment, `%${query}%`),
             ilike(transactions.note, `%${query}%`),
           ),
-          eq(transactions.userId, parseInt(userId)),
+          eq(transactions.userId, userId),
           sql`${transactions.transactionDate} BETWEEN ${startDate} AND ${endDate}`,
         ),
       )
@@ -195,7 +195,7 @@ export async function fetchFilteredTransactions(
             ilike(transactions.note, `%${query}%`),
             // ilike(transactions.amount, `%${query}%`),
           ),
-          eq(transactions.userId, parseInt(userId)),
+          eq(transactions.userId, userId),
           sql`${transactions.transactionDate} BETWEEN ${startDate} AND ${endDate}`,
         ),
       )
@@ -232,7 +232,7 @@ export async function fetchTransactionPages(
             ilike(transactions.note, `%${query}%`),
             // ilike(transactions.amount, `%${query}%`),
           ),
-          eq(transactions.userId, parseInt(userId)),
+          eq(transactions.userId, userId),
           sql`${transactions.transactionDate} BETWEEN ${startDate} AND ${endDate}`,
         ),
       );
@@ -541,7 +541,7 @@ export async function fetchUserBudgetSettings(userId: string) {
         budget: userBudgetSettings.budget,
       })
       .from(userBudgetSettings)
-      .where(eq(userBudgetSettings.userId, parseInt(userId)));
+      .where(eq(userBudgetSettings.userId, userId));
 
     return data;
   } catch (error) {
@@ -557,7 +557,7 @@ export async function fetchUserBudgetByMonth(userId: string) {
         total: sql`sum(budget)`,
       })
       .from(userBudgetSettings)
-      .where(eq(userBudgetSettings.userId, parseInt(userId)));
+      .where(eq(userBudgetSettings.userId, userId));
 
     return data ? data[0].total : 0;
   } catch (error) {
