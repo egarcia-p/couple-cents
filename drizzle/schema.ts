@@ -52,7 +52,7 @@ export const transactions = pgTable("transactions", {
   establishment: varchar("establishment", { length: 255 }).notNull(),
   category: varchar("category", { length: 255 }).notNull(),
   isEssential: boolean("isEssential").notNull(),
-  userId: integer("userId").notNull(),
+  userId: text("userId").notNull(),
   transactionDate: timestamp("transactionDate", {
     withTimezone: true,
   }).notNull(),
@@ -60,7 +60,7 @@ export const transactions = pgTable("transactions", {
 
 export const userBudgetSettings = pgTable("user_budget_settings", {
   id: serial("id").primaryKey(),
-  userId: integer("userId").notNull(),
+  userId: text("userId").notNull(),
   category: varchar("category", { length: 255 }).notNull(),
   budget: numeric("budget").notNull(),
 });
