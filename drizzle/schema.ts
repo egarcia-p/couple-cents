@@ -16,6 +16,26 @@ import {
   numeric,
 } from "drizzle-orm/pg-core";
 
+export const users = pgTable(
+  "users",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 255 }),
+    email: varchar("email", { length: 255 }),
+    emailVerified: timestamp("emailVerified", {
+      withTimezone: true,
+    }),
+    familyId: integer("familyId"),
+
+    image: text("image"),
+  },
+  (users) => {
+    return {
+      uniqueIdx: uniqueIndex("unique_idx").on(users.email),
+    };
+  },
+);
+
 export const families = pgTable("families", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }),

@@ -19,8 +19,15 @@
     {
       "idx": 2,
       "version": "7",
-      "when": 1758597069462,
-      "tag": "0002_wealthy_mesmero",
+      "when": 1759198698971,
+      "tag": "0002_wild_gabe_jones",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1759200167433,
+      "tag": "0003_map-new-users",
       "breakpoints": true
     }
   ]
