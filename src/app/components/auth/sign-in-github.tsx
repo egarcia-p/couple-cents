@@ -1,56 +1,19 @@
-import { auth } from "@/app/lib/auth";
-import { authClient } from "@/app/lib/auth-client";
-import { email } from "better-auth";
-import { redirect } from "next/navigation";
+"use client";
 
-// import { authClient } from "@/app/lib/auth-client";
-
-async function SignIn(formData: FormData) {
-  "use server";
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-
-  const response = await auth.api.signInEmail({
-    body: {
-      email,
-      password,
-      callbackURL: "/dashboard",
-    },
-    asResponse: true, // returns a response object instead of data
-  });
-
-  if (!response.ok) {
-    // Handle error case TODO: improve error handling
-    throw new Error("Failed to sign in");
-  }
-
-  // After successful sign in, redirect to dashboard
-  redirect("/dashboard");
-}
-
-export function SignInWithEmail() {
-  return (
-    <form
-      action={async (formData) => {
-        "use server";
-        await SignIn(formData);
-      }}
-    >
-      <input type="email" name="email" placeholder="Email" required />
-      <input type="password" name="password" placeholder="Password" required />
-      <button type="submit">Sign In with Email</button>
-    </form>
-  );
-}
+import { createAuthClient } from "better-auth/client";
+const authClient = createAuthClient();
 
 export function SignInWithGitHub() {
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+
+    const data = await authClient.signIn.social({
+      provider: "github",
+    });
+  }
+
   return (
-    <form
-      action={async () => {
-        "use server";
-        //await signIn("github", { redirectTo: "/dashboard" });
-      }}
-    >
+    <form onSubmit={handleLogin}>
       <button
         type="submit"
         className="py-2 px-4 max-w-md flex justify-center items-center bg-gray-600 hover:bg-gray-700 focus:ring-gray-500 focus:ring-offset-gray-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
