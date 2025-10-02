@@ -66,7 +66,7 @@ export default function Home() {
                 ) : (
                   <div className="flex flex-col gap-4">
                     <SignInWithGitHub />
-                    <SignInWithGoogle />
+                    {featureFlags.googleSignIn && <SignInWithGoogle />}
                   </div>
                 )}
               </div>
