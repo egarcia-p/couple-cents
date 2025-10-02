@@ -12,6 +12,7 @@ import { useState } from "react";
 import { is } from "drizzle-orm";
 import messagesAuth from "@/app/lib/data/messages/auth.json";
 import { featureFlags } from "./lib/featureflags";
+import { SignInWithGoogle } from "./components/auth/sign-in-google";
 
 type ConnectionStatus = {
   isConnected: boolean;
@@ -63,7 +64,10 @@ export default function Home() {
                     </div>
                   </div>
                 ) : (
-                  <SignInWithGitHub />
+                  <div className="flex flex-col gap-4">
+                    <SignInWithGitHub />
+                    <SignInWithGoogle />
+                  </div>
                 )}
               </div>
             )}
