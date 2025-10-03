@@ -20,9 +20,17 @@ export async function GET(
   { params }: { params: { userId: string } },
 ) {
   const session = await verifySession();
-  if (!session) return null;
+  if (!session) {
+    return Response.json(
+      {
+        message: "Unauthorized",
+        data: [],
+      },
+      { status: 401 },
+    );
+  }
 
-  if (!session || !session.user || session.user.id != params.userId) {
+  if (!session.user || session.user.id != params.userId) {
     return Response.json(
       {
         message: "Unauthenticated user or wrong user",
