@@ -9,6 +9,10 @@ export default function SignUp() {
 
   async function Signup() {
     // TODO: get values from the form and add basic validation
+    const email = "";
+    const password = "";
+    const name = "";
+    const image = "";
 
     const { data, error } = await authClient.signUp.email(
       {

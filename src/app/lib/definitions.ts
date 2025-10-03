@@ -6,13 +6,13 @@ export type TransactionForm = {
   establishment: string;
   category: string;
   isEssential: boolean;
-  userId: number;
+  userId: string;
   transactionDate: Date;
 };
 
 export type UserBudgetSettingForm = {
   id: number;
-  userId: number;
+  userId: string;
   category: string;
   budget: number;
 };
@@ -26,7 +26,7 @@ export type ExpenseDataMonth = [
 
 export type UserBudgetSetting = {
   id: number;
-  userId: number;
+  userId: string;
   category: string;
   budget: string;
 };
