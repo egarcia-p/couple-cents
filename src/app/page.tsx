@@ -34,7 +34,10 @@ export default async function Home() {
         </div>
         <div className="w-full lg:w-1/2 flex">
           <div className="m-auto items-center ">
-            <SignIn />
+            {/* <SignIn /> */}
+            <div className="text-2xl text-center p-8 border-2 border-red-500 rounded-lg">
+              The site is currently unavailable. Please check back later.
+            </div>
           </div>
         </div>
       </div>
