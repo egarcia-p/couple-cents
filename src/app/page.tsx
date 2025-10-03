@@ -1,15 +1,26 @@
+"use client";
+
 import Head from "next/head";
-import { SignIn } from "./components/sign-in";
 import logo from "../../public/logo.svg";
 import CreditCards from "../../public/credit_cards.jpeg";
 import Bench from "../../public/bench_2.jpeg";
 import Image from "next/image";
+import { SignInWithGitHub } from "./components/auth/sign-in-github";
+import SignUp from "./components/auth/sign-up";
+import LoginForm from "./components/auth/sign-in-email";
+import { useState } from "react";
+import { is } from "drizzle-orm";
+import messagesAuth from "@/app/lib/data/messages/auth.json";
+import { featureFlags } from "./lib/featureflags";
+import { SignInWithGoogle } from "./components/auth/sign-in-google";
 
 type ConnectionStatus = {
   isConnected: boolean;
 };
 
-export default async function Home() {
+export default function Home() {
+  const [isSignUp, setIsSignUp] = useState(false);
+
   return (
     <>
       <Head>
@@ -34,10 +45,32 @@ export default async function Home() {
         </div>
         <div className="w-full lg:w-1/2 flex">
           <div className="m-auto items-center ">
-            {/* <SignIn /> */}
-            <div className="text-2xl text-center p-8 border-2 border-red-500 rounded-lg">
-              The site is currently unavailable. Please check back later.
-            </div>
+            {isSignUp && featureFlags.signUp ? (
+              <SignUp />
+            ) : (
+              <div>
+                {featureFlags.signUp ? (
+                  <div>
+                    <LoginForm />
+                    <hr className="my-6 border-t-2 border-t-secondary" />
+                    <div className="my-6">
+                      <span>{messagesAuth.login.areYouNew} </span>
+                      <a
+                        onClick={() => setIsSignUp(true)}
+                        className="cursor-pointer underline hover:text-primary-300"
+                      >
+                        {messagesAuth.signup.newAccount}
+                      </a>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-4">
+                    <SignInWithGitHub />
+                    {featureFlags.googleSignIn && <SignInWithGoogle />}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

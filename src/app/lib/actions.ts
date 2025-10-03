@@ -26,7 +26,7 @@ const FormSchema = z.object({
   establishment: z.string(),
   category: z.string(),
   isEssential: z.coerce.boolean(),
-  userId: z.coerce.number(),
+  userId: z.string(),
   transactionDate: z.string(),
 });
 
@@ -201,7 +201,7 @@ export async function saveBudgetSettings(prevState: State, formData: FormData) {
   try {
     console.log("Form Data: ", formData);
     // create or save budget settings
-    const userId = Number(formData.get("userId"));
+    const userId = formData.get("userId") as string;
     // Get all entries and filter for budget settings
     const budgetSettings = Array.from(formData.entries())
       .filter(([key]) => key.startsWith("budget-"))
@@ -210,9 +210,6 @@ export async function saveBudgetSettings(prevState: State, formData: FormData) {
         category: key.replace("budget-", ""),
         budget: value,
       }));
-
-    console.log("User ID: ", userId);
-    console.log("Budget Settings: ", budgetSettings);
 
     const parsedBudgetSettings = budgetSettings.map((setting) => {
       const parsedSetting = UserBudgetSettingsCreate.safeParse(setting);
@@ -224,7 +221,7 @@ export async function saveBudgetSettings(prevState: State, formData: FormData) {
       return parsedSetting.data;
     });
     const budgetSettingsToSave = parsedBudgetSettings.map((setting) => ({
-      userId: Number(userId),
+      userId: userId,
       category: setting.category,
       budget: Number(setting.budget).toString(),
     }));

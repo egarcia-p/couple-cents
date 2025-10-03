@@ -1,24 +1,33 @@
-import authConfig from "./auth.config";
-import NextAuth from "next-auth";
-//export const { auth: middleware } = NextAuth(authConfig);
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getSessionCookie } from "better-auth/cookies";
 
-export function middleware(request: NextRequest) {
-  // Assume a "Cookie:nextjs=fast" header to be present on the incoming request
-  // Getting cookies from the request using the `RequestCookies` API
-  let cookie = request.cookies.get("authjs.session-token");
+const protectedRoutes = ["/dashboard"];
+const publicRoutes = ["/login", "/"];
 
-  const response = NextResponse.next();
-  if (cookie) {
-    response.cookies.set({
-      name: cookie.name,
-      value: cookie.value,
-      path: "/",
-      httpOnly: true,
-    });
-    cookie = response.cookies.get("authjs.session-token");
+export async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+  const isProtectedRoute = protectedRoutes.includes(path);
+  const isPublicRoute = publicRoutes.includes(path);
+
+  const sessionCookie = getSessionCookie(request);
+
+  if (isProtectedRoute && !sessionCookie) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
-  return response;
+  //This is not enough, we need to check if the user is authenticated
+  if (
+    isPublicRoute &&
+    sessionCookie &&
+    !request.nextUrl.pathname.startsWith("/dashboard")
+  ) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  return NextResponse.next();
 }
+
+// Routes Middleware should not run on
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+};

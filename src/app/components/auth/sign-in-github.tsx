@@ -1,15 +1,19 @@
-import { signIn } from "@/auth";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+"use client";
 
-export function SignIn() {
+import { createAuthClient } from "better-auth/client";
+const authClient = createAuthClient();
+
+export function SignInWithGitHub() {
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+
+    const data = await authClient.signIn.social({
+      provider: "github",
+    });
+  }
+
   return (
-    <form
-      action={async () => {
-        "use server";
-        await signIn("github", { redirectTo: "/dashboard" });
-      }}
-    >
+    <form onSubmit={handleLogin}>
       <button
         type="submit"
         className="py-2 px-4 max-w-md flex justify-center items-center bg-gray-600 hover:bg-gray-700 focus:ring-gray-500 focus:ring-offset-gray-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"

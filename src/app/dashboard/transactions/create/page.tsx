@@ -1,8 +1,8 @@
 import Form from "@/app/ui/transactions/create-form";
-import { auth } from "@/auth";
 import { Metadata } from "next";
 import categories from "../../../lib/data/categories.json";
 import categoriesForIncome from "../../../lib/data/categoriesForIncome.json";
+import { verifySession } from "@/app/lib/dal";
 
 export const metadata: Metadata = {
   title: "Create",
@@ -13,11 +13,8 @@ export default async function Page({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const session = await auth();
-
+  const session = await verifySession();
   if (!session) return null;
-  if (!session.user) return null;
-  if (!session.user.id) return null;
 
   const isExpense = String(searchParams.isExpense).toLowerCase() === "true";
   let formCategories = {};

@@ -1,9 +1,8 @@
 import { and, or, ilike, sql, eq, count, sum, desc } from "drizzle-orm";
 import _categories from "@/app/lib/data/categories.json";
 import _categoriesIncome from "@/app/lib/data/categoriesForIncome.json";
-import { auth } from "@/auth";
-import { NextApiRequest, NextApiResponse } from "next";
 import { fetchAllFilteredTransactions } from "@/app/lib/data";
+import { verifySession } from "@/app/lib/dal";
 
 interface ICategories {
   [key: string]: string;
@@ -20,9 +19,18 @@ export async function GET(
   req: Request,
   { params }: { params: { userId: string } },
 ) {
-  const session = await auth();
+  const session = await verifySession();
+  if (!session) {
+    return Response.json(
+      {
+        message: "Unauthorized",
+        data: [],
+      },
+      { status: 401 },
+    );
+  }
 
-  if (!session || !session.user || session.user.id != params.userId) {
+  if (!session.user || session.user.id != params.userId) {
     return Response.json(
       {
         message: "Unauthenticated user or wrong user",

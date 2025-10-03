@@ -5,9 +5,9 @@ import DatePicker from "@/app/ui/transactions/date-picker";
 import Pagination from "@/app/ui/transactions/pagination";
 import DashboardTable from "@/app/ui/transactions/table";
 import DashboardTableMobile from "@/app/ui/transactions/table-mobile";
-import { auth } from "@/auth";
 import messages from "@/app/lib/data/messages/transactions.json";
 import { toZonedTime, format } from "date-fns-tz";
+import { verifySession } from "@/app/lib/dal";
 
 export default async function Page({
   searchParams,
@@ -18,10 +18,8 @@ export default async function Page({
     page?: string;
   };
 }) {
-  const session = await auth();
-  if (!session) return <div>Not authenticated</div>;
-  if (!session.user) return <div>Not authenticated</div>;
-  if (!session.user.id) return <div>Not authenticated</div>;
+  const session = await verifySession();
+  if (!session) return null;
 
   const currentPage = Number(searchParams?.page) || 1;
   const query = searchParams?.query || "";

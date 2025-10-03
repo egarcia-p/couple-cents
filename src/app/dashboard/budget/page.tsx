@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import { Metadata } from "next";
 import { UserBudgetSetting } from "@/app/lib/definitions";
 import {
@@ -10,6 +9,7 @@ import Link from "next/link";
 import ExpensesTable from "@/app/components/budget/expenses-table";
 import messages from "@/app/lib/data/messages/budget.json";
 import Toggle from "@/app/ui/dashboard/Toggle";
+import { verifySession } from "@/app/lib/dal";
 
 export const metadata: Metadata = {
   title: "Budget Tracker Dashboard",
@@ -21,23 +21,9 @@ export default async function Page({
     period?: string;
   };
 }) {
-  const session = await auth();
-  if (!session)
-    return (
-      <div>
-        Not authenticated <Link href="/">Go to main page</Link>
-      </div>
-    );
+  const session = await verifySession();
+  if (!session) return null;
   const userId = session.user?.id;
-  if (!userId)
-    return (
-      <div>
-        Not authenticated <Link href="/">Go to main page</Link>
-      </div>
-    );
-
-  if (!session.user) return null;
-  if (!session.user.id) return null;
 
   const currentPeriod = searchParams?.period || "Month";
 

@@ -25,7 +25,7 @@ const main = async () => {
       establishment: faker.commerce.productName(),
       category: faker.word.noun(),
       isEssential: faker.datatype.boolean(),
-      userId: user[0].id,
+      userId: user[0].id.toString(),
       transactionDate: faker.date.recent(),
     });
   }

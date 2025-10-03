@@ -56,6 +56,8 @@ Financial app tool for individuals and/or couples to track their expenses and in
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+This project uses the App router pattern.
+
 ### Tech Stack
 
 - NextJS
@@ -95,6 +97,12 @@ npm install
 
 ### Running the Development Server
 
+Run Docker container with Posgtres Image 16
+
+```bash
+docker run -d --name couple-cents-db -p 5432:5432 -e POSTGRES_PASSWORD=<pass> postgres
+```
+
 Then run the development server:
 
 ```bash
@@ -117,6 +125,10 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 2. run `npm run generate` if there is an error with migration not up to date run `npx drizzle-kit up`
 3. then apply migrations by runnint `npx drizzle-kit migrate`
 4. confirm changes in the database
+
+For manual migrations:
+
+1. Create an empty sql migration using `npx drizzle-kit generate --custom --name=<name of migration>`
 
 ### Testing
 

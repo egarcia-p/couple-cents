@@ -1,8 +1,8 @@
 import { fetchFilteredTransactions } from "@/app/lib/data";
-import { auth } from "../../../auth";
 import { DeleteTransaction, UpdateTransaction } from "./buttons";
 import { formatDateToLocal } from "@/app/lib/utils";
 import DownloadCSV from "./download-button";
+import { verifySession } from "@/app/lib/dal";
 
 export default async function DashboardTable({
   query,
@@ -15,11 +15,8 @@ export default async function DashboardTable({
   currentPage: number;
   userId: string;
 }) {
-  const session = await auth();
-
+  const session = await verifySession();
   if (!session) return null;
-
-  if (!session.user) return null;
 
   const transactions = await fetchFilteredTransactions(
     query,

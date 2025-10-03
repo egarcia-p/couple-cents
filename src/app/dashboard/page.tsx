@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import { Metadata } from "next";
 import { Card, Cards } from "../ui/dashboard/cards";
 import {
@@ -15,6 +14,9 @@ import ExpensesMonthChart from "../ui/dashboard/expenses-month-chart";
 import ExpensesCategoryChart from "../ui/dashboard/expenses-category-chart";
 import Toggle from "../ui/dashboard/Toggle";
 import EssentialExpensesMonthChart from "../ui/dashboard/essential-expenses-chart";
+import { auth } from "../lib/auth";
+import { headers } from "next/headers";
+import { verifySession } from "../lib/dal";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -26,10 +28,8 @@ export default async function Page({
     period?: string;
   };
 }) {
-  const session = await auth();
-  if (!session) return <div>Not authenticated</div>;
-  if (!session.user) return null;
-  if (!session.user.id) return null;
+  const session = await verifySession();
+  if (!session) return null;
 
   const currentPeriod = searchParams?.period || "Month";
 
