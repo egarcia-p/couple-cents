@@ -30,7 +30,7 @@ export default function SideNav() {
             <p className=" text-lg">CoupleCents</p>
           </div>
           <div className="m-auto text-secondary md:w-40 md:text-center">
-            <p className=" text-sm">v0.5.1</p>
+            <p className=" text-sm">v0.5.2</p>
           </div>
         </div>
       </Link>
