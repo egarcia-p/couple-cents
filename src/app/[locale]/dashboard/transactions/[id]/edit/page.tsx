@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Form from "@/app/ui/transactions/edit-form";
 import { fetchTransactionById } from "@/app/lib/data";
-import _categories from "../../../../lib/data/categories.json";
+import _categories from "@/app/lib/data/categories.json";
 import _categoriesForIncome from "@/app/lib/data/categoriesForIncome.json";
 
 export const metadata: Metadata = {

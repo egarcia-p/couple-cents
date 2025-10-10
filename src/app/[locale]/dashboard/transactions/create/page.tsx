@@ -1,7 +1,7 @@
 import Form from "@/app/ui/transactions/create-form";
 import { Metadata } from "next";
-import categories from "../../../lib/data/categories.json";
-import categoriesForIncome from "../../../lib/data/categoriesForIncome.json";
+import categories from "@/app/lib/data/categories.json";
+import categoriesForIncome from "@/app/lib/data/categoriesForIncome.json";
 import { verifySession } from "@/app/lib/dal";
 
 export const metadata: Metadata = {

@@ -1,9 +1,8 @@
 import { auth } from "@/app/lib/auth";
 import { Metadata } from "next";
-import UserAvatar from "../../components/profile/user-profile";
+import UserAvatar from "@/app/components/profile/user-profile";
 import Link from "next/link";
 import UserSettings from "@/app/components/profile/settings";
-import { userBudgetSettings } from "../../../../drizzle/schema";
 import { fetchUserBudgetSettings } from "@/app/lib/data";
 import { UserBudgetSetting } from "@/app/lib/definitions";
 import { headers } from "next/headers";

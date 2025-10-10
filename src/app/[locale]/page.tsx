@@ -1,30 +1,32 @@
 "use client";
 
 import Head from "next/head";
-import logo from "../../public/logo.svg";
-import CreditCards from "../../public/credit_cards.jpeg";
-import Bench from "../../public/bench_2.jpeg";
+import logo from "@public/logo.svg";
+import CreditCards from "@public/credit_cards.jpeg";
+import Bench from "@public/bench_2.jpeg";
 import Image from "next/image";
-import { SignInWithGitHub } from "./components/auth/sign-in-github";
-import SignUp from "./components/auth/sign-up";
-import LoginForm from "./components/auth/sign-in-email";
+import { SignInWithGitHub } from "../components/auth/sign-in-github";
+import SignUp from "../components/auth/sign-up";
+import LoginForm from "../components/auth/sign-in-email";
 import { useState } from "react";
 import { is } from "drizzle-orm";
 import messagesAuth from "@/app/lib/data/messages/auth.json";
-import { featureFlags } from "./lib/featureflags";
-import { SignInWithGoogle } from "./components/auth/sign-in-google";
+import { featureFlags } from "../lib/featureflags";
+import { SignInWithGoogle } from "../components/auth/sign-in-google";
+import { useTranslations } from "next-intl";
 
 type ConnectionStatus = {
   isConnected: boolean;
 };
 
 export default function Home() {
+  const t = useTranslations("HomePage");
   const [isSignUp, setIsSignUp] = useState(false);
 
   return (
     <>
       <Head>
-        <title>CoupleCents</title>
+        <title>{t("title")}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div id="top" className="sm:h16 lg:h-32 flex"></div>
@@ -35,7 +37,7 @@ export default function Home() {
             <Image src={logo} alt="Logo" width={0} height={0} />
           </div>
           <div>
-            <h1 className="text-4xl">Couple Cents App</h1>
+            <h1 className="text-4xl">{t("titleWallet")}</h1>
           </div>
           <div>
             <p className="text-xl">
