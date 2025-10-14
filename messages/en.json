@@ -40,5 +40,19 @@
     "noAccount": "Don't have an account? Sign Up",
     "invalidCredentials": "Invalid email or password. Please try again.",
     "areYouNew": "New to Couple Cents?"
+  },
+  "DashboardPage": {
+    "Dashboard": "Dashboard"
+  },
+  "Toggle": {
+    "Month": "Month",
+    "Year": "Year"
+  },
+  "Cards": {
+    "currentSpend": "Current Spend",
+    "currentIncome": "Current Income",
+    "savings": "Savings",
+    "percentage": "Income Spent",
+    "budget": "Budget"
   }
 }

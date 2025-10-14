@@ -1,13 +1,3 @@
 {
-  "dashboard": {
-    "title": "Dashboard",
-    "description": "This is the dashboard page where you can see an overview of your data.",
-    "cards": {
-      "currentSpend": "Current Spend",
-      "currentIncome": "Current Income",
-      "savings": "Savings",
-      "percentage": "Income Spent",
-      "budget": "Budget"
-    }
-  }
+  "dashboard": {}
 }

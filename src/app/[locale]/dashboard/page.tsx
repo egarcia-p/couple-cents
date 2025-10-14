@@ -15,6 +15,7 @@ import ExpensesCategoryChart from "@/app/ui/dashboard/expenses-category-chart";
 import Toggle from "@/app/ui/dashboard/Toggle";
 import EssentialExpensesMonthChart from "@/app/ui/dashboard/essential-expenses-chart";
 import { verifySession } from "@/app/lib/dal";
+import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -26,6 +27,7 @@ export default async function Page({
     period?: string;
   };
 }) {
+  const t = await getTranslations("DashboardPage");
   const session = await verifySession();
   if (!session) return null;
 
@@ -93,7 +95,7 @@ export default async function Page({
 
   return (
     <main>
-      <h1 className={`mb-4 text-xl md:text-2xl`}>Dashboard</h1>
+      <h1 className={`mb-4 text-xl md:text-2xl`}>{t("Dashboard")}</h1>
       <Toggle />
       <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
         <Cards
