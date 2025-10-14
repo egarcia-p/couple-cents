@@ -6,6 +6,7 @@ import { formatCurrency, formatPercentage } from "./utils";
 import { and, or, ilike, sql, eq, count, sum, desc } from "drizzle-orm";
 import _categories from "@/app/lib/data/categories.json";
 import _categoriesIncome from "@/app/lib/data/categoriesForIncome.json";
+import { getTranslations } from "next-intl/server";
 
 //Create an interface for categories.json and assign to new var categories
 interface ICategories {
@@ -250,6 +251,7 @@ export async function fetchCardData(
   month: string,
   year: string,
 ) {
+  const t = await getTranslations("DB");
   try {
     const totalMonthSpendData = db
       .select({ value: sum(transactions.amount) })
@@ -316,7 +318,7 @@ export async function fetchCardData(
         Number(percentageOfIncomeSpentMonth),
       );
     } else {
-      percentageOfIncomeSpentMonth = "No Income";
+      percentageOfIncomeSpentMonth = t("noIncome");
     }
 
     if (totalYearIncomeDB > 0) {
@@ -325,7 +327,7 @@ export async function fetchCardData(
         Number(percentageOfIncomeSpentYear),
       );
     } else {
-      percentageOfIncomeSpentYear = "No Income";
+      percentageOfIncomeSpentYear = t("noIncome");
     }
 
     const totalMonthSpend = formatCurrency(totalMonthSpendDB ?? "0");

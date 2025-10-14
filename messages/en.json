@@ -45,8 +45,8 @@
     "Dashboard": "Dashboard"
   },
   "Toggle": {
-    "Month": "Month",
-    "Year": "Year"
+    "month": "Month",
+    "year": "Year"
   },
   "Cards": {
     "currentSpend": "Current Spend",
@@ -54,5 +54,60 @@
     "savings": "Savings",
     "percentage": "Income Spent",
     "budget": "Budget"
+  },
+  "months": {
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
+  },
+  "ExpensesMonthChart": {
+    "title": "Expenses by Month",
+    "expensesLabel": "Expenses",
+    "incomeLabel": "Income",
+    "budgetLabel": "Budget",
+    "currentYear": "Current Year"
+  },
+  "EssentialExpensesMonthChart": {
+    "title": "Expenses by Month",
+    "currentYear": "Current Year",
+    "essentialExpenses": "Essential Expenses",
+    "nonEssentialExpenses": "Non-Essential Expenses"
+  },
+  "ExpensesCategoryChart": {
+    "title": "Expenses by Category",
+    "label": "Expense Chart",
+    "currentPeriod": "Current Period"
+  },
+  "DB": {
+    "noIncome": "No Income"
+  },
+  "Categories": {
+    "CHI": "Childcare",
+    "DIN": "Dining Out",
+    "EDU": "Education",
+    "ENT": "Entertainment",
+    "FIT": "Fitness and Sports",
+    "GIF": "Gifts and Donations",
+    "GRO": "Groceries",
+    "HEA": "Healthcare",
+    "HOU": "Housing",
+    "INS": "Insurance",
+    "PER": "Personal Care",
+    "PET": "Pets",
+    "SAV": "Savings and Investments",
+    "SER": "Services",
+    "SHO": "Shopping",
+    "TRA": "Transportation",
+    "UTI": "Utilities",
+    "VAC": "Vacations"
   }
 }

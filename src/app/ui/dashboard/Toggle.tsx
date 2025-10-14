@@ -22,7 +22,7 @@ export default function Toggle() {
   };
   return (
     <div className="relative flex flex-row my-4 gap-2">
-      <div>{t("Month")}</div>
+      <div>{t("month")}</div>
       <div className=" rounded">
         <input
           id="one"
@@ -30,7 +30,7 @@ export default function Toggle() {
           type="checkbox"
         />
       </div>
-      <div>{t("Year")}</div>
+      <div>{t("year")}</div>
     </div>
   );
 }

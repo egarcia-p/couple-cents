@@ -5,6 +5,8 @@ import dynamic from "next/dynamic";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
 import options from "./financial-chart-options";
+import { use } from "react";
+import { useTranslations } from "next-intl";
 Chart.register(CategoryScale);
 
 const Line = dynamic(() => import("react-chartjs-2").then((mod) => mod.Line), {
@@ -15,21 +17,22 @@ export default function EssentialExpensesMonthChart({
   dataEssentialExpenses,
   dataNonEssentialExpenses,
 }: any) {
-  //Conver Info into data array
+  const t = useTranslations("EssentialExpensesMonthChart");
+  const tMonths = useTranslations("months");
 
   const monthsDisplay = new Map<number, string>();
-  monthsDisplay.set(1, "January");
-  monthsDisplay.set(2, "February");
-  monthsDisplay.set(3, "March");
-  monthsDisplay.set(4, "April");
-  monthsDisplay.set(5, "May");
-  monthsDisplay.set(6, "June");
-  monthsDisplay.set(7, "July");
-  monthsDisplay.set(8, "August");
-  monthsDisplay.set(9, "September");
-  monthsDisplay.set(10, "October");
-  monthsDisplay.set(11, "November");
-  monthsDisplay.set(12, "December");
+  monthsDisplay.set(1, tMonths("january"));
+  monthsDisplay.set(2, tMonths("february"));
+  monthsDisplay.set(3, tMonths("march"));
+  monthsDisplay.set(4, tMonths("april"));
+  monthsDisplay.set(5, tMonths("may"));
+  monthsDisplay.set(6, tMonths("june"));
+  monthsDisplay.set(7, tMonths("july"));
+  monthsDisplay.set(8, tMonths("august"));
+  monthsDisplay.set(9, tMonths("september"));
+  monthsDisplay.set(10, tMonths("october"));
+  monthsDisplay.set(11, tMonths("november"));
+  monthsDisplay.set(12, tMonths("december"));
 
   const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   let essentialArray = new Array<number>();
@@ -41,11 +44,12 @@ export default function EssentialExpensesMonthChart({
     monthArray.push(monthsDisplay.get(month)!);
   });
 
+  //Conver Info into data array
   const data = {
     labels: monthArray,
     datasets: [
       {
-        label: "Essential Expenses",
+        label: t("essentialExpenses"),
         data: essentialArray,
         backgroundColor: [
           "rgba(54, 162, 235, 0.2)", //Green
@@ -56,7 +60,7 @@ export default function EssentialExpensesMonthChart({
         borderWidth: 1,
       },
       {
-        label: "Non-Essential Expenses",
+        label: t("nonEssentialExpenses"),
         data: nonEssentialArray,
         backgroundColor: ["rgba(255, 99, 132, 0.2)"],
         borderColor: ["rgba(255, 99, 132, 1)"],
@@ -68,7 +72,7 @@ export default function EssentialExpensesMonthChart({
 
   return (
     <div className="w-full md:col-span-4">
-      <h2 className={`mb-4 text-xl md:text-2xl`}>Expenses by Month</h2>
+      <h2 className={`mb-4 text-xl md:text-2xl`}>{t("title")}</h2>
 
       {
         <div className="rounded-xl bg-gray-50 p-4">
@@ -77,7 +81,7 @@ export default function EssentialExpensesMonthChart({
           </div>
           <div className="flex items-center pb-2 pt-6">
             <CalendarIcon className="h-5 w-5 text-gray-500" />
-            <h3 className="ml-2 text-sm text-gray-500 ">Current Year</h3>
+            <h3 className="ml-2 text-sm text-gray-500 ">{t("currentYear")}</h3>
           </div>
         </div>
       }

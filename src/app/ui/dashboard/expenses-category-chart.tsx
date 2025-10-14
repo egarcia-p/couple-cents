@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
 import categories from "@/app/lib/data/categories.json";
+import { useTranslations } from "next-intl";
 
 Chart.register(CategoryScale);
 
@@ -26,12 +27,14 @@ const Doughnut = dynamic(
 export default function ExpensesCategoryChart({ dataExpenses }: any) {
   //Conver Info into data array
   const allCategories = categories as Categories;
+  const t = useTranslations("ExpensesCategoryChart");
+  const tCategories = useTranslations("Categories");
 
   let spendArray = new Array<number>();
   let categoryArray = new Array<string>();
   Object.keys(allCategories).forEach((categoryKey) => {
     spendArray.push(dataExpenses.get(categoryKey) | 0);
-    categoryArray.push(allCategories[categoryKey]);
+    categoryArray.push(tCategories(categoryKey));
   });
 
   const colors = [
@@ -80,7 +83,7 @@ export default function ExpensesCategoryChart({ dataExpenses }: any) {
     labels: categoryArray,
     datasets: [
       {
-        label: "Expense Chart",
+        label: t("label"),
         data: spendArray,
         backgroundColor: colors,
         borderColor: borderColors,
@@ -91,7 +94,7 @@ export default function ExpensesCategoryChart({ dataExpenses }: any) {
   };
   return (
     <div className="w-full md:col-span-4">
-      <h2 className={`mb-4 text-xl md:text-2xl`}>Expenses by Category</h2>
+      <h2 className={`mb-4 text-xl md:text-2xl`}>{t("title")}</h2>
 
       {
         <div className="rounded-xl bg-gray-50 p-4">
@@ -100,7 +103,9 @@ export default function ExpensesCategoryChart({ dataExpenses }: any) {
           </div>
           <div className="flex items-center pb-2 pt-6">
             <CalendarIcon className="h-5 w-5 text-gray-500" />
-            <h3 className="ml-2 text-sm text-gray-500 ">Current Period</h3>
+            <h3 className="ml-2 text-sm text-gray-500 ">
+              {t("currentPeriod")}
+            </h3>
           </div>
         </div>
       }
