@@ -1,11 +1,12 @@
 "use client";
 
 import { authClient } from "@/app/lib/auth-client"; //import the auth client
-import messagesAuth from "@/app/lib/data/messages/auth.json";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function SignUp() {
   const [error, setError] = useState("");
+  const t = useTranslations("SignUpComponent");
 
   async function Signup() {
     // TODO: get values from the form and add basic validation
@@ -40,49 +41,49 @@ export default function SignUp() {
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="text-black px-8 py-2 mx-auto gap-2 lg:px-16 lg:rounded-r-lg">
-        Sign up to Couple Cents and make smarter money decisions every day.
+        {t("description")}
       </div>
       {/* checkbox for privacy policy */}
 
       <div className="flex flex-col w-full">
         <label htmlFor="name" className="text-left ">
-          {messagesAuth.signup.name}
+          {t("name")}
         </label>
         <input
           id="name"
           name="name"
           type="text"
-          placeholder={messagesAuth.signup.namePlaceholder}
+          placeholder={t("namePlaceholder")}
           className="border rounded-lg p-2 w-full mb-4"
         />
         <label htmlFor="email" className="text-left ">
-          {messagesAuth.signup.email}
+          {t("email")}
         </label>
         <input
           id="email"
           name="email"
           type="email"
-          placeholder={messagesAuth.signup.emailPlaceholder}
+          placeholder={t("emailPlaceholder")}
           className="border rounded-lg p-2 w-full mb-4"
         />
         <label htmlFor="name" className="text-left ">
-          {messagesAuth.signup.password}
+          {t("password")}
         </label>
         <input
           id="password"
           name="password"
           type="password"
-          placeholder={messagesAuth.signup.passwordPlaceholder}
+          placeholder={t("passwordPlaceholder")}
           className="border rounded-lg p-2 w-full mb-4"
         />
         <label htmlFor="confirm-password" className="text-left ">
-          {messagesAuth.signup.confirmPassword}
+          {t("confirmPassword")}
         </label>
         <input
           id="confirm-password"
           name="confirm-password"
           type="password"
-          placeholder={messagesAuth.signup.confirmPasswordPlaceholder}
+          placeholder={t("confirmPasswordPlaceholder")}
           className="border rounded-lg p-2 w-full max-w-md my-4"
         />
       </div>
@@ -94,9 +95,9 @@ export default function SignUp() {
           className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
         /> */}
         <label htmlFor="remember" className="ml-2 block text-sm text-gray-900">
-          {messagesAuth.signup.newAccountMessage}
+          {t("newAccountMessage")}
           <a href="#" className="text-primary-600 hover:text-primary-500">
-            {messagesAuth.signup.termsAndPrivacy}
+            {t("termsAndPrivacy")}
           </a>
         </label>
       </div>
@@ -106,7 +107,7 @@ export default function SignUp() {
         onClick={Signup}
         className={` h-10 text-center items-center rounded-lg bg-primary-600 px-4 text-sm font-medium text-white transition-colors hover:bg-primary-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600`}
       >
-        {messagesAuth.signup.newAccount}
+        {t("newAccount")}
       </button>
     </div>
   );

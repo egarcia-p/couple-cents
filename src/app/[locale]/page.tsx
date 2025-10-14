@@ -10,7 +10,6 @@ import SignUp from "../components/auth/sign-up";
 import LoginForm from "../components/auth/sign-in-email";
 import { useState } from "react";
 import { is } from "drizzle-orm";
-import messagesAuth from "@/app/lib/data/messages/auth.json";
 import { featureFlags } from "../lib/featureflags";
 import { SignInWithGoogle } from "../components/auth/sign-in-google";
 import { useTranslations } from "next-intl";
@@ -21,6 +20,8 @@ type ConnectionStatus = {
 
 export default function Home() {
   const t = useTranslations("HomePage");
+  const tSignUp = useTranslations("SignUpComponent");
+  const tLogin = useTranslations("LoginComponent");
   const [isSignUp, setIsSignUp] = useState(false);
 
   return (
@@ -40,9 +41,7 @@ export default function Home() {
             <h1 className="text-4xl">{t("titleWallet")}</h1>
           </div>
           <div>
-            <p className="text-xl">
-              Financial Tool for Individuals and Couples
-            </p>
+            <p className="text-xl">{t("walletDescription")}</p>
           </div>
         </div>
         <div className="w-full lg:w-1/2 flex">
@@ -56,12 +55,12 @@ export default function Home() {
                     <LoginForm />
                     <hr className="my-6 border-t-2 border-t-secondary" />
                     <div className="my-6">
-                      <span>{messagesAuth.login.areYouNew} </span>
+                      <span>{tLogin("areYouNew")} </span>
                       <a
                         onClick={() => setIsSignUp(true)}
                         className="cursor-pointer underline hover:text-primary-300"
                       >
-                        {messagesAuth.signup.newAccount}
+                        {tSignUp("newAccount")}
                       </a>
                     </div>
                   </div>
@@ -83,7 +82,7 @@ export default function Home() {
             <Image
               className=" w-full object-cover"
               src={CreditCards}
-              alt="Credit cards"
+              alt={t("altTextImage1")}
               width={0}
               height={0}
             />
@@ -94,7 +93,7 @@ export default function Home() {
           className="text-black px-8 py-12 max-w-md mx-auto gap-2 w-1/4 sm:max-w-xl lg:max-w-full lg:w-1/2 lg:py-24 lg:px-16 lg:rounded-r-lg"
         >
           <div className="p-8 border-t-black border-t">
-            <h1 className="text-6xl">Take control of your finances</h1>
+            <h1 className="text-6xl">{t("section2Title")}</h1>
           </div>
         </div>
       </div>
@@ -105,7 +104,7 @@ export default function Home() {
           className="  text-secondary py-12 max-w-md mx-auto gap-2 sm:max-w-xl lg:max-w-full lg:w-1/2 lg:py-24  lg:rounded-r-lg"
         >
           <div className="absolute px-8 bg-primary-600 overflow-auto -mr-16 sm:max-w-xl lg:max-w-full lg:w-1/2 lg:py-24  lg:rounded-r-lg">
-            <h1 className="text-6xl ">Make the most of your money</h1>
+            <h1 className="text-6xl ">{t("section3Title")}</h1>
           </div>
         </div>
         <div className="w-[96rem] flex ">
@@ -113,7 +112,7 @@ export default function Home() {
             <Image
               className="w-full object-cover"
               src={Bench}
-              alt="Credit cards"
+              alt={t("altTextImage2")}
               width={0}
               height={0}
             />
@@ -124,16 +123,14 @@ export default function Home() {
       <div className="flex flex-row my-20 items-center justify-center">
         <div className="flex">
           <p className="text-xl text-justify">
-            © {new Date().getFullYear()} CoupleCents App. This project is
-            licensed under the Apache license - see the LICENSE file for
-            details. For contributions and support, visit our{" "}
+            © {new Date().getFullYear()} {t("footerText")}{" "}
             <a
               className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
               href="https://github.com/egarcia-p/couple-cents"
             >
-              GitHub
+              {t("githubLinkText")}
             </a>{" "}
-            repository.
+            {t("repositoryLinkText")}.
           </p>
         </div>
       </div>
