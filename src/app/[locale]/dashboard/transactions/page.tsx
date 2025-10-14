@@ -5,9 +5,9 @@ import DatePicker from "@/app/ui/transactions/date-picker";
 import Pagination from "@/app/ui/transactions/pagination";
 import DashboardTable from "@/app/ui/transactions/table";
 import DashboardTableMobile from "@/app/ui/transactions/table-mobile";
-import messages from "@/app/lib/data/messages/transactions.json";
 import { toZonedTime, format } from "date-fns-tz";
 import { verifySession } from "@/app/lib/dal";
+import { getTranslations } from "next-intl/server";
 
 export default async function Page({
   searchParams,
@@ -20,6 +20,8 @@ export default async function Page({
 }) {
   const session = await verifySession();
   if (!session) return null;
+
+  const t = await getTranslations("TransactionsPage");
 
   const currentPage = Number(searchParams?.page) || 1;
   const query = searchParams?.query || "";
@@ -79,7 +81,7 @@ export default async function Page({
       </div>
       <div className="hidden w-full md:block">
         <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-          <Search placeholder={`${messages.transactions.searchPlaceholder}`} />
+          <Search placeholder={`${t("searchPlaceholder")}`} />
 
           <div className="flex justify-center">
             <Pagination totalPages={totalPages} />
@@ -87,7 +89,7 @@ export default async function Page({
         </div>
       </div>
       <div className="block w-full md:hidden">
-        <Search placeholder={`${messages.transactions.searchPlaceholder}`} />
+        <Search placeholder={`${t("searchPlaceholder")}`} />
       </div>
 
       <div className="hidden w-full md:block">

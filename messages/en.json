@@ -109,5 +109,17 @@
     "TRA": "Transportation",
     "UTI": "Utilities",
     "VAC": "Vacations"
+  },
+  "TransactionsPage": {
+    "title": "Transactions",
+    "periodMobile": "Period: Current Month",
+    "searchPlaceholder": "Search transactions...",
+    "expenseButton": "Expense",
+    "incomeButton": "Income"
+  },
+  "Buttons": {
+    "create": "Create",
+    "delete": "Delete",
+    "downloadCsv": "Download CSV"
   }
 }
