@@ -7,6 +7,7 @@ import {
   getBudgetsPerCategorySettings,
 } from "@/app/lib/helpers/budget";
 import { formatCurrency, formatPercentage } from "@/app/lib/utils";
+import { useTranslations } from "next-intl";
 
 export default function ExpensesTable({
   budgetSettings,
@@ -15,6 +16,7 @@ export default function ExpensesTable({
   budgetSettings: UserBudgetSetting[];
   expenses: Map<string, number>;
 }) {
+  const t = useTranslations("Budget");
   const budgetsPerCategorySettings = getBudgetsPerCategorySettings(
     categories,
     budgetSettings,
@@ -41,14 +43,14 @@ export default function ExpensesTable({
                       scope="col"
                       className="px-3 py-5 text-center font-medium"
                     >
-                      {messages.budget.expenseTable.title}
+                      {t("expenseTable.title")}
                     </th>
                     <th
                       colSpan={2}
                       scope="col"
                       className="px-3 py-5 text-center font-medium"
                     >
-                      {messages.budget.varianceTable.title}
+                      {t("varianceTable.title")}
                     </th>
                   </tr>
                   <tr>
@@ -56,31 +58,31 @@ export default function ExpensesTable({
                       scope="col"
                       className="px-3 py-5 text-center font-medium"
                     >
-                      {messages.budget.expenseTable.columns.category}
+                      {t("expenseTable.columns.category")}
                     </th>
                     <th
                       scope="col"
                       className="px-3 py-5 text-center font-medium"
                     >
-                      {messages.budget.expenseTable.columns.expense}
+                      {t("expenseTable.columns.expense")}
                     </th>
                     <th
                       scope="col"
                       className="px-3 py-5 text-center font-medium"
                     >
-                      {messages.budget.expenseTable.columns.budget}
+                      {t("expenseTable.columns.budget")}
                     </th>
                     <th
                       scope="col"
                       className="px-3 py-5 text-center font-medium"
                     >
-                      {messages.budget.varianceTable.columns.variance}
+                      {t("varianceTable.columns.variance")}
                     </th>
                     <th
                       scope="col"
                       className="px-3 py-5 text-center font-medium"
                     >
-                      {messages.budget.varianceTable.columns.percentage}
+                      {t("varianceTable.columns.percentage")}
                     </th>
                   </tr>
                 </thead>
@@ -149,7 +151,7 @@ export default function ExpensesTable({
                       scope="col"
                       className="px-3 py-5 text-center font-medium"
                     >
-                      {messages.budget.varianceTable.title}
+                      {t("varianceTable.title")}
                     </th>
                   </tr>
                   <tr>
@@ -157,19 +159,19 @@ export default function ExpensesTable({
                       scope="col"
                       className="px-3 py-5 text-center font-medium"
                     >
-                      {messages.budget.expenseTable.columns.category}
+                      {t("expenseTable.columns.category")}
                     </th>
                     <th
                       scope="col"
                       className="px-3 py-5 text-center font-medium"
                     >
-                      {messages.budget.varianceTable.columns.variance}
+                      {t("varianceTable.columns.variance")}
                     </th>
                     <th
                       scope="col"
                       className="px-3 py-5 text-center font-medium"
                     >
-                      {messages.budget.varianceTable.columns.percentage}
+                      {t("varianceTable.columns.percentage")}
                     </th>
                   </tr>
                 </thead>
