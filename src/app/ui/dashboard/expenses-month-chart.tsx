@@ -27,7 +27,7 @@ export default function ExpensesMonthChart({
   budget,
 }: ExpensesMonthChartProps) {
   const t = useTranslations("ExpensesMonthChart");
-  const tMonths = useTranslations("months");
+  const tMonths = useTranslations("Months");
   const monthsDisplay = new Map<number, string>();
   monthsDisplay.set(1, tMonths("january"));
   monthsDisplay.set(2, tMonths("february"));

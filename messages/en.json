@@ -55,7 +55,8 @@
     "percentage": "Income Spent",
     "budget": "Budget"
   },
-  "months": {
+  "Months": {
+    "all": "All",
     "january": "January",
     "february": "February",
     "march": "March",
@@ -137,5 +138,15 @@
     "amount": "Amount",
     "note": "Note",
     "transactionDate": "Date"
+  },
+  "History": {
+    "title": "History",
+    "errorSelect": "Please select a month and a year"
+  },
+  "MonthYearFilter": {
+    "month": "Month",
+    "selectMonth": "Select a month",
+    "year": "Year",
+    "selectYear": "Select a year"
   }
 }

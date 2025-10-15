@@ -14,7 +14,7 @@ import ExpensesMonthChart from "@/app/ui/dashboard/expenses-month-chart";
 import ExpensesCategoryChart from "@/app/ui/dashboard/expenses-category-chart";
 import EssentialExpensesMonthChart from "@/app/ui/dashboard/essential-expenses-chart";
 import Filter from "@/app/ui/dashboard/month-year-filter";
-import { months } from "@/app/lib/data/months";
+import { getTranslations } from "next-intl/server";
 import years from "@/app/lib/data/years.json";
 import { verifySession } from "@/app/lib/dal";
 
@@ -31,6 +31,25 @@ export default async function Page({
   };
 }) {
   const session = await verifySession();
+  const tHistory = await getTranslations("History");
+  const tFilter = await getTranslations("MonthYearFilter");
+  const tMonths = await getTranslations("Months");
+
+  const months = {
+    "00": tMonths("all"),
+    "01": tMonths("january"),
+    "02": tMonths("february"),
+    "03": tMonths("march"),
+    "04": tMonths("april"),
+    "05": tMonths("may"),
+    "06": tMonths("june"),
+    "07": tMonths("july"),
+    "08": tMonths("august"),
+    "09": tMonths("september"),
+    "10": tMonths("october"),
+    "11": tMonths("november"),
+    "12": tMonths("december"),
+  };
   if (!session) return null;
 
   let currentPeriod = "Month";
@@ -48,7 +67,7 @@ export default async function Page({
     return (
       <main>
         <h1 className={`mb-4 text-xl md:text-2xl`}>
-          Please select a year and month
+          {tHistory("errorSelect")}
         </h1>
         <Filter months={sortedMonths} years={years} />
       </main>
@@ -117,7 +136,7 @@ export default async function Page({
 
   return (
     <main>
-      <h1 className={`mb-4 text-xl md:text-2xl`}>History</h1>
+      <h1 className={`mb-4 text-xl md:text-2xl`}>{tHistory("title")}</h1>
       <Filter months={sortedMonths} years={years} />
       <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
         <Cards
