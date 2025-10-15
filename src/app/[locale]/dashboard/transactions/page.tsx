@@ -62,7 +62,7 @@ export default async function Page({
     <div className="w-full">
       <div className="mt-4 flex justify-between gap-2 md:mt-8">
         <div className="justify-start">
-          <h1 className="text-lg font-bold">Transactions</h1>
+          <h1 className="text-lg font-bold">{t("title")}</h1>
         </div>
         <div className="flex justify-end gap-2">
           <CreateTransaction isExpense={true} />
@@ -71,7 +71,7 @@ export default async function Page({
       </div>
       <div className="block md:hidden">
         <div>
-          <h2>Period: Current Month</h2>
+          <h2>{t("currentPeriod")}</h2>
         </div>
       </div>
       <div className="hidden flex md:block">

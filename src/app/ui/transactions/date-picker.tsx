@@ -5,6 +5,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 import { DateValueType } from "react-tailwindcss-datepicker";
+import { useTranslations } from "next-intl";
 
 const WAIT_BETWEEN_KEY_PRESS = 1000;
 
@@ -12,6 +13,7 @@ export default function DatePicker({ placeholder }: { placeholder: string }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const t = useTranslations("DatePicker");
 
   var date = new Date();
   const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -58,15 +60,15 @@ export default function DatePicker({ placeholder }: { placeholder: string }) {
           value={value}
           configs={{
             shortcuts: {
-              today: "Today",
-              yesterday: "Yesterday",
-              past: (period) => `P-${period}`,
-              currentMonth: "Current Month",
-              pastMonth: "Past Month",
+              today: t("today"),
+              yesterday: t("yesterday"),
+              past: (period) => `${t("prefixPeriod")}${period}`,
+              currentMonth: t("currentMonth"),
+              pastMonth: t("pastMonth"),
             },
             footer: {
-              cancel: "Cancel",
-              apply: "Apply",
+              cancel: t("cancel"),
+              apply: t("apply"),
             },
           }}
           onChange={handleValueChange}

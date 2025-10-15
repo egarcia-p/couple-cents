@@ -121,5 +121,21 @@
     "create": "Create",
     "delete": "Delete",
     "downloadCsv": "Download CSV"
+  },
+  "DatePicker": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "prefixPeriod": "P-",
+    "currentMonth": "Current Month",
+    "pastMonth": "Past Month",
+    "cancel": "Cancel",
+    "apply": "Apply"
+  },
+  "DashboardTable": {
+    "establishment": "Establishment",
+    "category": "Category",
+    "amount": "Amount",
+    "note": "Note",
+    "transactionDate": "Date"
   }
 }

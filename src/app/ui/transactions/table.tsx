@@ -3,6 +3,7 @@ import { DeleteTransaction, UpdateTransaction } from "./buttons";
 import { formatDateToLocal } from "@/app/lib/utils";
 import DownloadCSV from "./download-button";
 import { verifySession } from "@/app/lib/dal";
+import { getTranslations } from "next-intl/server";
 
 export default async function DashboardTable({
   query,
@@ -17,6 +18,8 @@ export default async function DashboardTable({
 }) {
   const session = await verifySession();
   if (!session) return null;
+
+  const t = await getTranslations("DashboardTable");
 
   const transactions = await fetchFilteredTransactions(
     query,
@@ -33,19 +36,19 @@ export default async function DashboardTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Establishment
+                  {t("establishment")}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Category
+                  {t("category")}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Amount
+                  {t("amount")}
                 </th>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Note
+                  {t("note")}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Transaction Date
+                  {t("transactionDate")}
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
