@@ -166,5 +166,13 @@
         "percentage": "Percentage of Budget"
       }
     }
+  },
+  "Profile": {
+    "title": "Profile Settings",
+    "budget": {
+      "title": "Budget Settings(Monthly)",
+      "saveButton": "Save Budget",
+      "anualBudget": "Anual Budget"
+    }
   }
 }

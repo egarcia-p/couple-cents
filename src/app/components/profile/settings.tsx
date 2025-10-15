@@ -1,11 +1,8 @@
 "use client";
 
 import { saveBudgetSettings } from "@/app/lib/actions";
-import { fetchUserBudgetSettings } from "@/app/lib/data";
-import profileMessages from "@/app/lib/data/messages/profile.json";
 import { Button } from "@/app/ui/button";
 import { BudgetField } from "@/app/ui/profile/budget-field";
-import { int } from "drizzle-orm/mysql-core";
 import { useFormState } from "react-dom";
 import { use, useEffect, useState } from "react";
 import categories from "@/app/lib/data/categories.json";
@@ -13,6 +10,7 @@ import {
   UserBudgetSetting,
   UserBudgetSettingForm,
 } from "../../lib/definitions";
+import { useTranslations } from "next-intl";
 
 export default function UserSettings({
   userId,
@@ -21,6 +19,8 @@ export default function UserSettings({
   userId: string;
   budgetSettings: UserBudgetSetting[];
 }) {
+  const t = useTranslations("Profile");
+  const tCategories = useTranslations("Categories");
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useFormState(saveBudgetSettings, initialState);
   const [totalBudget, setTotalBudget] = useState(0);
@@ -28,7 +28,7 @@ export default function UserSettings({
   const budgetsPerCategorySettings = Object.keys(categories).map(
     (category) => ({
       categoryId: category,
-      category: categories[category as keyof typeof categories],
+      category: tCategories(category),
       budget: budgetSettings.find((setting) => setting.category === category)
         ? budgetSettings.find((setting) => setting.category === category)
             ?.budget
@@ -69,9 +69,7 @@ export default function UserSettings({
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 ">
           <div className="ml-4 mt-4 flex flex-col gap-4">
-            <h1 className="text-xl font-bold">
-              {profileMessages.settings.budget.title}
-            </h1>
+            <h1 className="text-xl font-bold">{t("budget.title")}</h1>
             <form action={dispatch}>
               <input type="hidden" name="userId" value={userId} />
               <div className="flex flex-col gap-2">
@@ -85,13 +83,13 @@ export default function UserSettings({
                   />
                 ))}
                 <div>
-                  <h2>Anual Budget</h2>
+                  <h2>{t("budget.anualBudget")}</h2>
                   <p className="text-lg font-semibold">
                     ${totalBudget.toLocaleString()}
                   </p>
                 </div>
                 <div className="flex w-full justify-left">
-                  <Button type="submit">Save Budget</Button>
+                  <Button type="submit">{t("budget.saveButton")}</Button>
                 </div>
               </div>
             </form>
