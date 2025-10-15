@@ -9,27 +9,27 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-// Map of links to display in the side navigation.
-// Depending on the size of the application, this would be stored in a database.
-const links = [
-  { name: "Home", href: "/dashboard", icon: HomeIcon },
-  {
-    name: "Transactions",
-    href: "/dashboard/transactions",
-    icon: BanknotesIcon,
-  },
-  {
-    name: "History",
-    href: "/dashboard/history",
-    icon: ChartBarSquareIcon,
-  },
-  { name: "Budget Tracker", href: "/dashboard/budget", icon: TableCellsIcon },
-  { name: "Profile", href: "/dashboard/profile", icon: UserCircleIcon },
-];
+import { useTranslations } from "next-intl";
 
 export default function NavLinks() {
   const pathname = usePathname();
+  const t = useTranslations("NavLinks");
+
+  const links = [
+    { name: t("home"), href: "/dashboard", icon: HomeIcon },
+    {
+      name: t("transactions"),
+      href: "/dashboard/transactions",
+      icon: BanknotesIcon,
+    },
+    {
+      name: t("history"),
+      href: "/dashboard/history",
+      icon: ChartBarSquareIcon,
+    },
+    { name: t("budget"), href: "/dashboard/budget", icon: TableCellsIcon },
+    { name: t("profile"), href: "/dashboard/profile", icon: UserCircleIcon },
+  ];
   return (
     <>
       {links.map((link) => {

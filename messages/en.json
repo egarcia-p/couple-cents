@@ -174,5 +174,14 @@
       "saveButton": "Save Budget",
       "anualBudget": "Anual Budget"
     }
+  },
+  "NavLinks": {
+    "title": "CoupleCents",
+    "home": "Home",
+    "transactions": "Transactions",
+    "history": "History",
+    "budget": "Budget Tracker",
+    "profile": "Profile",
+    "signout": "Sign Out"
   }
 }
