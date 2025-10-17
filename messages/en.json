@@ -169,6 +169,13 @@
   },
   "Profile": {
     "title": "Profile Settings",
+    "settings": {
+      "title": "General settings",
+      "language": "Language",
+      "languagePlaceholder": "Select a Language",
+      "timezone": "Timezone",
+      "timezonePlaceholder": "Select a timezone"
+    },
     "budget": {
       "title": "Budget Settings(Monthly)",
       "saveButton": "Save Budget",

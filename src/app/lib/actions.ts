@@ -199,7 +199,6 @@ export async function deleteTransaction(id: string) {
 
 export async function saveBudgetSettings(prevState: State, formData: FormData) {
   try {
-    console.log("Form Data: ", formData);
     // create or save budget settings
     const userId = formData.get("userId") as string;
     // Get all entries and filter for budget settings
@@ -260,6 +259,23 @@ export async function saveBudgetSettings(prevState: State, formData: FormData) {
   } catch (error) {
     return {
       message: "Database Error: Failed to Save Budget Settings.",
+    };
+  }
+
+  revalidatePath("/dashboard");
+  redirect("/dashboard");
+}
+
+export async function saveLanguageSettings(
+  prevState: State,
+  formData: FormData,
+) {
+  try {
+    // create or save lanaguage settings
+    const userId = formData.get("userId") as string;
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to Save Languge Settings.",
     };
   }
 
