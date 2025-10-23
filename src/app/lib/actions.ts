@@ -4,7 +4,11 @@ import z from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "./db";
-import { transactions, userBudgetSettings } from "../../../drizzle/schema";
+import {
+  transactions,
+  userBudgetSettings,
+  userSettings,
+} from "../../../drizzle/schema";
 import { and, eq } from "drizzle-orm";
 import { use } from "react";
 import { set } from "zod";
@@ -53,6 +57,15 @@ const UserBudgetSettingsUpdate = UserBudgetSettings.extend({
   }),
 });
 const UserBudgetSettingsCreate = UserBudgetSettings.omit({ id: true });
+
+const UserSettings = z.object({
+  id: z.coerce.number(),
+  userId: z.string(),
+  language: z.string(),
+  timezone: z.string(),
+});
+
+const UserSettingsCreate = UserSettings.omit({ id: true });
 
 export type State = {
   errors?: {
@@ -273,6 +286,45 @@ export async function saveLanguageSettings(
   try {
     // create or save lanaguage settings
     const userId = formData.get("userId") as string;
+    const language = formData.get("language") as string;
+    const timezone = formData.get("timezone") as string;
+
+    const setting = {
+      userId: userId,
+      language: language,
+      timezone: timezone,
+    };
+
+    const parsedSettings = UserSettingsCreate.safeParse(setting);
+
+    if (!parsedSettings.success) {
+      throw new Error(
+        `Invalid settings: ${setting}. Error: ${parsedSettings.error}`,
+      );
+    }
+
+    // Check if the setting already exists
+    const existingSetting = await db
+      .select()
+      .from(userSettings)
+      .where(and(eq(userSettings.userId, userId)))
+      .limit(1)
+      .execute();
+    if (existingSetting.length === 0) {
+      type NewUserSetting = typeof userSettings.$inferInsert;
+      const newUserSetting: NewUserSetting = parsedSettings.data;
+      await db.insert(userSettings).values(newUserSetting);
+    } else {
+      // If it exists, update
+      const setValues = {
+        language: parsedSettings.data.language.toString(),
+        timezone: parsedSettings.data.timezone.toString(),
+      };
+      await db
+        .update(userSettings)
+        .set(setValues)
+        .where(and(eq(userSettings.userId, userId)));
+    }
   } catch (error) {
     return {
       message: "Database Error: Failed to Save Languge Settings.",
