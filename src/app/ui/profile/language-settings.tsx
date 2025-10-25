@@ -18,12 +18,33 @@ export default function LanguageSettings({
   userId,
   userSettings,
 }: LanguageSettingsProps) {
-  const t = useTranslations("Profile");
-  const [region, setRegion] = useState("America");
-
   const defaultTimezone = userSettings.timezone
     ? userSettings.timezone
     : Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const t = useTranslations("Profile");
+
+  // typed view of the imported timezones JSON so we can index by region at runtime
+  const zones = timezones as Record<string, { key: string; label: string }[]>;
+
+  // derive initial region from the resolved/default timezone
+  const initialRegion = (() => {
+    // 1) exact match: find the region that contains the exact timezone key
+    for (const r of Object.keys(zones)) {
+      if (zones[r].some((tz) => tz.key === defaultTimezone)) return r;
+    }
+
+    // 2) prefix fallback: use the prefix (e.g. 'America' from 'America/New_York')
+    const prefix = String(defaultTimezone).split("/")[0];
+    for (const r of Object.keys(zones)) {
+      if (zones[r].some((tz) => tz.key.startsWith(prefix + "/"))) return r;
+    }
+
+    // 3) final fallback
+    return "America";
+  })();
+
+  const [region, setRegion] = useState<string>(initialRegion);
 
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useFormState(saveLanguageSettings, initialState);
@@ -80,9 +101,10 @@ export default function LanguageSettings({
             <div className="flex gap-4">
               <select
                 value={region}
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 onChange={(e) => setRegion(e.target.value)}
               >
-                {Object.keys(timezones).map((r) => (
+                {Object.keys(zones).map((r) => (
                   <option key={r} value={r}>
                     {r}
                   </option>
@@ -92,10 +114,11 @@ export default function LanguageSettings({
               <select
                 //value={timezone}
                 name="timezone"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 //={(e) => setTimezone(e.target.value)}
-                defaultValue={userSettings.timezone}
+                defaultValue={defaultTimezone}
               >
-                {timezones[region].map((tz) => (
+                {zones[region].map((tz) => (
                   <option key={tz.key} value={tz.key}>
                     {tz.label}
                   </option>
