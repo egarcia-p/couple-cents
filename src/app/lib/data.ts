@@ -1,5 +1,9 @@
 import { use } from "react";
-import { transactions, userBudgetSettings } from "../../../drizzle/schema";
+import {
+  transactions,
+  userBudgetSettings,
+  userSettings,
+} from "../../../drizzle/schema";
 import { db } from "./db";
 import { TransactionForm } from "./definitions";
 import { formatCurrency, formatPercentage } from "./utils";
@@ -549,6 +553,25 @@ export async function fetchUserBudgetSettings(userId: string) {
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch user budget settings.");
+  }
+}
+
+export async function fetchUserSettings(userId: string) {
+  try {
+    const data = await db
+      .select({
+        id: userSettings.id,
+        userId: userSettings.userId,
+        language: userSettings.language,
+        timezone: userSettings.timezone,
+      })
+      .from(userSettings)
+      .where(eq(userSettings.userId, userId));
+
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch user settings.");
   }
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { saveBudgetSettings, saveLanguageSettings } from "@/app/lib/actions";
+import { saveBudgetSettings } from "@/app/lib/actions";
 import { Button } from "@/app/ui/button";
 import { BudgetField } from "@/app/ui/profile/budget-field";
 import { useFormState } from "react-dom";
@@ -9,6 +9,7 @@ import categories from "@/app/lib/data/categories.json";
 import {
   UserBudgetSetting,
   UserBudgetSettingForm,
+  UserSettings as UserSettingsType,
 } from "../../lib/definitions";
 import { useTranslations } from "next-intl";
 import LanguageSettings from "@/app/ui/profile/language-settings";
@@ -16,19 +17,17 @@ import LanguageSettings from "@/app/ui/profile/language-settings";
 export default function UserSettings({
   userId,
   budgetSettings,
+  userSettings,
 }: {
   userId: string;
   budgetSettings: UserBudgetSetting[];
+  userSettings: UserSettingsType;
 }) {
   const t = useTranslations("Profile");
   const tCategories = useTranslations("Categories");
   const initialState = { message: "", errors: {} };
   const initialLanguageState = { message: "", errors: {} };
   const [_, dispatch] = useFormState(saveBudgetSettings, initialState);
-  const [_2, dispatchLanguageSettings] = useFormState(
-    saveLanguageSettings,
-    initialLanguageState,
-  );
   const [totalBudget, setTotalBudget] = useState(0);
 
   const budgetsPerCategorySettings = Object.keys(categories).map(
@@ -73,7 +72,7 @@ export default function UserSettings({
   return (
     <div className="mt-6 flex flex-col gap-6">
       <div className="inline-block min-w-full align-middle">
-        <LanguageSettings userId={userId} dispatch={dispatchLanguageSettings} />
+        <LanguageSettings userId={userId} userSettings={userSettings} />
       </div>
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 ">

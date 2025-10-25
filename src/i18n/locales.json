@@ -1,0 +1,34 @@
+[
+  {
+    "key": "en-US",
+    "label": "English (United States)",
+    "language": "English",
+    "region": "United States",
+    "currency": "USD",
+    "timezoneExample": "America/New_York"
+  },
+  {
+    "key": "en-GB",
+    "label": "English (United Kingdom)",
+    "language": "English",
+    "region": "United Kingdom",
+    "currency": "GBP",
+    "timezoneExample": "Europe/London"
+  },
+  {
+    "key": "es-ES",
+    "label": "Español (España)",
+    "language": "Español",
+    "region": "España",
+    "currency": "EUR",
+    "timezoneExample": "Europe/Madrid"
+  },
+  {
+    "key": "es-MX",
+    "label": "Español (México)",
+    "language": "Español",
+    "region": "México",
+    "currency": "MXN",
+    "timezoneExample": "America/Mexico_City"
+  }
+]

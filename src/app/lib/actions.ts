@@ -327,7 +327,7 @@ export async function saveLanguageSettings(
     }
   } catch (error) {
     return {
-      message: "Database Error: Failed to Save Languge Settings.",
+      message: "Database Error: Failed to Save Settings.",
     };
   }
 
