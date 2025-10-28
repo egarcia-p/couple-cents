@@ -12,6 +12,7 @@ import {
 import { and, eq } from "drizzle-orm";
 import { use } from "react";
 import { set } from "zod";
+import { cookies } from "next/headers";
 
 const booleanString = z
   .string()
@@ -325,6 +326,13 @@ export async function saveLanguageSettings(
         .set(setValues)
         .where(and(eq(userSettings.userId, userId)));
     }
+
+    // Set the cookie
+    cookies().set("NEXT_LOCALE", language, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+    });
   } catch (error) {
     return {
       message: "Database Error: Failed to Save Settings.",
