@@ -9,6 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { SetStateAction, useState } from "react";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import "dayjs/locale"; //TODO fix this import to not import all locales
 
 import dayjs, { Dayjs } from "dayjs";
 
@@ -16,10 +17,12 @@ export default function Form({
   userId,
   categories,
   isExpense,
+  locale,
 }: {
   userId: string;
   categories: Object;
   isExpense: boolean;
+  locale: string;
 }) {
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useFormState(createTransaction, initialState);
@@ -263,7 +266,10 @@ export default function Form({
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
                 /> */}
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <LocalizationProvider
+                  dateAdapter={AdapterDayjs}
+                  adapterLocale={locale}
+                >
                   <DatePicker
                     label="Date"
                     name="transactionDate"

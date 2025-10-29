@@ -8,6 +8,7 @@ import DashboardTableMobile from "@/app/ui/transactions/table-mobile";
 import { toZonedTime, format } from "date-fns-tz";
 import { verifySession } from "@/app/lib/dal";
 import { getTranslations } from "next-intl/server";
+import { cookies } from "next/headers";
 
 export default async function Page({
   searchParams,
@@ -22,6 +23,7 @@ export default async function Page({
   if (!session) return null;
 
   const t = await getTranslations("TransactionsPage");
+  const locale = cookies().get("NEXT_LOCALE")?.value || "en-GB";
 
   const currentPage = Number(searchParams?.page) || 1;
   const query = searchParams?.query || "";
@@ -76,7 +78,7 @@ export default async function Page({
       </div>
       <div className="hidden flex md:block">
         <div className=" w-1/2 justify-start">
-          <DatePicker placeholder="" />
+          <DatePicker placeholder="" locale={locale} />
         </div>
       </div>
       <div className="hidden w-full md:block">

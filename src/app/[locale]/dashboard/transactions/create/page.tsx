@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import categories from "@/app/lib/data/categories.json";
 import categoriesForIncome from "@/app/lib/data/categoriesForIncome.json";
 import { verifySession } from "@/app/lib/dal";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Create",
@@ -15,6 +16,8 @@ export default async function Page({
 }) {
   const session = await verifySession();
   if (!session) return null;
+
+  const locale = cookies().get("NEXT_LOCALE")?.value.toLowerCase() || "en";
 
   const isExpense = String(searchParams.isExpense).toLowerCase() === "true";
   let formCategories = {};
@@ -32,6 +35,7 @@ export default async function Page({
         userId={session.user.id}
         categories={formCategories}
         isExpense={isExpense}
+        locale={locale}
       />
     </main>
   );

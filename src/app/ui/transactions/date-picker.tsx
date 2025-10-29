@@ -9,7 +9,13 @@ import { useTranslations } from "next-intl";
 
 const WAIT_BETWEEN_KEY_PRESS = 1000;
 
-export default function DatePicker({ placeholder }: { placeholder: string }) {
+export default function DatePicker({
+  placeholder,
+  locale,
+}: {
+  placeholder: string;
+  locale: string;
+}) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -54,6 +60,7 @@ export default function DatePicker({ placeholder }: { placeholder: string }) {
     <div className="">
       <div className="">
         <Datepicker
+          i18n={locale}
           showShortcuts={true}
           showFooter={true}
           primaryColor={"green"}
