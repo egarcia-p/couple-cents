@@ -51,12 +51,12 @@ export default async function Page({
   const dates = searchParams?.dates || firstDay + "to" + lastDay;
   const totalPages = await fetchTransactionPages(query, dates, session.user.id);
 
-  console.warn("Date: new Date()", utcDate);
-  console.warn("Date: mexicoDate", mexicoDate);
-  console.warn("Definitive date:", date);
-  console.warn("Date: firstDay", firstDay);
-  console.warn("Date: lastDay", lastDay);
-  console.warn("Date: dates", dates);
+  // console.warn("Date: new Date()", utcDate);
+  // console.warn("Date: mexicoDate", mexicoDate);
+  // console.warn("Definitive date:", date);
+  // console.warn("Date: firstDay", firstDay);
+  // console.warn("Date: lastDay", lastDay);
+  // console.warn("Date: dates", dates);
 
   return (
     <div className="w-full">
