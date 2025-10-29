@@ -4,6 +4,7 @@ import { formatDateToLocal } from "@/app/lib/utils";
 import DownloadCSV from "./download-button";
 import { verifySession } from "@/app/lib/dal";
 import { getTranslations } from "next-intl/server";
+import { cookies } from "next/headers";
 
 export default async function DashboardTable({
   query,
@@ -27,6 +28,8 @@ export default async function DashboardTable({
     currentPage,
     userId,
   );
+
+  const locale: string = cookies().get("NEXT_LOCALE")?.value || "en-GB";
 
   return (
     <div className="mt-6 flow-root">
@@ -78,6 +81,7 @@ export default async function DashboardTable({
                   <td className="whitespace-nowrap px-3 py-3">
                     {formatDateToLocal(
                       transaction.transactionDate.toUTCString(),
+                      locale,
                     )}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
