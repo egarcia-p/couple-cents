@@ -18,7 +18,7 @@ export default function LanguageSettings({
   userId,
   userSettings,
 }: LanguageSettingsProps) {
-  const defaultTimezone = userSettings.timezone
+  const defaultTimezone = userSettings?.timezone
     ? userSettings.timezone
     : Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -70,7 +70,7 @@ export default function LanguageSettings({
                     id="language"
                     name="language"
                     className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                    defaultValue={userSettings.language}
+                    defaultValue={userSettings?.language}
                     aria-describedby="language-error"
                   >
                     <option value="" disabled>
