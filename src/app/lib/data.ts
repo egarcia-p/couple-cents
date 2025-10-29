@@ -102,6 +102,9 @@ export async function fetchAllFilteredTransactions({
   const startDate = dateArray[0];
   const endDate = dateArray[1];
 
+  const userSettingsData = await fetchUserSettings(userId);
+  const userLocale = userSettingsData[0]?.language || "en-US";
+
   const matchingCodes = Object.entries(categoriesMap)
     .filter(([code, name]) => name.toLowerCase().includes(query.toLowerCase()))
     .map(([code]) => code);
@@ -125,7 +128,11 @@ export async function fetchAllFilteredTransactions({
         amount: sql<string>`amount`.mapWith({
           mapFromDriverValue: (value: any) => {
             //let mappedValue = value / 100;
-            const mappedValue = formatCurrency(Number(value) ?? "0");
+            const mappedValue = formatCurrency(
+              Number(value) ?? "0",
+              true,
+              userLocale,
+            );
             return mappedValue;
           },
         }),
@@ -162,6 +169,9 @@ export async function fetchFilteredTransactions(
   const startDate = dateArray[0];
   const endDate = dateArray[1];
 
+  const userSettingsData = await fetchUserSettings(userId);
+  const userLocale = userSettingsData[0]?.language || "en-US";
+
   const matchingCodes = Object.entries(categoriesMap)
     .filter(([code, name]) => name.toLowerCase().includes(query.toLowerCase()))
     .map(([code]) => code);
@@ -185,7 +195,11 @@ export async function fetchFilteredTransactions(
         amount: sql<string>`amount`.mapWith({
           mapFromDriverValue: (value: any) => {
             //let mappedValue = value / 100;
-            const mappedValue = formatCurrency(Number(value) ?? "0");
+            const mappedValue = formatCurrency(
+              Number(value) ?? "0",
+              true,
+              userLocale,
+            );
             return mappedValue;
           },
         }),
@@ -256,6 +270,9 @@ export async function fetchCardData(
   year: string,
 ) {
   const t = await getTranslations("DB");
+  const userSettingsData = await fetchUserSettings(userId);
+  const userLocale = userSettingsData[0]?.language || "en-US";
+
   try {
     const totalMonthSpendData = db
       .select({ value: sum(transactions.amount) })
@@ -334,24 +351,44 @@ export async function fetchCardData(
       percentageOfIncomeSpentYear = t("noIncome");
     }
 
-    const totalMonthSpend = formatCurrency(totalMonthSpendDB ?? "0");
-    const totalYearSpend = formatCurrency(totalYearSpendDB ?? "0");
-    const totalMonthIncome = formatCurrency(totalMonthIncomeDB ?? "0");
-    const totalYearIncome = formatCurrency(totalYearIncomeDB ?? "0");
+    const totalMonthSpend = formatCurrency(
+      totalMonthSpendDB ?? "0",
+      true,
+      userLocale,
+    );
+    const totalYearSpend = formatCurrency(
+      totalYearSpendDB ?? "0",
+      true,
+      userLocale,
+    );
+    const totalMonthIncome = formatCurrency(
+      totalMonthIncomeDB ?? "0",
+      true,
+      userLocale,
+    );
+    const totalYearIncome = formatCurrency(
+      totalYearIncomeDB ?? "0",
+      true,
+      userLocale,
+    );
     const totalMonthSpendIncome = formatCurrency(
       totalMonthIncomeDB - totalMonthSpendDB,
+      true,
+      userLocale,
     );
     const totalYearSpendIncome = formatCurrency(
       totalYearIncomeDB - totalYearSpendDB,
+      true,
+      userLocale,
     );
 
     const totalMonthBudget = totalMonthBudgetDB
-      ? formatCurrency(totalMonthBudgetDB * 100) //convert from cents to dollars
-      : formatCurrency(0);
+      ? formatCurrency(totalMonthBudgetDB * 100, true, userLocale) //convert from cents to dollars
+      : formatCurrency(0, true, userLocale);
     //Calculate total year budget
     const totalYearBudget = totalMonthBudgetDB
-      ? formatCurrency(totalMonthBudgetDB * 100 * 12)
-      : formatCurrency(0);
+      ? formatCurrency(totalMonthBudgetDB * 100 * 12, true, userLocale)
+      : formatCurrency(0, true, userLocale);
 
     return {
       totalMonthSpend,

@@ -8,6 +8,7 @@ import {
 } from "@/app/lib/helpers/budget";
 import { formatCurrency, formatPercentage } from "@/app/lib/utils";
 import { useTranslations } from "next-intl";
+import { cookies } from "next/headers";
 
 export default function ExpensesTable({
   budgetSettings,
@@ -27,6 +28,8 @@ export default function ExpensesTable({
     budgetSettings,
     expenses,
   );
+
+  const locale: string = cookies().get("NEXT_LOCALE")?.value || "en-US";
 
   return (
     <>
@@ -93,7 +96,6 @@ export default function ExpensesTable({
                       category.budget && Number(category.budget) !== 0
                         ? variance / Number(category.budget)
                         : 0;
-                    console.log(percentage);
                     return (
                       <tr
                         key={category.category}
@@ -106,12 +108,14 @@ export default function ExpensesTable({
                           {formatCurrency(
                             Number(category.expense) ?? "0",
                             false,
+                            locale,
                           )}
                         </td>
                         <td className="whitespace-nowrap px-3 py-3">
                           {formatCurrency(
                             Number(category.budget) ?? "0",
                             false,
+                            locale,
                           )}
                         </td>
                         <td
@@ -119,7 +123,11 @@ export default function ExpensesTable({
                             variance < 0 ? "text-red-500" : "text-green-500"
                           }`}
                         >
-                          {formatCurrency(Number(variance) ?? "0", false)}
+                          {formatCurrency(
+                            Number(variance) ?? "0",
+                            false,
+                            locale,
+                          )}
                         </td>
                         <td
                           className={`whitespace-nowrap px-3 py-3 ${
@@ -196,7 +204,11 @@ export default function ExpensesTable({
                             variance < 0 ? "text-red-500" : "text-green-500"
                           }`}
                         >
-                          {formatCurrency(Number(variance) ?? "0", false)}
+                          {formatCurrency(
+                            Number(variance) ?? "0",
+                            false,
+                            locale,
+                          )}
                         </td>
                         <td
                           className={`whitespace-nowrap px-3 py-3 ${
