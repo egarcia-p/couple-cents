@@ -12,6 +12,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale"; //TODO fix this import to not import all locales
 
 import dayjs, { Dayjs } from "dayjs";
+import { useTranslations } from "next-intl";
 
 export default function Form({
   userId,
@@ -26,6 +27,8 @@ export default function Form({
 }) {
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useFormState(createTransaction, initialState);
+
+  const t = useTranslations("TransactionsPage");
 
   //Date state
   const date = new Date();
@@ -74,7 +77,7 @@ export default function Form({
           {/* Transaction Amount */}
           <div className="mb-4">
             <label htmlFor="amount" className="mb-2 block text-sm font-medium">
-              Choose an amount
+              {t("create.amountLabel")}
             </label>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
@@ -83,7 +86,7 @@ export default function Form({
                   name="amount"
                   type="number"
                   step="0.01"
-                  placeholder="Enter MXN amount"
+                  placeholder={t("create.amountPlaceholder")}
                   className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                   aria-describedby="amount-error"
                 />
@@ -106,7 +109,7 @@ export default function Form({
               htmlFor="establishment"
               className="mb-2 block text-sm font-medium"
             >
-              Choose establishment
+              {t("create.establishmentLabel")}
             </label>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
@@ -114,7 +117,7 @@ export default function Form({
                   id="establishment"
                   name="establishment"
                   type="text"
-                  placeholder="Enter a establishment"
+                  placeholder={t("create.establishmentPlaceholder")}
                   className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                   aria-describedby="establishment-error"
                 />
@@ -141,7 +144,7 @@ export default function Form({
               htmlFor="category"
               className="mb-2 block text-sm font-medium"
             >
-              Choose category
+              {t("create.categoryLabel")}
             </label>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
@@ -153,7 +156,7 @@ export default function Form({
                   aria-describedby="category-error"
                 >
                   <option value="" disabled>
-                    Select a category
+                    {t("create.categoryPlaceholder")}
                   </option>
                   {Object.entries(categories).map(
                     ([key, value]: [string, string]) => (
@@ -179,7 +182,7 @@ export default function Form({
           {/* Transaction Note  */}
           <div className="mb-4">
             <label htmlFor="note" className="mb-2 block text-sm font-medium">
-              Add a note
+              {t("create.noteLabel")}
             </label>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
@@ -187,7 +190,7 @@ export default function Form({
                   id="note"
                   name="note"
                   type="text"
-                  placeholder="Enter a note"
+                  placeholder={t("create.notePlaceholder")}
                   className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                   aria-describedby="note-error"
                 />
@@ -211,7 +214,7 @@ export default function Form({
                 htmlFor="isEssential"
                 className="mb-2 block text-sm font-medium"
               >
-                Choose if is an essential expense
+                {t("create.essentialLabel")}
               </label>
               <div className="relative mt-2 rounded-md">
                 <div className="relative">
@@ -256,7 +259,7 @@ export default function Form({
               htmlFor="transactionDate"
               className="mb-2 block text-sm font-medium"
             >
-              Date of Transaction
+              {t("create.dateOfTransactionLabel")}
             </label>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
@@ -302,9 +305,9 @@ export default function Form({
             href="/dashboard/transactions"
             className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
           >
-            Cancel
+            {t("create.cancelButton")}
           </Link>
-          <Button type="submit">Create Transaction</Button>
+          <Button type="submit">{t("create.createButton")}</Button>
         </div>
       </form>
     </>

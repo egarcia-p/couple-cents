@@ -18,7 +18,7 @@ export default function EssentialExpensesMonthChart({
   dataNonEssentialExpenses,
 }: any) {
   const t = useTranslations("EssentialExpensesMonthChart");
-  const tMonths = useTranslations("months");
+  const tMonths = useTranslations("Months");
 
   const monthsDisplay = new Map<number, string>();
   monthsDisplay.set(1, tMonths("january"));

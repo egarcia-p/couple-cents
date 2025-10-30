@@ -116,7 +116,40 @@
     "periodMobile": "Period: Current Month",
     "searchPlaceholder": "Search transactions...",
     "expenseButton": "Expense",
-    "incomeButton": "Income"
+    "incomeButton": "Income",
+    "currentPeriod": "Current Period",
+    "create": {
+      "createExpense": "Create Expense",
+      "createIncome": "Create Income",
+      "amountLabel": "Amount",
+      "amountPlaceholder": "Enter an amount",
+      "establishmentLabel": "Establishment",
+      "establishmentPlaceholder": "Enter a establishment",
+      "categoryLabel": "Category",
+      "categoryPlaceholder": "Select a category",
+      "noteLabel": "Note",
+      "notePlaceholder": "Enter a note",
+      "essentialLabel": "Choose if is an essential expense",
+      "dateOfTransactionLabel": "Date",
+      "cancelButton": "Cancel",
+      "createButton": "Create Transaction"
+    },
+    "edit": {
+      "editExpense": "Edit Expense",
+      "editIncome": "Edit Income",
+      "amountLabel": "Amount",
+      "amountPlaceholder": "Enter an amount",
+      "establishmentLabel": "Establishment",
+      "establishmentPlaceholder": "Enter a establishment",
+      "categoryLabel": "Category",
+      "categoryPlaceholder": "Select a category",
+      "noteLabel": "Note",
+      "notePlaceholder": "Enter a note",
+      "essentialLabel": "Choose if is an essential expense",
+      "dateOfTransactionLabel": "Date",
+      "cancelButton": "Cancel",
+      "updateButton": "Update Transaction"
+    }
   },
   "Buttons": {
     "create": "Create",
