@@ -1,12 +1,21 @@
-export const formatCurrency = (amount: number, isCents: boolean = true) => {
+import locales from "@/i18n/locales.json";
+
+export const formatCurrency = async (
+  amount: number,
+  isCents: boolean = true,
+  locale: string,
+) => {
   if (isCents) {
     // If the amount is in cents, convert it to $ base 100
     amount = amount / 100;
   }
-  return amount.toLocaleString("en-US", {
+
+  const currencyCode = getCurrencyFromLocale(locale);
+
+  return new Intl.NumberFormat(locale, {
     style: "currency",
-    currency: "MXN",
-  });
+    currency: currencyCode,
+  }).format(amount);
 };
 
 export const formatPercentage = (percentage: number) => {
@@ -64,3 +73,10 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
     totalPages,
   ];
 };
+
+export function getCurrencyFromLocale(locale: string): string {
+  const found = (locales as Array<{ key: string; currency: string }>).find(
+    (l) => l.key === locale,
+  );
+  return found ? found.currency : "USD"; // fallback to USD if not found
+}

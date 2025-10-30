@@ -1,0 +1,74 @@
+{
+  "Africa": [
+    { "key": "Africa/Cairo", "label": "Cairo" },
+    { "key": "Africa/Johannesburg", "label": "Johannesburg" },
+    { "key": "Africa/Lagos", "label": "Lagos" },
+    { "key": "Africa/Nairobi", "label": "Nairobi" },
+    { "key": "Africa/Casablanca", "label": "Casablanca" }
+  ],
+  "America": [
+    { "key": "America/Los_Angeles", "label": "Pacific Time (US & Canada)" },
+    { "key": "America/Denver", "label": "Mountain Time (US & Canada)" },
+    { "key": "America/Chicago", "label": "Central Time (US & Canada)" },
+    { "key": "America/New_York", "label": "Eastern Time (US & Canada)" },
+    { "key": "America/Mexico_City", "label": "Mexico City" },
+    { "key": "America/Bogota", "label": "Bogotá" },
+    { "key": "America/Lima", "label": "Lima" },
+    { "key": "America/Santiago", "label": "Santiago" },
+    { "key": "America/Argentina/Buenos_Aires", "label": "Buenos Aires" },
+    { "key": "America/Sao_Paulo", "label": "São Paulo" },
+    { "key": "America/Toronto", "label": "Toronto" },
+    { "key": "America/Vancouver", "label": "Vancouver" }
+  ],
+  "Asia": [
+    { "key": "Asia/Dubai", "label": "Dubai" },
+    { "key": "Asia/Tokyo", "label": "Tokyo" },
+    { "key": "Asia/Seoul", "label": "Seoul" },
+    { "key": "Asia/Singapore", "label": "Singapore" },
+    { "key": "Asia/Hong_Kong", "label": "Hong Kong" },
+    { "key": "Asia/Shanghai", "label": "Shanghai" },
+    { "key": "Asia/Kolkata", "label": "Kolkata" },
+    { "key": "Asia/Bangkok", "label": "Bangkok" },
+    { "key": "Asia/Jakarta", "label": "Jakarta" },
+    { "key": "Asia/Manila", "label": "Manila" }
+  ],
+  "Australia": [
+    { "key": "Australia/Sydney", "label": "Sydney" },
+    { "key": "Australia/Melbourne", "label": "Melbourne" },
+    { "key": "Australia/Brisbane", "label": "Brisbane" },
+    { "key": "Australia/Perth", "label": "Perth" },
+    { "key": "Australia/Adelaide", "label": "Adelaide" }
+  ],
+  "Europe": [
+    { "key": "Europe/London", "label": "London" },
+    { "key": "Europe/Madrid", "label": "Madrid" },
+    { "key": "Europe/Paris", "label": "Paris" },
+    { "key": "Europe/Berlin", "label": "Berlin" },
+    { "key": "Europe/Rome", "label": "Rome" },
+    { "key": "Europe/Amsterdam", "label": "Amsterdam" },
+    { "key": "Europe/Stockholm", "label": "Stockholm" },
+    { "key": "Europe/Zurich", "label": "Zurich" },
+    { "key": "Europe/Athens", "label": "Athens" },
+    { "key": "Europe/Istanbul", "label": "Istanbul" }
+  ],
+  "Pacific": [
+    { "key": "Pacific/Auckland", "label": "Auckland" },
+    { "key": "Pacific/Fiji", "label": "Fiji" },
+    { "key": "Pacific/Honolulu", "label": "Honolulu" },
+    { "key": "Pacific/Guam", "label": "Guam" },
+    { "key": "Pacific/Tahiti", "label": "Tahiti" }
+  ],
+  "Middle East": [
+    { "key": "Asia/Jerusalem", "label": "Jerusalem" },
+    { "key": "Asia/Beirut", "label": "Beirut" },
+    { "key": "Asia/Baghdad", "label": "Baghdad" },
+    { "key": "Asia/Riyadh", "label": "Riyadh" },
+    { "key": "Asia/Tehran", "label": "Tehran" }
+  ],
+  "Atlantic": [
+    { "key": "Atlantic/Azores", "label": "Azores" },
+    { "key": "Atlantic/Bermuda", "label": "Bermuda" },
+    { "key": "Atlantic/Reykjavik", "label": "Reykjavik" },
+    { "key": "Atlantic/Canary", "label": "Canary Islands" }
+  ]
+}

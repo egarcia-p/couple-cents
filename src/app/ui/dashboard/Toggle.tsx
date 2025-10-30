@@ -1,11 +1,13 @@
 "use client";
 
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function Toggle() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const t = useTranslations("Toggle");
 
   const handleToggle = (term: boolean) => {
     // Perform search logic here
@@ -20,7 +22,7 @@ export default function Toggle() {
   };
   return (
     <div className="relative flex flex-row my-4 gap-2">
-      <div>Month</div>
+      <div>{t("month")}</div>
       <div className=" rounded">
         <input
           id="one"
@@ -28,7 +30,7 @@ export default function Toggle() {
           type="checkbox"
         />
       </div>
-      <div>Year</div>
+      <div>{t("year")}</div>
     </div>
   );
 }

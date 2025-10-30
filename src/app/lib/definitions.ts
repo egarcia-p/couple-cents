@@ -30,3 +30,10 @@ export type UserBudgetSetting = {
   category: string;
   budget: string;
 };
+
+export type UserSettings = {
+  id: number;
+  userId: string;
+  language: string;
+  timezone: string;
+};

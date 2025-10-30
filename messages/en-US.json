@@ -1,0 +1,228 @@
+{
+  "HomePage": {
+    "title": "CoupleCents",
+    "titleWallet": "CoupleCents App",
+    "walletDescription": "Financial Tool for Individuals and Couples",
+    "section2Title": "Take control of your finances",
+    "section3Title": "Make the most of your money",
+    "altTextImage1": "Credit cards",
+    "altTextImage2": "Woman in a bench watching her phone",
+    "footerText": "CoupleCents App. This project is licensed under the Apache license - see the LICENSE file for details. For contributions and support, visit our",
+    "githubLinkText": "GitHub",
+    "repositoryLinkText": "repository"
+  },
+  "SignUpComponent": {
+    "description": "Sign up to Couple Cents and make smarter money decisions every day.",
+    "name": "Full Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "namePlaceholder": "Enter your full name",
+    "emailPlaceholder": "Enter your email",
+    "passwordPlaceholder": "Create a password",
+    "confirmPasswordPlaceholder": "Confirm your password",
+    "signupButton": "Sign Up",
+    "haveAccount": "Already have an account? Login",
+    "passwordMismatch": "Passwords do not match. Please try again.",
+    "weakPassword": "Password is too weak. Please choose a stronger password.",
+    "emailInUse": "Email is already in use. Please use a different email.",
+    "invalidEmail": "Invalid email format. Please enter a valid email address.",
+    "newAccount": "Create an account",
+    "newAccountMessage": "By creating an account, you agree to our ",
+    "termsAndPrivacy": "Terms of Service and Privacy Policy."
+  },
+  "LoginComponent": {
+    "emailPlaceholder": "Enter your email",
+    "passwordPlaceholder": "Enter your password",
+    "emailButton": "Submit",
+    "loginButton": "Login",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account? Sign Up",
+    "invalidCredentials": "Invalid email or password. Please try again.",
+    "areYouNew": "New to Couple Cents?"
+  },
+  "DashboardPage": {
+    "Dashboard": "Dashboard"
+  },
+  "Toggle": {
+    "month": "Month",
+    "year": "Year"
+  },
+  "Cards": {
+    "currentSpend": "Current Spend",
+    "currentIncome": "Current Income",
+    "savings": "Savings",
+    "percentage": "Income Spent",
+    "budget": "Budget"
+  },
+  "Months": {
+    "all": "All",
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
+  },
+  "ExpensesMonthChart": {
+    "title": "Expenses by Month",
+    "expensesLabel": "Expenses",
+    "incomeLabel": "Income",
+    "budgetLabel": "Budget",
+    "currentYear": "Current Year"
+  },
+  "EssentialExpensesMonthChart": {
+    "title": "Expenses by Month",
+    "currentYear": "Current Year",
+    "essentialExpenses": "Essential Expenses",
+    "nonEssentialExpenses": "Non-Essential Expenses"
+  },
+  "ExpensesCategoryChart": {
+    "title": "Expenses by Category",
+    "label": "Expense Chart",
+    "currentPeriod": "Current Period"
+  },
+  "DB": {
+    "noIncome": "No Income"
+  },
+  "Categories": {
+    "CHI": "Childcare",
+    "DIN": "Dining Out",
+    "EDU": "Education",
+    "ENT": "Entertainment",
+    "FIT": "Fitness and Sports",
+    "GIF": "Gifts and Donations",
+    "GRO": "Groceries",
+    "HEA": "Healthcare",
+    "HOU": "Housing",
+    "INS": "Insurance",
+    "PER": "Personal Care",
+    "PET": "Pets",
+    "SAV": "Savings and Investments",
+    "SER": "Services",
+    "SHO": "Shopping",
+    "TRA": "Transportation",
+    "UTI": "Utilities",
+    "VAC": "Vacations"
+  },
+  "TransactionsPage": {
+    "title": "Transactions",
+    "periodMobile": "Period: Current Month",
+    "searchPlaceholder": "Search transactions...",
+    "expenseButton": "Expense",
+    "incomeButton": "Income",
+    "currentPeriod": "Current Period",
+    "create": {
+      "createExpense": "Create Expense",
+      "createIncome": "Create Income",
+      "amountLabel": "Amount",
+      "amountPlaceholder": "Enter an amount",
+      "establishmentLabel": "Establishment",
+      "establishmentPlaceholder": "Enter a establishment",
+      "categoryLabel": "Category",
+      "categoryPlaceholder": "Select a category",
+      "noteLabel": "Note",
+      "notePlaceholder": "Enter a note",
+      "essentialLabel": "Choose if is an essential expense",
+      "dateOfTransactionLabel": "Date",
+      "cancelButton": "Cancel",
+      "createButton": "Create Transaction"
+    },
+    "edit": {
+      "editExpense": "Edit Expense",
+      "editIncome": "Edit Income",
+      "amountLabel": "Amount",
+      "amountPlaceholder": "Enter an amount",
+      "establishmentLabel": "Establishment",
+      "establishmentPlaceholder": "Enter a establishment",
+      "categoryLabel": "Category",
+      "categoryPlaceholder": "Select a category",
+      "noteLabel": "Note",
+      "notePlaceholder": "Enter a note",
+      "essentialLabel": "Choose if is an essential expense",
+      "dateOfTransactionLabel": "Date",
+      "cancelButton": "Cancel",
+      "updateButton": "Update Transaction"
+    }
+  },
+  "Buttons": {
+    "create": "Create",
+    "delete": "Delete",
+    "downloadCsv": "Download CSV"
+  },
+  "DatePicker": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "prefixPeriod": "P-",
+    "currentMonth": "Current Month",
+    "pastMonth": "Past Month",
+    "cancel": "Cancel",
+    "apply": "Apply"
+  },
+  "DashboardTable": {
+    "establishment": "Establishment",
+    "category": "Category",
+    "amount": "Amount",
+    "note": "Note",
+    "transactionDate": "Date"
+  },
+  "History": {
+    "title": "History",
+    "errorSelect": "Please select a month and a year"
+  },
+  "MonthYearFilter": {
+    "month": "Month",
+    "selectMonth": "Select a month",
+    "year": "Year",
+    "selectYear": "Select a year"
+  },
+  "Budget": {
+    "title": "Budget Tracker Dashboard",
+    "expenseTable": {
+      "title": "Expenses by Category",
+      "columns": {
+        "category": "Category",
+        "expense": "Actual Expense",
+        "budget": "Budget Target"
+      }
+    },
+    "varianceTable": {
+      "title": "Variance to Budget",
+      "columns": {
+        "variance": "Variance",
+        "percentage": "Percentage of Budget"
+      }
+    }
+  },
+  "Profile": {
+    "title": "Profile Settings",
+    "settings": {
+      "title": "General settings",
+      "language": "Language",
+      "languagePlaceholder": "Select a Language",
+      "timezone": "Timezone",
+      "timezonePlaceholder": "Select a timezone",
+      "saveButton": "Save Settings"
+    },
+    "budget": {
+      "title": "Budget Settings(Monthly)",
+      "saveButton": "Save Budget",
+      "anualBudget": "Anual Budget"
+    }
+  },
+  "NavLinks": {
+    "title": "CoupleCents",
+    "home": "Home",
+    "transactions": "Transactions",
+    "history": "History",
+    "budget": "Budget Tracker",
+    "profile": "Profile",
+    "signout": "Sign Out"
+  }
+}

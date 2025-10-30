@@ -1,6 +1,7 @@
 import { fetchCardData } from "@/app/lib/data";
 import { BanknotesIcon, PercentBadgeIcon } from "@heroicons/react/24/outline";
-import dashboardMessages from "../../lib/data/messages/dashboard.json";
+import { get } from "http";
+import { getTranslations } from "next-intl/server";
 
 const iconMap = {
   year: BanknotesIcon,
@@ -48,6 +49,7 @@ export async function Cards({
   currentYear: number | string;
   userId: string;
 }) {
+  const t = await getTranslations("Cards");
   const {
     totalMonthSpend,
     totalMonthIncome,
@@ -89,31 +91,19 @@ export async function Cards({
   }
   return (
     <>
+      <Card title={t("currentSpend")} value={totalSpendValue} type="month" />
+      <Card title={t("currentIncome")} value={totalIncomeValue} type="year" />
       <Card
-        title={dashboardMessages.dashboard.cards.currentSpend}
-        value={totalSpendValue}
-        type="month"
-      />
-      <Card
-        title={dashboardMessages.dashboard.cards.currentIncome}
-        value={totalIncomeValue}
-        type="year"
-      />
-      <Card
-        title={dashboardMessages.dashboard.cards.savings}
+        title={t("savings")}
         value={totalSpendIncomeValue}
         type="spendIncome"
       />
       <Card
-        title={dashboardMessages.dashboard.cards.percentage}
+        title={t("percentage")}
         value={totalSpendIncomePercentage}
         type="percentage"
       />
-      <Card
-        title={dashboardMessages.dashboard.cards.budget}
-        value={totalBudgetValue}
-        type="budget"
-      />
+      <Card title={t("budget")} value={totalBudgetValue} type="budget" />
     </>
   );
 }

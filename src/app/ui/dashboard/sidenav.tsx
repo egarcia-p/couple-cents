@@ -7,9 +7,11 @@ import logo from "../../../../public/logo.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/app/lib/auth-client";
+import { useTranslations } from "next-intl";
 
 export default function SideNav() {
   const router = useRouter();
+  const t = useTranslations("NavLinks");
 
   const handleSignOut = async () => {
     try {
@@ -28,10 +30,10 @@ export default function SideNav() {
             <Image src={logo} alt="Logo" />
           </div>
           <div className="w-full m-auto text-secondary md:w-40 md:text-center">
-            <p className=" text-lg">CoupleCents</p>
+            <p className=" text-lg">{t("title")}</p>
           </div>
           <div className="m-auto text-secondary md:w-40 md:text-center">
-            <p className=" text-sm">v0.5.3</p>
+            <p className=" text-sm">v0.6.0</p>
           </div>
         </div>
       </Link>
@@ -44,7 +46,7 @@ export default function SideNav() {
           className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-primary-100 hover:text-black-600 md:flex-none md:justify-start md:p-2 md:px-3"
         >
           <ArrowLeftEndOnRectangleIcon className="w-6" />
-          <div className="hidden md:block">Sign Out</div>
+          <div className="hidden md:block">{t("signout")}</div>
         </button>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { Card, Cards } from "../ui/dashboard/cards";
+import { Cards } from "@/app/ui/dashboard/cards";
 import {
   fetchCardData,
   fetchEssentialSpendDataByMonth,
@@ -9,32 +9,73 @@ import {
   fetchSpendDataByCategoryMonthly,
   fetchSpendDataByMonth,
   fetchUserBudgetByMonth,
-} from "../lib/data";
-import ExpensesMonthChart from "../ui/dashboard/expenses-month-chart";
-import ExpensesCategoryChart from "../ui/dashboard/expenses-category-chart";
-import Toggle from "../ui/dashboard/Toggle";
-import EssentialExpensesMonthChart from "../ui/dashboard/essential-expenses-chart";
-import { auth } from "../lib/auth";
-import { headers } from "next/headers";
-import { verifySession } from "../lib/dal";
+} from "@/app/lib/data";
+import ExpensesMonthChart from "@/app/ui/dashboard/expenses-month-chart";
+import ExpensesCategoryChart from "@/app/ui/dashboard/expenses-category-chart";
+import EssentialExpensesMonthChart from "@/app/ui/dashboard/essential-expenses-chart";
+import Filter from "@/app/ui/dashboard/month-year-filter";
+import { getTranslations } from "next-intl/server";
+import years from "@/app/lib/data/years.json";
+import { verifySession } from "@/app/lib/dal";
 
 export const metadata: Metadata = {
-  title: "Dashboard",
+  title: "History",
 };
 export default async function Page({
   searchParams,
 }: {
   searchParams?: {
     period?: string;
+    year?: string;
+    month?: string;
   };
 }) {
   const session = await verifySession();
+  const tHistory = await getTranslations("History");
+  const tFilter = await getTranslations("MonthYearFilter");
+  const tMonths = await getTranslations("Months");
+
+  const months = {
+    "00": tMonths("all"),
+    "01": tMonths("january"),
+    "02": tMonths("february"),
+    "03": tMonths("march"),
+    "04": tMonths("april"),
+    "05": tMonths("may"),
+    "06": tMonths("june"),
+    "07": tMonths("july"),
+    "08": tMonths("august"),
+    "09": tMonths("september"),
+    "10": tMonths("october"),
+    "11": tMonths("november"),
+    "12": tMonths("december"),
+  };
   if (!session) return null;
 
-  const currentPeriod = searchParams?.period || "Month";
+  let currentPeriod = "Month";
 
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
+  if (searchParams?.month == "00") {
+    currentPeriod = "Year";
+  }
+
+  const sortedMonths = Object.entries(months).sort(([keyA], [keyB]) =>
+    keyA.localeCompare(keyB),
+  );
+
+  //if year and month are not provided, return <h1>Select a year and month</h1>
+  if (!searchParams?.year && !searchParams?.month) {
+    return (
+      <main>
+        <h1 className={`mb-4 text-xl md:text-2xl`}>
+          {tHistory("errorSelect")}
+        </h1>
+        <Filter months={sortedMonths} years={years} />
+      </main>
+    );
+  }
+
+  const currentYear = searchParams?.year || new Date().getFullYear();
+  const currentMonth = searchParams?.month || new Date().getMonth() + 1;
 
   //get budget
   const totalBudgetByMonth = await fetchUserBudgetByMonth(session.user.id);
@@ -95,8 +136,8 @@ export default async function Page({
 
   return (
     <main>
-      <h1 className={`mb-4 text-xl md:text-2xl`}>Dashboard</h1>
-      <Toggle />
+      <h1 className={`mb-4 text-xl md:text-2xl`}>{tHistory("title")}</h1>
+      <Filter months={sortedMonths} years={years} />
       <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
         <Cards
           currentPeriod={currentPeriod}

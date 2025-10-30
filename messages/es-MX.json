@@ -1,0 +1,228 @@
+{
+  "HomePage": {
+    "title": "CoupleCents",
+    "titleWallet": "Aplicación CoupleCents",
+    "walletDescription": "Herramienta financiera para individuos y parejas",
+    "section2Title": "Toma el control de tus finanzas",
+    "section3Title": "Aprovecha al máximo tu dinero",
+    "altTextImage1": "Tarjetas de crédito",
+    "altTextImage2": "Mujer en una banca mirando su teléfono",
+    "footerText": "Aplicación CoupleCents. Este proyecto está bajo la licencia Apache; consulta el archivo LICENSE para más detalles. Para contribuciones y soporte, visita nuestro",
+    "githubLinkText": "GitHub",
+    "repositoryLinkText": "repositorio"
+  },
+  "SignUpComponent": {
+    "description": "Regístrate en Couple Cents y toma decisiones financieras más inteligentes cada día.",
+    "name": "Nombre completo",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "namePlaceholder": "Ingresa tu nombre completo",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "passwordPlaceholder": "Crea una contraseña",
+    "confirmPasswordPlaceholder": "Confirma tu contraseña",
+    "signupButton": "Registrarse",
+    "haveAccount": "¿Ya tienes una cuenta? Inicia sesión",
+    "passwordMismatch": "Las contraseñas no coinciden. Intenta de nuevo.",
+    "weakPassword": "La contraseña es muy débil. Elige una más segura.",
+    "emailInUse": "El correo electrónico ya está en uso. Usa uno diferente.",
+    "invalidEmail": "Formato de correo no válido. Ingresa un correo válido.",
+    "newAccount": "Crear una cuenta",
+    "newAccountMessage": "Al crear una cuenta, aceptas nuestros ",
+    "termsAndPrivacy": "Términos de servicio y Política de privacidad."
+  },
+  "LoginComponent": {
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "emailButton": "Enviar",
+    "loginButton": "Iniciar sesión",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes una cuenta? Regístrate",
+    "invalidCredentials": "Correo o contraseña inválidos. Intenta de nuevo.",
+    "areYouNew": "¿Nuevo en Couple Cents?"
+  },
+  "DashboardPage": {
+    "Dashboard": "Panel de control"
+  },
+  "Toggle": {
+    "month": "Mes",
+    "year": "Año"
+  },
+  "Cards": {
+    "currentSpend": "Gasto actual",
+    "currentIncome": "Ingreso actual",
+    "savings": "Ahorros",
+    "percentage": "Porcentaje de ingreso gastado",
+    "budget": "Presupuesto"
+  },
+  "Months": {
+    "all": "Todos",
+    "january": "Enero",
+    "february": "Febrero",
+    "march": "Marzo",
+    "april": "Abril",
+    "may": "Mayo",
+    "june": "Junio",
+    "july": "Julio",
+    "august": "Agosto",
+    "september": "Septiembre",
+    "october": "Octubre",
+    "november": "Noviembre",
+    "december": "Diciembre"
+  },
+  "ExpensesMonthChart": {
+    "title": "Gastos por mes",
+    "expensesLabel": "Gastos",
+    "incomeLabel": "Ingresos",
+    "budgetLabel": "Presupuesto",
+    "currentYear": "Año actual"
+  },
+  "EssentialExpensesMonthChart": {
+    "title": "Gastos por mes",
+    "currentYear": "Año actual",
+    "essentialExpenses": "Gastos esenciales",
+    "nonEssentialExpenses": "Gastos no esenciales"
+  },
+  "ExpensesCategoryChart": {
+    "title": "Gastos por categoría",
+    "label": "Gráfico de gastos",
+    "currentPeriod": "Periodo actual"
+  },
+  "DB": {
+    "noIncome": "Sin ingresos"
+  },
+  "Categories": {
+    "CHI": "Cuidado infantil",
+    "DIN": "Restaurantes",
+    "EDU": "Educación",
+    "ENT": "Entretenimiento",
+    "FIT": "Ejercicio y deportes",
+    "GIF": "Regalos y donaciones",
+    "GRO": "Supermercado",
+    "HEA": "Salud",
+    "HOU": "Vivienda",
+    "INS": "Seguro",
+    "PER": "Cuidado personal",
+    "PET": "Mascotas",
+    "SAV": "Ahorros e inversiones",
+    "SER": "Servicios",
+    "SHO": "Compras",
+    "TRA": "Transporte",
+    "UTI": "Servicios públicos",
+    "VAC": "Vacaciones"
+  },
+  "TransactionsPage": {
+    "title": "Transacciones",
+    "periodMobile": "Periodo: Mes actual",
+    "searchPlaceholder": "Buscar transacciones...",
+    "expenseButton": "Gasto",
+    "incomeButton": "Ingreso",
+    "currentPeriod": "Periodo actual",
+    "create": {
+      "createExpense": "Crear Gasto",
+      "createIncome": "Crear Ingreso",
+      "amountLabel": "Cantidad",
+      "amountPlaceholder": "Ingresa una cantidad",
+      "establishmentLabel": "Establecimiento",
+      "establishmentPlaceholder": "Ingresa un establecimiento",
+      "categoryLabel": "Categoría",
+      "categoryPlaceholder": "Selecciona una categoría",
+      "noteLabel": "Nota",
+      "notePlaceholder": "Ingresa una nota",
+      "essentialLabel": "¿Es un gasto esencial?",
+      "dateOfTransactionLabel": "Fecha",
+      "cancelButton": "Cancelar",
+      "createButton": "Crear"
+    },
+    "edit": {
+      "editExpense": "Editar Gasto",
+      "editIncome": "Editar Ingreso",
+      "amountLabel": "Cantidad",
+      "amountPlaceholder": "Ingresa una cantidad",
+      "establishmentLabel": "Establecimiento",
+      "establishmentPlaceholder": "Ingresa un establecimiento",
+      "categoryLabel": "Categoría",
+      "categoryPlaceholder": "Selecciona una categoría",
+      "noteLabel": "Nota",
+      "notePlaceholder": "Ingresa una nota",
+      "essentialLabel": "¿Es un gasto esencial?",
+      "dateOfTransactionLabel": "Fecha",
+      "cancelButton": "Cancelar",
+      "updateButton": "Editar"
+    }
+  },
+  "Buttons": {
+    "create": "Crear",
+    "delete": "Eliminar",
+    "downloadCsv": "Descargar CSV"
+  },
+  "DatePicker": {
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "prefixPeriod": "P-",
+    "currentMonth": "Mes actual",
+    "pastMonth": "Mes pasado",
+    "cancel": "Cancelar",
+    "apply": "Aplicar"
+  },
+  "DashboardTable": {
+    "establishment": "Establecimiento",
+    "category": "Categoría",
+    "amount": "Monto",
+    "note": "Nota",
+    "transactionDate": "Fecha"
+  },
+  "History": {
+    "title": "Historial",
+    "errorSelect": "Por favor selecciona un mes y un año"
+  },
+  "MonthYearFilter": {
+    "month": "Mes",
+    "selectMonth": "Selecciona un mes",
+    "year": "Año",
+    "selectYear": "Selecciona un año"
+  },
+  "Budget": {
+    "title": "Panel de control del presupuesto",
+    "expenseTable": {
+      "title": "Gastos por categoría",
+      "columns": {
+        "category": "Categoría",
+        "expense": "Gasto real",
+        "budget": "Presupuesto objetivo"
+      }
+    },
+    "varianceTable": {
+      "title": "Diferencia con el presupuesto",
+      "columns": {
+        "variance": "Diferencia",
+        "percentage": "Porcentaje del presupuesto"
+      }
+    }
+  },
+  "Profile": {
+    "title": "Configuración de perfil",
+    "settings": {
+      "title": "Configuración general",
+      "language": "Idioma",
+      "languagePlaceholder": "Selecciona un idioma",
+      "timezone": "Zona horaria",
+      "timezonePlaceholder": "Selecciona una zona horaria",
+      "saveButton": "Guardar configuración"
+    },
+    "budget": {
+      "title": "Configuración del presupuesto (mensual)",
+      "saveButton": "Guardar presupuesto",
+      "anualBudget": "Presupuesto anual"
+    }
+  },
+  "NavLinks": {
+    "title": "CoupleCents",
+    "home": "Inicio",
+    "transactions": "Transacciones",
+    "history": "Historial",
+    "budget": "Presupuesto",
+    "profile": "Perfil",
+    "signout": "Cerrar sesión"
+  }
+}

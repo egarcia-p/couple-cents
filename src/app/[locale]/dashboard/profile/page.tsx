@@ -1,12 +1,11 @@
-import { auth } from "@/app/lib/auth";
 import { Metadata } from "next";
-import UserAvatar from "../../components/profile/user-profile";
-import Link from "next/link";
+import UserAvatar from "@/app/components/profile/user-profile";
 import UserSettings from "@/app/components/profile/settings";
-import { userBudgetSettings } from "../../../../drizzle/schema";
-import { fetchUserBudgetSettings } from "@/app/lib/data";
-import { UserBudgetSetting } from "@/app/lib/definitions";
-import { headers } from "next/headers";
+import { fetchUserBudgetSettings, fetchUserSettings } from "@/app/lib/data";
+import type {
+  UserBudgetSetting,
+  UserSettings as UserSettingsType,
+} from "@/app/lib/definitions";
 import { verifySession } from "@/app/lib/dal";
 
 export const metadata: Metadata = {
@@ -17,21 +16,23 @@ export default async function Page() {
   if (!session) return null;
 
   const userId = session.user?.id;
-  if (!userId)
-    return (
-      <div>
-        Not authenticated <Link href="/">Go to main page</Link>
-      </div>
-    );
 
   const userBudgetSettingsData: UserBudgetSetting[] =
     await fetchUserBudgetSettings(userId);
+
+  const userSettingsData: UserSettingsType = (
+    await fetchUserSettings(userId)
+  )[0]!;
 
   return (
     <main>
       <h1 className={`mb-4 text-xl md:text-2xl`}>Profile Settings</h1>
       <UserAvatar />
-      <UserSettings userId={userId} budgetSettings={userBudgetSettingsData} />
+      <UserSettings
+        userId={userId}
+        budgetSettings={userBudgetSettingsData}
+        userSettings={userSettingsData}
+      />
     </main>
   );
 }

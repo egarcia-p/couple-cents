@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import messages from "@/app/lib/data/messages/auth.json";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/app/lib/auth-client";
+import { useTranslations } from "next-intl";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -10,6 +10,7 @@ export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const t = useTranslations("LoginComponent");
 
   async function handleEmailSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -45,7 +46,7 @@ export default function LoginForm() {
         },
         onError: (ctx) => {
           // display the error message
-          setError(messages.login.invalidCredentials);
+          setError(t("invalidCredentials"));
         },
       },
     );
@@ -74,7 +75,7 @@ export default function LoginForm() {
             <input
               type="email"
               className="border rounded-lg p-2"
-              placeholder={messages.login.emailPlaceholder}
+              placeholder={t("emailPlaceholder")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -83,7 +84,7 @@ export default function LoginForm() {
               type="submit"
               className={` h-10 text-center items-center rounded-lg bg-primary-600 px-4 text-sm font-medium text-white transition-colors hover:bg-primary-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600`}
             >
-              {messages.login.emailButton}
+              {t("emailButton")}
             </button>
           </div>
         </form>
@@ -94,7 +95,7 @@ export default function LoginForm() {
           <div className="flex flex-col gap-4 mb-4 ">
             <input
               type="password"
-              placeholder={messages.login.passwordPlaceholder}
+              placeholder={t("passwordPlaceholder")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="border rounded-lg p-2"
@@ -105,7 +106,7 @@ export default function LoginForm() {
               type="submit"
               className={` h-10 text-center items-center rounded-lg bg-primary-600 px-4 text-sm font-medium text-white transition-colors hover:bg-primary-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600`}
             >
-              {messages.login.loginButton}
+              {t("loginButton")}
             </button>
           </div>
         </form>

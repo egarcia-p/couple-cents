@@ -65,6 +65,13 @@ export const userBudgetSettings = pgTable("user_budget_settings", {
   budget: numeric("budget").notNull(),
 });
 
+export const userSettings = pgTable("user_settings", {
+  id: serial("id").primaryKey(),
+  userId: text("userId").notNull(),
+  language: varchar("language", { length: 255 }).notNull(),
+  timezone: varchar("timezone", { length: 255 }).notNull(),
+});
+
 //  Better Auth Tables
 export const user = pgTable("user", {
   id: text("id").primaryKey(),

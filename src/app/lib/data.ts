@@ -1,11 +1,16 @@
 import { use } from "react";
-import { transactions, userBudgetSettings } from "../../../drizzle/schema";
+import {
+  transactions,
+  userBudgetSettings,
+  userSettings,
+} from "../../../drizzle/schema";
 import { db } from "./db";
 import { TransactionForm } from "./definitions";
 import { formatCurrency, formatPercentage } from "./utils";
 import { and, or, ilike, sql, eq, count, sum, desc } from "drizzle-orm";
 import _categories from "@/app/lib/data/categories.json";
 import _categoriesIncome from "@/app/lib/data/categoriesForIncome.json";
+import { getTranslations } from "next-intl/server";
 
 //Create an interface for categories.json and assign to new var categories
 interface ICategories {
@@ -97,6 +102,9 @@ export async function fetchAllFilteredTransactions({
   const startDate = dateArray[0];
   const endDate = dateArray[1];
 
+  const userSettingsData = await fetchUserSettings(userId);
+  const userLocale = userSettingsData[0]?.language || "en-US";
+
   const matchingCodes = Object.entries(categoriesMap)
     .filter(([code, name]) => name.toLowerCase().includes(query.toLowerCase()))
     .map(([code]) => code);
@@ -120,7 +128,11 @@ export async function fetchAllFilteredTransactions({
         amount: sql<string>`amount`.mapWith({
           mapFromDriverValue: (value: any) => {
             //let mappedValue = value / 100;
-            const mappedValue = formatCurrency(Number(value) ?? "0");
+            const mappedValue = formatCurrency(
+              Number(value) ?? "0",
+              true,
+              userLocale,
+            );
             return mappedValue;
           },
         }),
@@ -157,6 +169,9 @@ export async function fetchFilteredTransactions(
   const startDate = dateArray[0];
   const endDate = dateArray[1];
 
+  const userSettingsData = await fetchUserSettings(userId);
+  const userLocale = userSettingsData[0]?.language || "en-US";
+
   const matchingCodes = Object.entries(categoriesMap)
     .filter(([code, name]) => name.toLowerCase().includes(query.toLowerCase()))
     .map(([code]) => code);
@@ -180,7 +195,11 @@ export async function fetchFilteredTransactions(
         amount: sql<string>`amount`.mapWith({
           mapFromDriverValue: (value: any) => {
             //let mappedValue = value / 100;
-            const mappedValue = formatCurrency(Number(value) ?? "0");
+            const mappedValue = formatCurrency(
+              Number(value) ?? "0",
+              true,
+              userLocale,
+            );
             return mappedValue;
           },
         }),
@@ -250,6 +269,10 @@ export async function fetchCardData(
   month: string,
   year: string,
 ) {
+  const t = await getTranslations("DB");
+  const userSettingsData = await fetchUserSettings(userId);
+  const userLocale = userSettingsData[0]?.language || "en-US";
+
   try {
     const totalMonthSpendData = db
       .select({ value: sum(transactions.amount) })
@@ -316,7 +339,7 @@ export async function fetchCardData(
         Number(percentageOfIncomeSpentMonth),
       );
     } else {
-      percentageOfIncomeSpentMonth = "No Income";
+      percentageOfIncomeSpentMonth = t("noIncome");
     }
 
     if (totalYearIncomeDB > 0) {
@@ -325,27 +348,47 @@ export async function fetchCardData(
         Number(percentageOfIncomeSpentYear),
       );
     } else {
-      percentageOfIncomeSpentYear = "No Income";
+      percentageOfIncomeSpentYear = t("noIncome");
     }
 
-    const totalMonthSpend = formatCurrency(totalMonthSpendDB ?? "0");
-    const totalYearSpend = formatCurrency(totalYearSpendDB ?? "0");
-    const totalMonthIncome = formatCurrency(totalMonthIncomeDB ?? "0");
-    const totalYearIncome = formatCurrency(totalYearIncomeDB ?? "0");
-    const totalMonthSpendIncome = formatCurrency(
-      totalMonthIncomeDB - totalMonthSpendDB,
+    const totalMonthSpend = await formatCurrency(
+      totalMonthSpendDB ?? "0",
+      true,
+      userLocale,
     );
-    const totalYearSpendIncome = formatCurrency(
+    const totalYearSpend = await formatCurrency(
+      totalYearSpendDB ?? "0",
+      true,
+      userLocale,
+    );
+    const totalMonthIncome = await formatCurrency(
+      totalMonthIncomeDB ?? "0",
+      true,
+      userLocale,
+    );
+    const totalYearIncome = await formatCurrency(
+      totalYearIncomeDB ?? "0",
+      true,
+      userLocale,
+    );
+    const totalMonthSpendIncome = await formatCurrency(
+      totalMonthIncomeDB - totalMonthSpendDB,
+      true,
+      userLocale,
+    );
+    const totalYearSpendIncome = await formatCurrency(
       totalYearIncomeDB - totalYearSpendDB,
+      true,
+      userLocale,
     );
 
     const totalMonthBudget = totalMonthBudgetDB
-      ? formatCurrency(totalMonthBudgetDB * 100) //convert from cents to dollars
-      : formatCurrency(0);
+      ? await formatCurrency(totalMonthBudgetDB * 100, true, userLocale) //convert from cents to dollars
+      : await formatCurrency(0, true, userLocale);
     //Calculate total year budget
     const totalYearBudget = totalMonthBudgetDB
-      ? formatCurrency(totalMonthBudgetDB * 100 * 12)
-      : formatCurrency(0);
+      ? await formatCurrency(totalMonthBudgetDB * 100 * 12, true, userLocale)
+      : await formatCurrency(0, true, userLocale);
 
     return {
       totalMonthSpend,
@@ -547,6 +590,25 @@ export async function fetchUserBudgetSettings(userId: string) {
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch user budget settings.");
+  }
+}
+
+export async function fetchUserSettings(userId: string) {
+  try {
+    const data = await db
+      .select({
+        id: userSettings.id,
+        userId: userSettings.userId,
+        language: userSettings.language,
+        timezone: userSettings.timezone,
+      })
+      .from(userSettings)
+      .where(eq(userSettings.userId, userId));
+
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch user settings.");
   }
 }
 

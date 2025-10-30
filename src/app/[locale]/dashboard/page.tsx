@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { Card, Cards } from "../../ui/dashboard/cards";
+import { Cards } from "@/app/ui/dashboard/cards";
 import {
   fetchCardData,
   fetchEssentialSpendDataByMonth,
@@ -9,54 +9,32 @@ import {
   fetchSpendDataByCategoryMonthly,
   fetchSpendDataByMonth,
   fetchUserBudgetByMonth,
-} from "../../lib/data";
+} from "@/app/lib/data";
 import ExpensesMonthChart from "@/app/ui/dashboard/expenses-month-chart";
 import ExpensesCategoryChart from "@/app/ui/dashboard/expenses-category-chart";
+import Toggle from "@/app/ui/dashboard/Toggle";
 import EssentialExpensesMonthChart from "@/app/ui/dashboard/essential-expenses-chart";
-import Filter from "@/app/ui/dashboard/month-year-filter";
-import { months } from "@/app/lib/data/months";
-import years from "@/app/lib/data/years.json";
 import { verifySession } from "@/app/lib/dal";
+import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
-  title: "History",
+  title: "Dashboard",
 };
 export default async function Page({
   searchParams,
 }: {
   searchParams?: {
     period?: string;
-    year?: string;
-    month?: string;
   };
 }) {
+  const t = await getTranslations("DashboardPage");
   const session = await verifySession();
   if (!session) return null;
 
-  let currentPeriod = "Month";
+  const currentPeriod = searchParams?.period || "Month";
 
-  if (searchParams?.month == "00") {
-    currentPeriod = "Year";
-  }
-
-  const sortedMonths = Object.entries(months).sort(([keyA], [keyB]) =>
-    keyA.localeCompare(keyB),
-  );
-
-  //if year and month are not provided, return <h1>Select a year and month</h1>
-  if (!searchParams?.year && !searchParams?.month) {
-    return (
-      <main>
-        <h1 className={`mb-4 text-xl md:text-2xl`}>
-          Please select a year and month
-        </h1>
-        <Filter months={sortedMonths} years={years} />
-      </main>
-    );
-  }
-
-  const currentYear = searchParams?.year || new Date().getFullYear();
-  const currentMonth = searchParams?.month || new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
 
   //get budget
   const totalBudgetByMonth = await fetchUserBudgetByMonth(session.user.id);
@@ -117,8 +95,8 @@ export default async function Page({
 
   return (
     <main>
-      <h1 className={`mb-4 text-xl md:text-2xl`}>History</h1>
-      <Filter months={sortedMonths} years={years} />
+      <h1 className={`mb-4 text-xl md:text-2xl`}>{t("Dashboard")}</h1>
+      <Toggle />
       <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
         <Cards
           currentPeriod={currentPeriod}

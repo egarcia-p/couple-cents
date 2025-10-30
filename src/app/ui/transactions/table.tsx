@@ -3,6 +3,8 @@ import { DeleteTransaction, UpdateTransaction } from "./buttons";
 import { formatDateToLocal } from "@/app/lib/utils";
 import DownloadCSV from "./download-button";
 import { verifySession } from "@/app/lib/dal";
+import { getTranslations } from "next-intl/server";
+import { cookies } from "next/headers";
 
 export default async function DashboardTable({
   query,
@@ -18,12 +20,16 @@ export default async function DashboardTable({
   const session = await verifySession();
   if (!session) return null;
 
+  const t = await getTranslations("DashboardTable");
+
   const transactions = await fetchFilteredTransactions(
     query,
     dates,
     currentPage,
     userId,
   );
+
+  const locale: string = cookies().get("NEXT_LOCALE")?.value || "en-GB";
 
   return (
     <div className="mt-6 flow-root">
@@ -33,19 +39,19 @@ export default async function DashboardTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Establishment
+                  {t("establishment")}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Category
+                  {t("category")}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Amount
+                  {t("amount")}
                 </th>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Note
+                  {t("note")}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Transaction Date
+                  {t("transactionDate")}
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -75,6 +81,7 @@ export default async function DashboardTable({
                   <td className="whitespace-nowrap px-3 py-3">
                     {formatDateToLocal(
                       transaction.transactionDate.toUTCString(),
+                      locale,
                     )}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">

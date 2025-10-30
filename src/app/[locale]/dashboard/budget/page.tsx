@@ -5,11 +5,10 @@ import {
   fetchSpendDataByCategoryMonthly,
   fetchUserBudgetSettings,
 } from "@/app/lib/data";
-import Link from "next/link";
 import ExpensesTable from "@/app/components/budget/expenses-table";
-import messages from "@/app/lib/data/messages/budget.json";
 import Toggle from "@/app/ui/dashboard/Toggle";
 import { verifySession } from "@/app/lib/dal";
+import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "Budget Tracker Dashboard",
@@ -23,6 +22,7 @@ export default async function Page({
 }) {
   const session = await verifySession();
   if (!session) return null;
+  const t = await getTranslations("Budget");
   const userId = session.user?.id;
 
   const currentPeriod = searchParams?.period || "Month";
@@ -65,7 +65,7 @@ export default async function Page({
 
   return (
     <main>
-      <h1 className={`mb-4 text-xl md:text-2xl`}>{messages.budget.title}</h1>
+      <h1 className={`mb-4 text-xl md:text-2xl`}>{t("title")}</h1>
 
       <div className="mb-4">
         <Toggle />
