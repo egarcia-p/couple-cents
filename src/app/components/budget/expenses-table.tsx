@@ -1,6 +1,5 @@
 import { UserBudgetSetting } from "@/app/lib/definitions";
 import categories from "@/app/lib/data/categories.json";
-import messages from "@/app/lib/data/messages/budget.json";
 
 import {
   getBudgetsExpensesPerCategorySettings,

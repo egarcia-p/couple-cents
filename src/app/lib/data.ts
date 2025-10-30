@@ -351,44 +351,44 @@ export async function fetchCardData(
       percentageOfIncomeSpentYear = t("noIncome");
     }
 
-    const totalMonthSpend = formatCurrency(
+    const totalMonthSpend = await formatCurrency(
       totalMonthSpendDB ?? "0",
       true,
       userLocale,
     );
-    const totalYearSpend = formatCurrency(
+    const totalYearSpend = await formatCurrency(
       totalYearSpendDB ?? "0",
       true,
       userLocale,
     );
-    const totalMonthIncome = formatCurrency(
+    const totalMonthIncome = await formatCurrency(
       totalMonthIncomeDB ?? "0",
       true,
       userLocale,
     );
-    const totalYearIncome = formatCurrency(
+    const totalYearIncome = await formatCurrency(
       totalYearIncomeDB ?? "0",
       true,
       userLocale,
     );
-    const totalMonthSpendIncome = formatCurrency(
+    const totalMonthSpendIncome = await formatCurrency(
       totalMonthIncomeDB - totalMonthSpendDB,
       true,
       userLocale,
     );
-    const totalYearSpendIncome = formatCurrency(
+    const totalYearSpendIncome = await formatCurrency(
       totalYearIncomeDB - totalYearSpendDB,
       true,
       userLocale,
     );
 
     const totalMonthBudget = totalMonthBudgetDB
-      ? formatCurrency(totalMonthBudgetDB * 100, true, userLocale) //convert from cents to dollars
-      : formatCurrency(0, true, userLocale);
+      ? await formatCurrency(totalMonthBudgetDB * 100, true, userLocale) //convert from cents to dollars
+      : await formatCurrency(0, true, userLocale);
     //Calculate total year budget
     const totalYearBudget = totalMonthBudgetDB
-      ? formatCurrency(totalMonthBudgetDB * 100 * 12, true, userLocale)
-      : formatCurrency(0, true, userLocale);
+      ? await formatCurrency(totalMonthBudgetDB * 100 * 12, true, userLocale)
+      : await formatCurrency(0, true, userLocale);
 
     return {
       totalMonthSpend,

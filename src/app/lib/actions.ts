@@ -77,6 +77,8 @@ export type State = {
     category?: string[];
     isEssential?: string[];
     transactionDate?: string[];
+    language?: string[];
+    timezone?: string[];
   };
   message?: string | null;
 };
@@ -299,9 +301,10 @@ export async function saveLanguageSettings(
     const parsedSettings = UserSettingsCreate.safeParse(setting);
 
     if (!parsedSettings.success) {
-      throw new Error(
-        `Invalid settings: ${setting}. Error: ${parsedSettings.error}`,
-      );
+      return {
+        errors: parsedSettings.error.flatten().fieldErrors,
+        message: "Missing Fields. Failed to save settings.",
+      };
     }
 
     // Check if the setting already exists

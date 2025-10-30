@@ -6,7 +6,6 @@ import {
   fetchUserBudgetSettings,
 } from "@/app/lib/data";
 import ExpensesTable from "@/app/components/budget/expenses-table";
-import messages from "@/app/lib/data/messages/budget.json";
 import Toggle from "@/app/ui/dashboard/Toggle";
 import { verifySession } from "@/app/lib/dal";
 import { getTranslations } from "next-intl/server";
