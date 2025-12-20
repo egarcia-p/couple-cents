@@ -215,12 +215,16 @@ export async function updateTransaction(
       if (existingDateMidnight.getTime() === newDateMidnight.getTime()) {
         finalTimestamp = existingDate;
       } else {
-        // Date changed: use helper function to set new date with appropriate time
-        finalTimestamp = getTransactionDateWithTime(transactionDate, userTimezone);
+        // Date changed: use date new as UTC
+        newDate.setUTCHours(0, 0, 0, 0);
+        finalTimestamp = newDate;
       }
     } else {
-      // Fallback: if transaction not found, use helper function
-      finalTimestamp = getTransactionDateWithTime(transactionDate, userTimezone);
+      // Fallback: Error
+      return {
+        message:
+          "Database Error: Transaction not found. Failed to Update Transaction.",
+      };
     }
 
     const setValues = {
