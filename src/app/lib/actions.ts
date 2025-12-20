@@ -13,6 +13,8 @@ import { and, eq } from "drizzle-orm";
 import { use } from "react";
 import { set } from "zod";
 import { cookies } from "next/headers";
+import { getTransactionDateWithTime } from "./utils";
+import { fetchUserSettings } from "./data";
 
 const booleanString = z
   .string()
@@ -118,7 +120,12 @@ export async function createTransaction(prevState: State, formData: FormData) {
   amountInCents = Math.round(amountInCents);
 
   try {
-    const timestamp = new Date(transactionDate);
+    // Fetch user's timezone settings
+    const userSettingsData = await fetchUserSettings(userId);
+    const userTimezone = userSettingsData[0]?.timezone || "America/Mexico_City";
+
+    // Combine selected date with current time in user's timezone
+    const timestamp = getTransactionDateWithTime(transactionDate, userTimezone);
 
     type NewTransaction = typeof transactions.$inferInsert;
     const newTransaction: NewTransaction = {
@@ -180,7 +187,45 @@ export async function updateTransaction(
   amountInCents = Math.round(amountInCents);
 
   try {
-    const timestampTransactionDate = new Date(transactionDate);
+    // Fetch user's timezone settings
+    const userSettingsData = await fetchUserSettings(userId);
+    const userTimezone = userSettingsData[0]?.timezone || "America/Mexico_City";
+
+    // Fetch existing transaction to check if date changed
+    const existingTransaction = await db
+      .select()
+      .from(transactions)
+      .where(eq(transactions.id, id))
+      .limit(1);
+
+    let finalTimestamp: Date;
+
+    if (existingTransaction.length > 0) {
+      const existingDate = new Date(existingTransaction[0].transactionDate);
+      const newDate = new Date(transactionDate);
+
+      // Compare dates (at midnight UTC level)
+      const existingDateMidnight = new Date(existingDate);
+      existingDateMidnight.setUTCHours(0, 0, 0, 0);
+
+      const newDateMidnight = new Date(newDate);
+      newDateMidnight.setUTCHours(0, 0, 0, 0);
+
+      // If date hasn't changed, preserve the existing time
+      if (existingDateMidnight.getTime() === newDateMidnight.getTime()) {
+        finalTimestamp = existingDate;
+      } else {
+        // Date changed: use date new as UTC
+        newDate.setUTCHours(0, 0, 0, 0);
+        finalTimestamp = newDate;
+      }
+    } else {
+      // Fallback: Error
+      return {
+        message:
+          "Database Error: Transaction not found. Failed to Update Transaction.",
+      };
+    }
 
     const setValues = {
       isExpense: isExpense,
@@ -190,7 +235,7 @@ export async function updateTransaction(
       category: category,
       isEssential: isEssential,
       userId: userId,
-      transactionDate: timestampTransactionDate,
+      transactionDate: finalTimestamp,
     };
 
     await db.update(transactions).set(setValues).where(eq(transactions.id, id));
