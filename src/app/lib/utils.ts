@@ -80,3 +80,55 @@ export function getCurrencyFromLocale(locale: string): string {
   );
   return found ? found.currency : "USD"; // fallback to USD if not found
 }
+
+/**
+ * Combines a selected date with current time in user's timezone.
+ * For today's date: uses current time in user's timezone
+ * For past dates: uses 00:00:00 (midnight) in user's timezone
+ *
+ * @param selectedDate - The date selected by user (as Date or string "YYYY-MM-DD")
+ * @param userTimezone - User's timezone (e.g., "America/Mexico_City")
+ * @returns Date object with time component, ready for database storage
+ */
+export function getTransactionDateWithTime(
+  selectedDate: Date | string,
+  userTimezone: string,
+): Date {
+  const { formatInTimeZone, toZonedTime } = require("date-fns-tz");
+
+  // Parse selected date
+  let dateObj: Date;
+  if (typeof selectedDate === "string") {
+    dateObj = new Date(selectedDate);
+  } else {
+    dateObj = selectedDate;
+  }
+
+  // Get today's date at midnight UTC
+  const todayUTC = new Date();
+  todayUTC.setUTCHours(0, 0, 0, 0);
+
+  // Get selected date at midnight UTC (for comparison)
+  const selectedDateAtMidnightUTC = new Date(dateObj);
+  selectedDateAtMidnightUTC.setUTCHours(0, 0, 0, 0);
+
+  // Compare dates (comparing midnight UTC versions)
+  const isToday =
+    todayUTC.getTime() === selectedDateAtMidnightUTC.getTime();
+
+  let resultDate: Date;
+
+  if (isToday) {
+    // For today: use current time in user's timezone
+    const now = new Date();
+    const zonedNow = toZonedTime(now, userTimezone);
+    resultDate = zonedNow;
+  } else {
+    // For past dates: use 00:00:00 in user's timezone
+    const zonedDate = toZonedTime(dateObj, userTimezone);
+    zonedDate.setHours(0, 0, 0, 0);
+    resultDate = zonedDate;
+  }
+
+  return resultDate;
+}
