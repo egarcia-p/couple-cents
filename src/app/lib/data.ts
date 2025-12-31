@@ -146,7 +146,7 @@ export async function fetchAllFilteredTransactions({
             ilike(transactions.note, `%${query}%`),
           ),
           eq(transactions.userId, userId),
-          sql`${transactions.transactionDate} BETWEEN ${startDate} AND ${endDate}`,
+          sql`CAST(${transactions.transactionDate} AS DATE) BETWEEN ${startDate} AND ${endDate}`,
         ),
       )
       .orderBy(desc(transactions.transactionDate));
@@ -215,7 +215,7 @@ export async function fetchFilteredTransactions(
             // ilike(transactions.amount, `%${query}%`),
           ),
           eq(transactions.userId, userId),
-          sql`${transactions.transactionDate} BETWEEN ${startDate} AND ${endDate}`,
+          sql`CAST(${transactions.transactionDate} AS DATE) BETWEEN ${startDate} AND ${endDate}`,
         ),
       )
       .orderBy(desc(transactions.transactionDate))
@@ -252,7 +252,7 @@ export async function fetchTransactionPages(
             // ilike(transactions.amount, `%${query}%`),
           ),
           eq(transactions.userId, userId),
-          sql`${transactions.transactionDate} BETWEEN ${startDate} AND ${endDate}`,
+          sql`CAST(${transactions.transactionDate} AS DATE) BETWEEN ${startDate} AND ${endDate}`,
         ),
       );
 
