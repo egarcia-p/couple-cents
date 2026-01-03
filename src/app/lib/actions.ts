@@ -45,16 +45,8 @@ const UpdateTransaction = FormSchema.omit({ id: true });
 
 const UserBudgetSettings = z.object({
   id: z.coerce.number(),
-  userId: z.coerce.number(),
+  userId: z.string(),
   category: z.string(),
-  budget: z.coerce.number().gt(-1, {
-    message: "Please enter a budget that is greater or equal to $0",
-  }),
-});
-const UserBudgetSettingsUpdate = UserBudgetSettings.extend({
-  id: z.coerce.number().optional(),
-  userId: z.coerce.number().optional(),
-  category: z.string().optional(),
   budget: z.coerce.number().gt(-1, {
     message: "Please enter a budget that is greater or equal to $0",
   }),
@@ -302,7 +294,7 @@ export async function saveBudgetSettings(prevState: State, formData: FormData) {
       if (existingSetting.length === 0) {
         await db.insert(userBudgetSettings).values(setting);
       } else {
-        // If it exists, update the budge
+        // If it exists, update the budget
         const setValues = {
           budget: setting.budget.toString(),
         };
@@ -318,6 +310,7 @@ export async function saveBudgetSettings(prevState: State, formData: FormData) {
       }
     }
   } catch (error) {
+    console.error("Error saving budget settings:", error);
     return {
       message: "Database Error: Failed to Save Budget Settings.",
     };
