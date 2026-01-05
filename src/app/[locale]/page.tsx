@@ -120,7 +120,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex flex-row my-20 items-center justify-center">
+      <div className="flex flex-col gap-6 my-20 items-center justify-center">
         <div className="flex">
           <p className="text-xl text-justify">
             © {new Date().getFullYear()} {t("footerText")}{" "}
@@ -132,6 +132,21 @@ export default function Home() {
             </a>{" "}
             {t("repositoryLinkText")}.
           </p>
+        </div>
+        <div className="flex gap-6 text-center">
+          <a
+            className="text-blue-600 hover:text-blue-800 underline visited:text-purple-600"
+            href="/terms"
+          >
+            Terms of Service
+          </a>
+          <span className="text-gray-400">•</span>
+          <a
+            className="text-blue-600 hover:text-blue-800 underline visited:text-purple-600"
+            href="/privacy"
+          >
+            Privacy Notice
+          </a>
         </div>
       </div>
     </>
