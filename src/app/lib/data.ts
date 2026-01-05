@@ -127,13 +127,10 @@ export async function fetchAllFilteredTransactions({
         note: transactions.note,
         amount: sql<string>`amount`.mapWith({
           mapFromDriverValue: (value: any) => {
-            //let mappedValue = value / 100;
-            const mappedValue = formatCurrency(
-              Number(value) ?? "0",
-              true,
-              userLocale,
-            );
-            return mappedValue;
+            if (value === null || value === undefined) {
+              return "0";
+            }
+            return (value / 100).toString();
           },
         }),
       })
@@ -194,13 +191,10 @@ export async function fetchFilteredTransactions(
         note: transactions.note,
         amount: sql<string>`amount`.mapWith({
           mapFromDriverValue: (value: any) => {
-            //let mappedValue = value / 100;
-            const mappedValue = formatCurrency(
-              Number(value) ?? "0",
-              true,
-              userLocale,
-            );
-            return mappedValue;
+            if (value === null || value === undefined) {
+              return "0";
+            }
+            return (value / 100).toString();
           },
         }),
       })
