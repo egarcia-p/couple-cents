@@ -178,6 +178,13 @@ Distributed under the Apache License. See `LICENSE.txt` for more information.
 
 <!-- CONTACT -->
 
+## Legal
+
+- [Terms of Service](/terms) - Our terms and conditions
+- [Privacy Notice](/privacy) - How we handle your data
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ## Contact
 
 Eugenio Garcia - [Linkedin](https://www.linkedin.com/in/ergarciag/)
