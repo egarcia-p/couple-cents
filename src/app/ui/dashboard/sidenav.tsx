@@ -33,7 +33,7 @@ export default function SideNav() {
             <p className=" text-lg">{t("title")}</p>
           </div>
           <div className="m-auto text-secondary md:w-40 md:text-center">
-            <p className=" text-sm">v0.6.4</p>
+            <p className=" text-sm">v0.6.5</p>
           </div>
         </div>
       </Link>
