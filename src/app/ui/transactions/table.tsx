@@ -1,6 +1,6 @@
-import { fetchFilteredTransactions } from "@/app/lib/data";
+import { fetchFilteredTransactions, fetchUserSettings } from "@/app/lib/data";
 import { DeleteTransaction, UpdateTransaction } from "./buttons";
-import { formatDateToLocal } from "@/app/lib/utils";
+import { formatCurrency, formatDateToLocal } from "@/app/lib/utils";
 import DownloadCSV from "./download-button";
 import { verifySession } from "@/app/lib/dal";
 import { getTranslations } from "next-intl/server";
@@ -31,6 +31,14 @@ export default async function DashboardTable({
 
   const locale: string = cookies().get("NEXT_LOCALE")?.value || "en-GB";
 
+  const userSettings = await fetchUserSettings(userId);
+  const userLocale = userSettings[0]?.language || "en-US";
+
+  const formattedTransactions = transactions.map((transaction) => ({
+    ...transaction,
+    amount: formatCurrency(Number(transaction.amount), false, userLocale),
+  }));
+
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -59,7 +67,7 @@ export default async function DashboardTable({
               </tr>
             </thead>
             <tbody className="bg-white">
-              {transactions?.map((transaction) => (
+              {formattedTransactions?.map((transaction) => (
                 <tr
                   key={transaction.id}
                   className={` ${!transaction.isExpense && "bg-primary-100"} w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg`}

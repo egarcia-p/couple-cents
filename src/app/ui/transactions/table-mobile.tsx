@@ -1,6 +1,9 @@
-import { fetchFilteredTransactions } from "@/app/lib/data";
+import { fetchFilteredTransactions, fetchUserSettings } from "@/app/lib/data";
 import { DeleteTransaction, UpdateTransaction } from "./buttons";
 import { verifySession } from "@/app/lib/dal";
+import { userSettings } from "../../../../drizzle/schema";
+import { tr } from "@faker-js/faker";
+import { formatCurrency } from "@/app/lib/utils";
 
 export default async function DashboardTableMobile({
   query,
@@ -23,10 +26,18 @@ export default async function DashboardTableMobile({
     userId,
   );
 
+  const userSettings = await fetchUserSettings(userId);
+  const userLocale = userSettings[0]?.language || "en-US";
+
+  const formattedTransactions = transactions.map((transaction) => ({
+    ...transaction,
+    amount: formatCurrency(Number(transaction.amount), false, userLocale),
+  }));
+
   return (
     <div className="mt-2 flex-row ">
       <div className="min-w-full rounded-lg bg-gray-50 p-2 md:pt-0">
-        {transactions?.map((transaction) => (
+        {formattedTransactions?.map((transaction) => (
           <div
             key={transaction.id}
             className={`flex flex-row justify-between ${!transaction.isExpense ? "bg-primary-100" : "bg-white"}  m-1 rounded-lg`}
