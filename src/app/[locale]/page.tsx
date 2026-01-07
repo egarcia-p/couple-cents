@@ -136,14 +136,14 @@ export default function Home() {
         <div className="flex gap-6 text-center">
           <a
             className="text-blue-600 hover:text-blue-800 underline visited:text-purple-600"
-            href="/terms"
+            href="https://www.couple-cents.com/terms"
           >
             Terms of Service
           </a>
           <span className="text-gray-400">•</span>
           <a
             className="text-blue-600 hover:text-blue-800 underline visited:text-purple-600"
-            href="/privacy"
+            href="https://www.couple-cents.com/privacy"
           >
             Privacy Notice
           </a>
