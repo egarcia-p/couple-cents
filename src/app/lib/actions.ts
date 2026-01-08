@@ -200,7 +200,7 @@ export async function updateTransaction(
       const existingDateMidnight = new Date(existingDate);
       existingDateMidnight.setUTCHours(0, 0, 0, 0);
 
-      const newDateMidnight = new Date(newDate);
+      const newDateMidnight = new Date(newDate); // TODO adjust to user timezone? not 100% sure it works
       newDateMidnight.setUTCHours(0, 0, 0, 0);
 
       // If date hasn't changed, preserve the existing time

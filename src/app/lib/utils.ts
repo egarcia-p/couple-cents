@@ -1,4 +1,5 @@
 import locales from "@/i18n/locales.json";
+import { fromZonedTime, toZonedTime } from "date-fns-tz";
 
 export const formatCurrency = async (
   amount: number,
@@ -86,49 +87,46 @@ export function getCurrencyFromLocale(locale: string): string {
  * For today's date: uses current time in user's timezone
  * For past dates: uses 00:00:00 (midnight) in user's timezone
  *
- * @param selectedDate - The date selected by user (as Date or string "YYYY-MM-DD")
+ * @param selectedDate - The date selected by user as local date (as Date or string "YYYY-MM-DD")
  * @param userTimezone - User's timezone (e.g., "America/Mexico_City")
- * @returns Date object with time component, ready for database storage
+ * @returns Date object representing the UTC equivalent of the local time
  */
 export function getTransactionDateWithTime(
   selectedDate: Date | string,
   userTimezone: string,
 ): Date {
-  const { formatInTimeZone, toZonedTime } = require("date-fns-tz");
+  const { zonedTimeToUtc } = require("date-fns-tz");
 
-  // Parse selected date
-  let dateObj: Date;
+  let year: number, month: number, day: number;
+
   if (typeof selectedDate === "string") {
-    dateObj = new Date(selectedDate);
+    // Parse en-US "MM/DD/YYYY" format as local date in user's timezone
+    const parts = selectedDate.split("/");
+    year = parseInt(parts[2]);
+    month = parseInt(parts[0]) - 1; // JS months are 0-indexed
+    day = parseInt(parts[1]);
   } else {
-    dateObj = selectedDate;
+    year = selectedDate.getFullYear();
+    month = selectedDate.getMonth();
+    day = selectedDate.getDate();
   }
 
-  // Get today's date at midnight UTC
-  const todayUTC = new Date();
-  todayUTC.setUTCHours(0, 0, 0, 0);
-
-  // Get selected date at midnight UTC (for comparison)
-  const selectedDateAtMidnightUTC = new Date(dateObj);
-  selectedDateAtMidnightUTC.setUTCHours(0, 0, 0, 0);
-
-  // Compare dates (comparing midnight UTC versions)
+  // Get today's date in local time TODO do with same as user timezone
+  const today = new Date();
+  const zonedToday = toZonedTime(today, userTimezone);
   const isToday =
-    todayUTC.getTime() === selectedDateAtMidnightUTC.getTime();
-
-  let resultDate: Date;
-
+    year === zonedToday.getFullYear() &&
+    month === zonedToday.getMonth() &&
+    day === zonedToday.getDate();
   if (isToday) {
-    // For today: use current time in user's timezone
+    // For today: just pass the current date
     const now = new Date();
     const zonedNow = toZonedTime(now, userTimezone);
-    resultDate = zonedNow;
+    return zonedNow;
   } else {
-    // For past dates: use 00:00:00 in user's timezone
-    const zonedDate = toZonedTime(dateObj, userTimezone);
-    zonedDate.setHours(0, 0, 0, 0);
-    resultDate = zonedDate;
+    // For past dates: midnight in user's timezone
+    const local = new Date(year, month, day, 0, 0, 0, 0);
+    const zoned = fromZonedTime(local, userTimezone);
+    return zoned;
   }
-
-  return resultDate;
 }
