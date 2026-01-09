@@ -88,7 +88,8 @@ export default async function DashboardTable({
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {formatDateToLocal(
-                      transaction.transactionDate.toUTCString(),
+                      transaction.transactionDate,
+                      userSettings[0]?.timezone || "UTC",
                       locale,
                     )}
                   </td>
