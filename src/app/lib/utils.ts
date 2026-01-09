@@ -28,15 +28,18 @@ export const formatPercentage = (percentage: number) => {
 };
 
 export const formatDateToLocal = (
-  dateStr: string,
+  date: Date,
+  userTimezone: string,
   locale: string = "en-GB",
 ) => {
-  const date = new Date(dateStr);
   const options: Intl.DateTimeFormatOptions = {
     day: "numeric",
     month: "short",
     year: "numeric",
-    timeZone: "UTC",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZone: userTimezone,
   };
   const formatter = new Intl.DateTimeFormat(locale, options);
   return formatter.format(date);
