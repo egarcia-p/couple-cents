@@ -95,8 +95,6 @@ export function getTransactionDateWithTime(
   selectedDate: Date | string,
   userTimezone: string,
 ): Date {
-  const { zonedTimeToUtc } = require("date-fns-tz");
-
   let year: number, month: number, day: number;
 
   if (typeof selectedDate === "string") {
@@ -129,4 +127,46 @@ export function getTransactionDateWithTime(
     const zoned = fromZonedTime(local, userTimezone);
     return zoned;
   }
+}
+
+export function getDateForUpdateTransaction(
+  existingDate: Date,
+  newDate: Date | string,
+  userTimezone: string,
+): Date {
+  // Get dates in user's timezone
+  const existingDateInUserTz = toZonedTime(existingDate, userTimezone);
+
+  let year: number, month: number, day: number;
+
+  if (typeof newDate === "string") {
+    // Parse en-US "MM/DD/YYYY" format as local date in user's timezone
+    const parts = newDate.split("/");
+    year = parseInt(parts[2]);
+    month = parseInt(parts[0]) - 1; // JS months are 0-indexed
+    day = parseInt(parts[1]);
+  } else {
+    year = newDate.getFullYear();
+    month = newDate.getMonth();
+    day = newDate.getDate();
+  }
+
+  const isSameDate =
+    year === existingDateInUserTz.getFullYear() &&
+    month === existingDateInUserTz.getMonth() &&
+    day === existingDateInUserTz.getDate();
+
+  let finalTimestamp: Date;
+
+  // If date hasn't changed, preserve the existing time
+  if (isSameDate) {
+    finalTimestamp = existingDate;
+  } else {
+    // Date changed
+    const local = new Date(year, month, day, 0, 0, 0, 0);
+    const zoned = fromZonedTime(local, userTimezone);
+
+    finalTimestamp = zoned;
+  }
+  return finalTimestamp;
 }

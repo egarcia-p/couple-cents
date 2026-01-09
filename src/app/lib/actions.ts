@@ -13,7 +13,10 @@ import { and, eq } from "drizzle-orm";
 import { use } from "react";
 import { set } from "zod";
 import { cookies } from "next/headers";
-import { getTransactionDateWithTime } from "./utils";
+import {
+  getDateForUpdateTransaction,
+  getTransactionDateWithTime,
+} from "./utils";
 import { fetchUserSettings } from "./data";
 
 const booleanString = z
@@ -194,23 +197,12 @@ export async function updateTransaction(
 
     if (existingTransaction.length > 0) {
       const existingDate = new Date(existingTransaction[0].transactionDate);
-      const newDate = new Date(transactionDate);
 
-      // Compare dates (at midnight UTC level)
-      const existingDateMidnight = new Date(existingDate);
-      existingDateMidnight.setUTCHours(0, 0, 0, 0);
-
-      const newDateMidnight = new Date(newDate); // TODO adjust to user timezone? not 100% sure it works
-      newDateMidnight.setUTCHours(0, 0, 0, 0);
-
-      // If date hasn't changed, preserve the existing time
-      if (existingDateMidnight.getTime() === newDateMidnight.getTime()) {
-        finalTimestamp = existingDate;
-      } else {
-        // Date changed: use date new as UTC
-        newDate.setUTCHours(0, 0, 0, 0);
-        finalTimestamp = newDate;
-      }
+      finalTimestamp = getDateForUpdateTransaction(
+        existingDate,
+        transactionDate,
+        userTimezone,
+      );
     } else {
       // Fallback: Error
       return {
