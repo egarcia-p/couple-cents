@@ -112,7 +112,7 @@ export function getTransactionDateWithTime(
     day = selectedDate.getDate();
   }
 
-  // Get today's date in local time TODO do with same as user timezone
+  // Get today's date in local time
   const today = new Date();
   const zonedToday = toZonedTime(today, userTimezone);
   const isToday =
@@ -122,10 +122,9 @@ export function getTransactionDateWithTime(
   if (isToday) {
     // For today: just pass the current date
     const now = new Date();
-    const zonedNow = toZonedTime(now, userTimezone);
-    return zonedNow;
+    return now;
   } else {
-    // For past dates: midnight in user's timezone
+    // For past dates: midnight in user's timezone, then convert to UTC
     const local = new Date(year, month, day, 0, 0, 0, 0);
     const zoned = fromZonedTime(local, userTimezone);
     return zoned;
