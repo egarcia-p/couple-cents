@@ -1,5 +1,6 @@
 import locales from "@/i18n/locales.json";
 import { fromZonedTime, toZonedTime } from "date-fns-tz";
+import { parse } from "date-fns";
 
 export const formatCurrency = async (
   amount: number,
@@ -97,20 +98,23 @@ export function getCurrencyFromLocale(locale: string): string {
 export function getTransactionDateWithTime(
   selectedDate: Date | string,
   userTimezone: string,
+  locale: string = "en-US",
 ): Date {
-  let year: number, month: number, day: number;
+  let dateObj: Date;
 
   if (typeof selectedDate === "string") {
-    // Parse en-US "MM/DD/YYYY" format as local date in user's timezone
-    const parts = selectedDate.split("/");
-    year = parseInt(parts[2]);
-    month = parseInt(parts[0]) - 1; // JS months are 0-indexed
-    day = parseInt(parts[1]);
+    // Parse depending on locale using date-fns
+    // en-US uses MM/dd/yyyy, other locales (like es-MX) use dd/MM/yyyy
+    const dateFormat = locales.filter((l) => l.key === locale)[0]
+      .dateFormatSimple;
+    dateObj = parse(selectedDate, dateFormat, new Date());
   } else {
-    year = selectedDate.getFullYear();
-    month = selectedDate.getMonth();
-    day = selectedDate.getDate();
+    dateObj = selectedDate;
   }
+
+  const year = dateObj.getFullYear();
+  const month = dateObj.getMonth();
+  const day = dateObj.getDate();
 
   // Get today's date in local time
   const today = new Date();
@@ -135,23 +139,26 @@ export function getDateForUpdateTransaction(
   existingDate: Date,
   newDate: Date | string,
   userTimezone: string,
+  locale: string = "en-US",
 ): Date {
   // Get dates in user's timezone
   const existingDateInUserTz = toZonedTime(existingDate, userTimezone);
 
-  let year: number, month: number, day: number;
+  let dateObj: Date;
 
   if (typeof newDate === "string") {
-    // Parse en-US "MM/DD/YYYY" format as local date in user's timezone
-    const parts = newDate.split("/");
-    year = parseInt(parts[2]);
-    month = parseInt(parts[0]) - 1; // JS months are 0-indexed
-    day = parseInt(parts[1]);
+    // Parse depending on locale using date-fns
+    // en-US uses MM/dd/yyyy, other locales (like es-MX) use dd/MM/yyyy
+    const dateFormat = locales.filter((l) => l.key === locale)[0]
+      .dateFormatSimple;
+    dateObj = parse(newDate, dateFormat, new Date());
   } else {
-    year = newDate.getFullYear();
-    month = newDate.getMonth();
-    day = newDate.getDate();
+    dateObj = newDate;
   }
+
+  const year = dateObj.getFullYear();
+  const month = dateObj.getMonth();
+  const day = dateObj.getDate();
 
   const isSameDate =
     year === existingDateInUserTz.getFullYear() &&

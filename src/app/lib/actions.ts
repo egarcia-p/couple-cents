@@ -118,9 +118,14 @@ export async function createTransaction(prevState: State, formData: FormData) {
     // Fetch user's timezone settings
     const userSettingsData = await fetchUserSettings(userId);
     const userTimezone = userSettingsData[0]?.timezone || "America/Mexico_City";
+    const locale = userSettingsData[0]?.language;
 
     // Combine selected date with current time in user's timezone
-    const timestamp = getTransactionDateWithTime(transactionDate, userTimezone);
+    const timestamp = getTransactionDateWithTime(
+      transactionDate,
+      userTimezone,
+      locale,
+    );
 
     type NewTransaction = typeof transactions.$inferInsert;
     const newTransaction: NewTransaction = {
