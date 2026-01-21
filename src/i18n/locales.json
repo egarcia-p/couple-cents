@@ -5,6 +5,16 @@
     "language": "English",
     "region": "United States",
     "currency": "USD",
-    "timezoneExample": "America/New_York"
+    "timezoneExample": "America/New_York",
+    "dateFormatSimple": "MM/dd/yyyy"
+  },
+  {
+    "key": "es-MX",
+    "label": "Español (México)",
+    "language": "Español",
+    "region": "México",
+    "currency": "MXN",
+    "timezoneExample": "America/Mexico_City",
+    "dateFormatSimple": "dd/MM/yyyy"
   }
 ]
