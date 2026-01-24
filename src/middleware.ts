@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
 import createMiddleware from "next-intl/middleware";
-import { verifySession } from "./app/lib/dal";
-import { fetchUserSettings } from "./app/lib/data";
 
 const protectedRoutes = ["/dashboard"];
 const publicRoutes = ["/login", "/"];
@@ -42,7 +40,9 @@ const routing = {
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.includes(path);
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    path.startsWith(route),
+  );
   const isPublicRoute = publicRoutes.includes(path);
 
   const sessionCookie = getSessionCookie(request);
@@ -51,7 +51,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  //This is not enough, we need to check if the user is authenticated
   if (
     isPublicRoute &&
     sessionCookie &&
@@ -60,8 +59,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // Check if the user is authenticated get user id and set locale accordingly
-  const preferredLocale = request.cookies.get("NEXT_LOCALE")?.value || "en-US";
+  const preferredLocale = getLocaleForRequest(request);
 
   const handleI18nRouting = createMiddleware({
     defaultLocale: preferredLocale,
@@ -75,3 +73,19 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: "/((?!api|trpc|_next|_vercel|.*\\..*).*)",
 };
+
+function getLocaleForRequest(request: NextRequest): string {
+  // Check NEXT_LOCALE cookie first
+  const nextLocale = request.cookies.get("NEXT_LOCALE")?.value;
+  if (nextLocale) {
+    return nextLocale;
+  }
+
+  // Check Accept-Language header
+  const acceptLanguage = request.headers.get("Accept-Language");
+  if (acceptLanguage?.startsWith("es")) {
+    return "es-MX";
+  }
+
+  return "en-US";
+}
