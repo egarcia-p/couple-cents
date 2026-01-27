@@ -154,9 +154,29 @@ export default function Home() {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-4">
-                    <SignInWithGitHub />
-                    {featureFlags.googleSignIn && <SignInWithGoogle />}
+                  <div className="flex flex-col ">
+                    <div className="flex flex-col gap-4 m-auto items-center">
+                      <SignInWithGitHub />
+                      {featureFlags.googleSignIn && <SignInWithGoogle />}
+                    </div>
+                    <div className="flex flex-col gap-4">
+                      <p className="text-xs text-gray-600 text-center mt-3">
+                        {t("bySigningIn")}{" "}
+                        <a
+                          href="/terms"
+                          className="text-blue-600 hover:text-blue-800 underline"
+                        >
+                          {t("termsOfService")}
+                        </a>{" "}
+                        {t("and")}{" "}
+                        <a
+                          href="/privacy"
+                          className="text-blue-600 hover:text-blue-800 underline"
+                        >
+                          {t("privacyPolicy")}
+                        </a>
+                      </p>
+                    </div>
                   </div>
                 )}
               </div>
@@ -221,21 +241,6 @@ export default function Home() {
             </a>{" "}
             {t("repositoryLinkText")}.
           </p>
-        </div>
-        <div className="flex gap-6 text-center">
-          <a
-            className="text-blue-600 hover:text-blue-800 underline visited:text-purple-600"
-            href="https://www.couple-cents.com/terms"
-          >
-            Terms of Service
-          </a>
-          <span className="text-gray-400">•</span>
-          <a
-            className="text-blue-600 hover:text-blue-800 underline visited:text-purple-600"
-            href="https://www.couple-cents.com/privacy"
-          >
-            Privacy Notice
-          </a>
         </div>
       </div>
     </>
