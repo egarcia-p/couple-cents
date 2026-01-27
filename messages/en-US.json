@@ -9,7 +9,11 @@
     "altTextImage2": "Woman in a bench watching her phone",
     "footerText": "CoupleCents App. This project is licensed under the Apache license - see the LICENSE file for details. For contributions and support, visit our",
     "githubLinkText": "GitHub",
-    "repositoryLinkText": "repository"
+    "repositoryLinkText": "repository",
+    "bySigningIn": "By signing in, you agree to our",
+    "termsOfService": "Terms of Service",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy"
   },
   "SignUpComponent": {
     "description": "Sign up to Couple Cents and make smarter money decisions every day.",

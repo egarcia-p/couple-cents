@@ -9,7 +9,11 @@
     "altTextImage2": "Mujer en una banca mirando su teléfono",
     "footerText": "Aplicación CoupleCents. Este proyecto está bajo la licencia Apache; consulta el archivo LICENSE para más detalles. Para contribuciones y soporte, visita nuestro",
     "githubLinkText": "GitHub",
-    "repositoryLinkText": "repositorio"
+    "repositoryLinkText": "repositorio",
+    "bySigningIn": "Al iniciar sesión, aceptas nuestros",
+    "termsOfService": "Términos de Servicio",
+    "and": "y",
+    "privacyPolicy": "Política de Privacidad"
   },
   "SignUpComponent": {
     "description": "Regístrate en Couple Cents y toma decisiones financieras más inteligentes cada día.",
