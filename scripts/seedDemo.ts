@@ -9,7 +9,7 @@ import { eq, and } from "drizzle-orm";
 import { Pool } from "pg";
 import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
-import { hash } from "better-auth/crypto";
+import bcrypt from "bcryptjs";
 
 dotenv.config({ path: "./.env.local" });
 
@@ -112,7 +112,7 @@ async function seedDemoUser(db: ReturnType<typeof drizzle>): Promise<DemoUser> {
   }
 
   // Create demo user
-  const hashedPassword = await hash(DEMO_PASSWORD);
+  const hashedPassword = await bcrypt.hash(DEMO_PASSWORD, 10);
   const newUser = await db
     .insert(user)
     .values({
