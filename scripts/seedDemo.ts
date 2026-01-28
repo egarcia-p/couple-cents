@@ -205,8 +205,8 @@ async function seedTransactions(
 
   const transactionData: (typeof transactions.$inferInsert)[] = [];
 
-  // Generate transactions for last 12 months (2025 and January 2026)
-  const endDate = new Date(2026, 0, 27); // Jan 27, 2026
+  // Generate transactions for 2025 and all of 2026
+  const endDate = new Date(2026, 11, 31); // Dec 31, 2026
   const startDate = new Date(2025, 0, 1); // Jan 1, 2025
 
   // Track monthly spending per category for realism
