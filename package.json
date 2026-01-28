@@ -10,6 +10,7 @@
     "seed": "node -r dotenv/config ./scripts/seed.js",
     "db:migrate": "dotenv -c -- tsx ./scripts/dbMigrate.ts",
     "db:seed": "dotenv -c -- tsx ./scripts/seed.ts",
+    "db:seed:demo": "dotenv -c -- tsx ./scripts/seedDemo.ts",
     "db:studio": "dotenv -c -- drizzle-kit studio",
     "generate": "drizzle-kit generate",
     "test": "vitest"

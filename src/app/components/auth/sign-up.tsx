@@ -9,11 +9,54 @@ export default function SignUp() {
   const t = useTranslations("SignUpComponent");
 
   async function Signup() {
-    // TODO: get values from the form and add basic validation
-    const email = "";
-    const password = "";
-    const name = "";
+    // Get values from the form
+    const nameInput = document.getElementById("name") as HTMLInputElement;
+    const emailInput = document.getElementById("email") as HTMLInputElement;
+    const passwordInput = document.getElementById(
+      "password",
+    ) as HTMLInputElement;
+    const confirmPasswordInput = document.getElementById(
+      "confirm-password",
+    ) as HTMLInputElement;
+
+    const email = emailInput?.value.trim() || "";
+    const password = passwordInput?.value || "";
+    const name = nameInput?.value.trim() || "";
+    const confirmPassword = confirmPasswordInput?.value || "";
     const image = "";
+
+    // Basic validation
+    if (!name) {
+      setError(t("validation.nameRequired"));
+      return;
+    }
+    if (!email) {
+      setError(t("validation.emailRequired"));
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError(t("validation.emailInvalid"));
+      return;
+    }
+    if (!password) {
+      setError(t("validation.passwordRequired"));
+      return;
+    }
+    if (password.length < 8) {
+      setError(t("validation.passwordMinLength"));
+      return;
+    }
+    if (!confirmPassword) {
+      setError(t("validation.confirmPasswordRequired"));
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError(t("validation.passwordMismatch"));
+      return;
+    }
+
+    setError(""); // Clear any previous errors
 
     const { data, error } = await authClient.signUp.email(
       {
@@ -32,7 +75,8 @@ export default function SignUp() {
         },
         onError: (ctx) => {
           // display the error message
-          alert(ctx.error.message);
+          console.log("Sign up error:", ctx.error);
+          setError(ctx.error.message);
         },
       },
     );
@@ -43,7 +87,11 @@ export default function SignUp() {
       <div className="text-black px-8 py-2 mx-auto gap-2 lg:px-16 lg:rounded-r-lg">
         {t("description")}
       </div>
-      {/* checkbox for privacy policy */}
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          {error}
+        </div>
+      )}
 
       <div className="flex flex-col w-full">
         <label htmlFor="name" className="text-left ">
