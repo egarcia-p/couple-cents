@@ -33,7 +33,10 @@
     "invalidEmail": "Invalid email format. Please enter a valid email address.",
     "newAccount": "Create an account",
     "newAccountMessage": "By creating an account, you agree to our ",
-    "termsAndPrivacy": "Terms of Service and Privacy Policy."
+    "termsAndPrivacy": "Terms of Service and Privacy Policy.",
+    "features": "Features",
+    "security": "Security",
+    "support": "Support"
   },
   "LoginComponent": {
     "emailPlaceholder": "Enter your email",

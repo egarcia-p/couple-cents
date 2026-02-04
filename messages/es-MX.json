@@ -13,7 +13,11 @@
     "bySigningIn": "Al iniciar sesión, aceptas nuestros",
     "termsOfService": "Términos de Servicio",
     "and": "y",
-    "privacyPolicy": "Política de Privacidad"
+    "privacyPolicy": "Política de Privacidad",
+    "features": "Funcionalidades",
+    "security": "Seguridad",
+    "support": "Ayuda",
+    "getStarted": "Iniciar sesión"
   },
   "SignUpComponent": {
     "description": "Regístrate en Couple Cents y toma decisiones financieras más inteligentes cada día.",
