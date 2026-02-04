@@ -148,9 +148,12 @@ export default function Home() {
               </a>
             </nav>
             <div className="flex items-center gap-4">
-              <button className="hidden sm:flex h-11 px-6 items-center justify-center rounded-lg bg-primary-600 text-secondary text-sm font-bold hover:shadow-lg hover:shadow-secondary/20 transition-all">
+              <a
+                href="#login"
+                className="hidden sm:flex h-11 px-6 items-center justify-center rounded-lg bg-primary-600 text-secondary text-sm font-bold hover:shadow-lg hover:shadow-secondary/20 transition-all"
+              >
                 {t("getStarted")}
-              </button>
+              </a>
             </div>
           </div>
         </header>
@@ -173,17 +176,20 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-4">
-                  <button className="h-14 px-8 rounded-xl bg-secondary text-gray-900 font-bold text-lg hover:bg-opacity-90 transition-colors">
+                  {/* <button className="h-14 px-8 rounded-xl bg-secondary text-gray-900 font-bold text-lg hover:bg-opacity-90 transition-colors">
                     {t("getStartedButton")}
                   </button>
                   <button className="h-14 px-8 rounded-xl border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white font-bold text-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                     {t("viewDemo")}
-                  </button>
+                  </button> */}
                 </div>
               </div>
 
               {/* Right: Visual & Auth Card */}
-              <div className="relative w-full aspect-square lg:aspect-auto lg:h-[700px]">
+              <div
+                id="login"
+                className="relative w-full aspect-square lg:aspect-auto lg:h-[700px]"
+              >
                 {/* Background Hero Image */}
                 <div className="absolute inset-0 rounded-3xl overflow-hidden shadow-2xl">
                   <div className="absolute inset-0 bg-gradient-to-tr from-gray-900/40 to-transparent z-10"></div>
@@ -205,9 +211,6 @@ export default function Home() {
                         <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white">
                           {t("loginTitle")}
                         </h3>
-                        <p className="text-gray-600 dark:text-gray-400 text-sm">
-                          {t("loginSubtitle")}
-                        </p>
                       </div>
 
                       {/* Auth Content */}
@@ -243,10 +246,10 @@ export default function Home() {
                               </div>
                             ) : (
                               <div className="space-y-4">
-                                <SignInWithGitHub />
                                 {featureFlags.googleSignIn && (
                                   <SignInWithGoogle />
                                 )}
+                                <SignInWithGitHub />
                               </div>
                             )}
                           </>

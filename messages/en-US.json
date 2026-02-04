@@ -1,8 +1,9 @@
 {
   "HomePage": {
     "title": "CoupleCents",
+    "subtitle": "Financial Clarity for Everyday Life",
     "titleWallet": "CoupleCents App",
-    "walletDescription": "Financial Tool for Individuals and Couples",
+    "walletDescription": "Manage your expenses and income together — no spreadsheets, no friction.",
     "section2Title": "Take control of your finances",
     "section3Title": "Make the most of your money",
     "altTextImage1": "Credit cards",
@@ -13,7 +14,12 @@
     "bySigningIn": "By signing in, you agree to our",
     "termsOfService": "Terms of Service",
     "and": "and",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "features": "Features",
+    "security": "Security",
+    "support": "Support",
+    "getStarted": "Sign In",
+    "loginTitle": "Join Couple-Cents"
   },
   "SignUpComponent": {
     "description": "Sign up to Couple Cents and make smarter money decisions every day.",
@@ -33,10 +39,7 @@
     "invalidEmail": "Invalid email format. Please enter a valid email address.",
     "newAccount": "Create an account",
     "newAccountMessage": "By creating an account, you agree to our ",
-    "termsAndPrivacy": "Terms of Service and Privacy Policy.",
-    "features": "Features",
-    "security": "Security",
-    "support": "Support"
+    "termsAndPrivacy": "Terms of Service and Privacy Policy."
   },
   "LoginComponent": {
     "emailPlaceholder": "Enter your email",

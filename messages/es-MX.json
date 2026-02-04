@@ -1,8 +1,9 @@
 {
   "HomePage": {
     "title": "CoupleCents",
+    "subtitle": "Claridad Financia para cada día",
     "titleWallet": "Aplicación CoupleCents",
-    "walletDescription": "Herramienta financiera para individuos y parejas",
+    "walletDescription": "Administra tus gastos e ingresos juntos — sin spreadsheets, sin fricción.",
     "section2Title": "Toma el control de tus finanzas",
     "section3Title": "Aprovecha al máximo tu dinero",
     "altTextImage1": "Tarjetas de crédito",
@@ -17,7 +18,8 @@
     "features": "Funcionalidades",
     "security": "Seguridad",
     "support": "Ayuda",
-    "getStarted": "Iniciar sesión"
+    "getStarted": "Iniciar sesión",
+    "loginTitle": "Únete a Couple-Cents"
   },
   "SignUpComponent": {
     "description": "Regístrate en Couple Cents y toma decisiones financieras más inteligentes cada día.",
