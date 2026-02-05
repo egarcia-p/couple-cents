@@ -4,14 +4,20 @@ import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import logo from "@public/logo.png";
-import CreditCards from "@public/credit_cards.jpeg";
 import Bench from "@public/bench_2.jpeg";
+import Dashboard from "@public/history_dashboard.png";
 import { SignInWithGitHub } from "../components/auth/sign-in-github";
 import SignUp from "../components/auth/sign-up";
 import LoginForm from "../components/auth/sign-in-email";
 import { featureFlags } from "../lib/featureflags";
 import { SignInWithGoogle } from "../components/auth/sign-in-google";
 import Head from "next/head";
+import {
+  ArrowTrendingUpIcon,
+  CreditCardIcon,
+  GiftIcon,
+  ShieldCheckIcon,
+} from "@heroicons/react/24/outline";
 
 export default function Home() {
   const t = useTranslations("HomePage");
@@ -136,7 +142,7 @@ export default function Home() {
               </a>
               <a
                 className="text-sm font-semibold hover:text-secondary transition-colors"
-                href="#security"
+                href="#features"
               >
                 {t("security")}
               </a>
@@ -195,8 +201,8 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-tr from-gray-900/40 to-transparent z-10"></div>
                   <div className="w-full h-full bg-cover bg-center">
                     <Image
-                      src={CreditCards}
-                      alt={t("altTextImage1")}
+                      src={Bench}
+                      alt={t("altTextImage2")}
                       fill
                       className="object-cover"
                     />
@@ -307,7 +313,9 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Feature Card 1 */}
                 <div className="group p-10 rounded-2xl bg-white dark:bg-slate-700/50 border border-gray-200 dark:border-gray-600 hover:border-secondary/30 transition-all duration-500 hover:shadow-lg">
-                  <div className="text-5xl mb-8">💎</div>
+                  <div className="size-16 rounded-2xl bg-primary-600 dark:bg-white/5 flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
+                    <ShieldCheckIcon className="w-10 h-10 text-secondary" />
+                  </div>
                   <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
                     {t("feature1Title")}
                   </h3>
@@ -318,7 +326,9 @@ export default function Home() {
 
                 {/* Feature Card 2 */}
                 <div className="group p-10 rounded-2xl bg-white dark:bg-slate-700/50 border border-gray-200 dark:border-gray-600 hover:border-secondary/30 transition-all duration-500 hover:shadow-lg">
-                  <div className="text-5xl mb-8">📈</div>
+                  <div className="size-16 rounded-2xl bg-primary-600 dark:bg-white/5 flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
+                    <ArrowTrendingUpIcon className="w-10 h-10 text-secondary" />
+                  </div>
                   <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
                     {t("feature2Title")}
                   </h3>
@@ -329,7 +339,9 @@ export default function Home() {
 
                 {/* Feature Card 3 */}
                 <div className="group p-10 rounded-2xl bg-white dark:bg-slate-700/50 border border-gray-200 dark:border-gray-600 hover:border-secondary/30 transition-all duration-500 hover:shadow-lg">
-                  <div className="text-5xl mb-8">❤️</div>
+                  <div className="size-16 rounded-2xl bg-primary-600 dark:bg-white/5 flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
+                    <CreditCardIcon className="w-10 h-10 text-secondary" />
+                  </div>
                   <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
                     {t("feature3Title")}
                   </h3>
@@ -343,13 +355,13 @@ export default function Home() {
 
           {/* Image Section */}
           <section className="hidden lg:flex flex-row py-20 bg-white dark:bg-slate-900">
-            <div className="w-1/2 flex items-center justify-center px-12">
-              <div className="w-full relative h-96">
+            <div className="w-1/2 flex items-center justify-center px-12 ">
+              <div className="w-full relative h-96 ">
                 <Image
-                  src={Bench}
-                  alt={t("altTextImage2")}
+                  src={Dashboard}
+                  alt={t("altTextImage1")}
                   fill
-                  className="object-cover rounded-2xl"
+                  className="object-cover rounded-2xl border border-gray-200 dark:border-gray-600 hover:border-secondary/30 transition-all duration-500 hover:shadow-lg"
                 />
               </div>
             </div>
@@ -362,6 +374,26 @@ export default function Home() {
                   {t("section3Description")}
                 </p>
               </div>
+            </div>
+          </section>
+          <section
+            id="support"
+            className="py-24 border-t border-forest/5 dark:border-white/5"
+          >
+            <div className="max-w-4xl mx-auto px-6 text-center">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full  bg-primary-600 dark:bg-white/5 text-secondary dark:bg-white dark:text-forest text-xs font-bold uppercase tracking-widest mb-8">
+                <GiftIcon className="w-6 h-6" />
+                {t("supportTitle")}
+              </div>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-forest dark:text-white mb-6">
+                {t("supportHeading")}
+              </h2>
+              <p className="text-forest/60 dark:text-white/60 font-medium mb-12 max-w-xl mx-auto">
+                {t("supportDescription")}
+              </p>
+              <button className="h-14 px-12 rounded-xl  bg-primary-600 dark:bg-white/5 text-secondary dark:text-forest font-black text-lg hover:shadow-xl transition-all">
+                {t("supportButton")}
+              </button>
             </div>
           </section>
         </main>
