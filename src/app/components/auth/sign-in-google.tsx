@@ -14,8 +14,11 @@ export function SignInWithGoogle() {
   }
 
   return (
-    <form onSubmit={handleLogin}>
-      <button className={styles["gsi-material-button"]} style={{ width: 206 }}>
+    <form onSubmit={handleLogin} className="w-full">
+      <button
+        className={`${styles["gsi-material-button"]}`}
+        style={{ width: "100%", borderRadius: "0.5rem" }}
+      >
         <div className={styles["gsi-material-button-state"]}></div>
         <div className={styles["gsi-material-button-content-wrapper"]}>
           <div className={styles["gsi-material-button-icon"]}>
@@ -46,7 +49,10 @@ export function SignInWithGoogle() {
               <path fill="none" d="M0 0h48v48H0z"></path>
             </svg>
           </div>
-          <span className={styles["gsi-material-button-contents"]}>
+          <span
+            className={styles["gsi-material-button-contents"]}
+            style={{ fontSize: "1rem" }}
+          >
             Sign in with Google
           </span>
           <span style={{ display: "none" }}>Sign in with Google</span>
