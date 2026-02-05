@@ -391,9 +391,15 @@ export default function Home() {
               <p className="text-forest/60 dark:text-white/60 font-medium mb-12 max-w-xl mx-auto">
                 {t("supportDescription")}
               </p>
-              <button className="h-14 px-12 rounded-xl  bg-primary-600 dark:bg-white/5 text-secondary dark:text-forest font-black text-lg hover:shadow-xl transition-all">
-                {t("supportButton")}
-              </button>
+              <a
+                href="https://buymeacoffee.com/devconsigl9"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <button className="h-14 px-12 rounded-xl  bg-primary-600 dark:bg-white/5 text-secondary dark:text-forest font-black text-lg hover:shadow-xl transition-all">
+                  {t("supportButton")}
+                </button>
+              </a>
             </div>
           </section>
         </main>
