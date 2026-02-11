@@ -75,17 +75,7 @@ export const config = {
 };
 
 function getLocaleForRequest(request: NextRequest): string {
-  // Check NEXT_LOCALE cookie first
-  const nextLocale = request.cookies.get("NEXT_LOCALE")?.value;
-  if (nextLocale) {
-    return nextLocale;
-  }
-
-  // Check Accept-Language header
-  const acceptLanguage = request.headers.get("Accept-Language");
-  if (acceptLanguage?.startsWith("es")) {
-    return "es-MX";
-  }
-
+  // Use a static default locale here for home page mainly
+  // The actual user locale will be fetched at the page level in components
   return "en-US";
 }
