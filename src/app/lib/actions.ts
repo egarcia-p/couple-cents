@@ -322,14 +322,21 @@ export async function saveLanguageSettings(
   formData: FormData,
 ) {
   try {
-    // create or save lanaguage settings
+    // Save both locale and timezone settings to userSettings table
     const userId = formData.get("userId") as string;
-    const language = formData.get("language") as string;
+    const locale = formData.get("locale") as string;
     const timezone = formData.get("timezone") as string;
 
+    if (!userId || !locale || !timezone) {
+      return {
+        message: "Missing required fields",
+      };
+    }
+
+    // Save to userSettings table
     const setting = {
       userId: userId,
-      language: language,
+      language: locale,
       timezone: timezone,
     };
 
@@ -349,6 +356,7 @@ export async function saveLanguageSettings(
       .where(and(eq(userSettings.userId, userId)))
       .limit(1)
       .execute();
+
     if (existingSetting.length === 0) {
       type NewUserSetting = typeof userSettings.$inferInsert;
       const newUserSetting: NewUserSetting = parsedSettings.data;
@@ -365,13 +373,14 @@ export async function saveLanguageSettings(
         .where(and(eq(userSettings.userId, userId)));
     }
 
-    // Set the cookie
-    cookies().set("NEXT_LOCALE", language, {
+    // Set the cookie for immediate use
+    (await cookies()).set("NEXT_LOCALE", locale, {
       path: "/",
       maxAge: 60 * 60 * 24 * 365,
       sameSite: "lax",
     });
   } catch (error) {
+    console.error("Error saving settings:", error);
     return {
       message: "Database Error: Failed to Save Settings.",
     };

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "../button";
 import { useTranslations } from "next-intl";
 import { user, userSettings } from "../../../../drizzle/schema";
@@ -53,13 +55,15 @@ export default function LanguageSettings({
     <div className="rounded-lg bg-gray-50 p-2 ">
       <div className="ml-4 m-4 flex flex-col gap-4">
         <h1 className="text-xl font-bold">{t("settings.title")}</h1>
+
+        {/* Single form for both locale and timezone */}
         <form action={dispatch}>
           <input type="hidden" name="userId" value={userId} />
           <div className="flex flex-col gap-2">
-            {/* Language Setting */}
+            {/* Language/Locale Setting */}
             <div className="mb-4">
               <label
-                htmlFor="language"
+                htmlFor="locale"
                 className="mb-2 block text-sm font-medium"
               >
                 {t("settings.language")}
@@ -67,11 +71,11 @@ export default function LanguageSettings({
               <div className="relative mt-2 rounded-md">
                 <div className="relative">
                   <select
-                    id="language"
-                    name="language"
+                    id="locale"
+                    name="locale"
                     className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                     defaultValue={userSettings?.language}
-                    aria-describedby="language-error"
+                    aria-describedby="locale-error"
                   >
                     <option value="" disabled>
                       {t("settings.languagePlaceholder")}
@@ -82,9 +86,8 @@ export default function LanguageSettings({
                       </option>
                     ))}
                   </select>
-                  {/* <  className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}
                 </div>
-                <div id="language-error" aria-live="polite" aria-atomic="true">
+                <div id="locale-error" aria-live="polite" aria-atomic="true">
                   {state.errors?.language &&
                     state.errors.language.map((error: string) => (
                       <p className="mt-2 text-sm text-red-500" key={error}>
@@ -95,6 +98,7 @@ export default function LanguageSettings({
               </div>
             </div>
 
+            {/* Timezone Setting */}
             <div className="flex">
               <span className="text-gray-700">{t("settings.timezone")}</span>
             </div>
@@ -112,10 +116,8 @@ export default function LanguageSettings({
               </select>
 
               <select
-                //value={timezone}
                 name="timezone"
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                //={(e) => setTimezone(e.target.value)}
                 defaultValue={defaultTimezone}
               >
                 {zones[region].map((tz) => (
