@@ -108,6 +108,10 @@ export function getTransactionDateWithTime(
     const dateFormat = locales.filter((l) => l.key === locale)[0]
       .dateFormatSimple;
     dateObj = parse(selectedDate, dateFormat, new Date());
+    // If parsing fails, return something that will trigger validation error later
+    if (isNaN(dateObj.getTime())) {
+      return new Date("invalid");
+    }
   } else {
     dateObj = selectedDate;
   }
@@ -152,6 +156,10 @@ export function getDateForUpdateTransaction(
     const dateFormat = locales.filter((l) => l.key === locale)[0]
       .dateFormatSimple;
     dateObj = parse(newDate, dateFormat, new Date());
+    // If parsing fails, return something that will trigger validation error later
+    if (isNaN(dateObj.getTime())) {
+      return new Date("invalid");
+    }
   } else {
     dateObj = newDate;
   }

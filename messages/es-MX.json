@@ -155,7 +155,10 @@
       "essentialLabel": "¿Es un gasto esencial?",
       "dateOfTransactionLabel": "Fecha",
       "cancelButton": "Cancelar",
-      "createButton": "Crear"
+      "createButton": "Crear",
+      "invalidDateError": "Formato de fecha inválido.",
+      "invalidDateMessage": "Formato de fecha inválido. Por favor ingresa una fecha válida.",
+      "databaseError": "Ocurrió un error al guardar la transacción. Por favor inténtalo de nuevo."
     },
     "edit": {
       "editExpense": "Editar Gasto",
@@ -171,7 +174,10 @@
       "essentialLabel": "¿Es un gasto esencial?",
       "dateOfTransactionLabel": "Fecha",
       "cancelButton": "Cancelar",
-      "updateButton": "Editar"
+      "updateButton": "Editar",
+      "invalidDateError": "Formato de fecha inválido.",
+      "invalidDateMessage": "Formato de fecha inválido. Por favor ingresa una fecha válida.",
+      "databaseError": "Ocurrió un error al guardar la transacción. Por favor inténtalo de nuevo."
     }
   },
   "Buttons": {

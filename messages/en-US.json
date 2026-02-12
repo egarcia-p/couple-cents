@@ -155,7 +155,10 @@
       "essentialLabel": "Choose if is an essential expense",
       "dateOfTransactionLabel": "Date",
       "cancelButton": "Cancel",
-      "createButton": "Create Transaction"
+      "createButton": "Create Transaction",
+      "invalidDateError": "Invalid date format.",
+      "invalidDateMessage": "Invalid date format. Please enter a valid date.",
+      "databaseError": "An error occurred while saving the transaction. Please try again."
     },
     "edit": {
       "editExpense": "Edit Expense",
@@ -171,7 +174,10 @@
       "essentialLabel": "Choose if is an essential expense",
       "dateOfTransactionLabel": "Date",
       "cancelButton": "Cancel",
-      "updateButton": "Update Transaction"
+      "updateButton": "Update Transaction",
+      "invalidDateError": "Invalid date format.",
+      "invalidDateMessage": "Invalid date format. Please enter a valid date.",
+      "databaseError": "An error occurred while saving the transaction. Please try again."
     }
   },
   "Buttons": {

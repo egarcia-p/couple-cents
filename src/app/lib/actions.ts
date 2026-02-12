@@ -18,6 +18,7 @@ import {
   getTransactionDateWithTime,
 } from "./utils";
 import { fetchUserSettings } from "./data";
+import { getTranslations } from "next-intl/server";
 
 const booleanString = z
   .string()
@@ -81,6 +82,8 @@ export type State = {
 };
 
 export async function createTransaction(prevState: State, formData: FormData) {
+  const translations = await getTranslations("TransactionsPage");
+
   const validatedFields = CreateTransaction.safeParse({
     isExpense: booleanString.parse(formData.get("isExpense")),
     amount: formData.get("amount"),
@@ -127,6 +130,13 @@ export async function createTransaction(prevState: State, formData: FormData) {
       locale,
     );
 
+    if (isNaN(timestamp.getTime())) {
+      return {
+        errors: { transactionDate: [translations("invalidDateError")] },
+        message: translations("invalidDateMessage"),
+      };
+    }
+
     type NewTransaction = typeof transactions.$inferInsert;
     const newTransaction: NewTransaction = {
       isExpense,
@@ -142,7 +152,7 @@ export async function createTransaction(prevState: State, formData: FormData) {
     await db.insert(transactions).values(newTransaction);
   } catch (error) {
     return {
-      message: "Database Error: Failed to Create Transaction.",
+      message: translations("databaseError"),
     };
   }
 
@@ -155,6 +165,8 @@ export async function updateTransaction(
   prevState: State,
   formData: FormData,
 ) {
+  const translations = await getTranslations("TransactionsPage");
+
   const validatedFields = UpdateTransaction.safeParse({
     isExpense: booleanString.parse(formData.get("isExpense")),
     amount: formData.get("amount"),
@@ -190,6 +202,7 @@ export async function updateTransaction(
     // Fetch user's timezone settings
     const userSettingsData = await fetchUserSettings(userId);
     const userTimezone = userSettingsData[0]?.timezone || "America/Mexico_City";
+    const locale = userSettingsData[0]?.language;
 
     // Fetch existing transaction to check if date changed
     const existingTransaction = await db
@@ -207,12 +220,21 @@ export async function updateTransaction(
         existingDate,
         transactionDate,
         userTimezone,
+        locale,
       );
+
+      if (isNaN(finalTimestamp.getTime())) {
+        return {
+          errors: {
+            transactionDate: [translations("edit.invalidDateError")],
+          },
+          message: translations("edit.invalidDateMessage"),
+        };
+      }
     } else {
       // Fallback: Error
       return {
-        message:
-          "Database Error: Transaction not found. Failed to Update Transaction.",
+        message: translations("edit.databaseError"),
       };
     }
 
