@@ -17,6 +17,7 @@ import Filter from "@/app/ui/dashboard/month-year-filter";
 import { getTranslations } from "next-intl/server";
 import years from "@/app/lib/data/years.json";
 import { verifySession } from "@/app/lib/dal";
+import TopExpensesCategoryChart from "@/app/ui/dashboard/top-expenses-category-chart";
 
 export const metadata: Metadata = {
   title: "History",
@@ -158,6 +159,7 @@ export default async function Page({
             dataNonEssentialExpenses={spendNonEssentialByMonthMap}
           />
           <ExpensesCategoryChart dataExpenses={spendByCategoryMap} />
+          <TopExpensesCategoryChart dataExpenses={spendByCategoryMap} />
         </div>
         {/* <Suspense fallback={<RevenueChartSkeleton />}>
           <RevenueChart />
