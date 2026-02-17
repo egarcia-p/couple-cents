@@ -16,6 +16,7 @@ import Toggle from "@/app/ui/dashboard/Toggle";
 import EssentialExpensesMonthChart from "@/app/ui/dashboard/essential-expenses-chart";
 import { verifySession } from "@/app/lib/dal";
 import { getTranslations } from "next-intl/server";
+import TopExpensesCategoryChart from "@/app/ui/dashboard/top-expenses-category-chart";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -106,7 +107,7 @@ export default async function Page({
         />
       </div>
       <div className="hidden md:block">
-        <div className="h-64 mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
+        <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
           <ExpensesMonthChart
             dataExpenses={spendByMonthMap}
             dataIncome={incomeByMonthMap}
@@ -117,6 +118,7 @@ export default async function Page({
             dataNonEssentialExpenses={spendNonEssentialByMonthMap}
           />
           <ExpensesCategoryChart dataExpenses={spendByCategoryMap} />
+          <TopExpensesCategoryChart dataExpenses={spendByCategoryMap} />
         </div>
         {/* <Suspense fallback={<RevenueChartSkeleton />}>
           <RevenueChart />
