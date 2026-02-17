@@ -111,6 +111,11 @@
     "label": "Expense Chart",
     "currentPeriod": "Current Period"
   },
+  "TopExpensesCategoryChart": {
+    "title": "Top Expenses by Category",
+    "label": "Top Expenses",
+    "currentPeriod": "Current Period"
+  },
   "DB": {
     "noIncome": "No Income"
   },
