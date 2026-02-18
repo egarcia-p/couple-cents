@@ -4,14 +4,18 @@ import React from "react";
 import IconButton from "./Button/icon-button";
 import ConfirmDialog from "./confirm-dialog";
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { useTranslations } from "next-intl";
 
 interface Props {
   onConfirm: Function;
+  isExpense: boolean;
 }
 
 export default function DeleteTransactionModal(props: Props) {
-  const { onConfirm } = props;
+  const { onConfirm, isExpense } = props;
   const [confirmOpen, setConfirmOpen] = React.useState(false);
+
+  const t = useTranslations("TransactionsPage");
 
   return (
     <div>
@@ -23,12 +27,12 @@ export default function DeleteTransactionModal(props: Props) {
         <TrashIcon className="w-5" />
       </IconButton>
       <ConfirmDialog
-        title="Delete Transaction?"
+        title={isExpense ? t("delete.deleteExpense") : t("delete.deleteIncome")}
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
         onConfirm={() => onConfirm()}
       >
-        Are you sure you want to delete this transaction?
+        {t("delete.confirmationMessage")}
       </ConfirmDialog>
     </div>
   );

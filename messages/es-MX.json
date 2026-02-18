@@ -183,6 +183,13 @@
       "invalidDateError": "Formato de fecha inválido.",
       "invalidDateMessage": "Formato de fecha inválido. Por favor ingresa una fecha válida.",
       "databaseError": "Ocurrió un error al guardar la transacción. Por favor inténtalo de nuevo."
+    },
+    "delete": {
+      "deleteExpense": "Eliminar Gasto",
+      "deleteIncome": "Eliminar Ingreso",
+      "confirmationMessage": "¿Estás seguro de que quieres eliminar esta transacción?",
+      "cancelButton": "No",
+      "deleteButton": "Sí"
     }
   },
   "Buttons": {

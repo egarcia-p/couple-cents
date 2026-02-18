@@ -1,5 +1,6 @@
 import Dialog from "./dialog";
 import Button from "./Button/button";
+import { useTranslations } from "next-intl";
 interface Props {
   title: string;
   children: React.ReactNode;
@@ -9,6 +10,8 @@ interface Props {
 }
 export default function Confirm(props: Props) {
   const { open, onClose, title, children, onConfirm } = props;
+  const t = useTranslations("TransactionsPage");
+
   if (!open) {
     return <></>;
   }
@@ -23,7 +26,7 @@ export default function Confirm(props: Props) {
             onClick={() => onClose()}
             className="bg-red-600 hover:bg-red-300"
           >
-            No
+            {t("delete.cancelButton")}
           </Button>
         </div>
         <div className="p-1">
@@ -34,7 +37,7 @@ export default function Confirm(props: Props) {
             }}
             className="bg-primary-600 hover:bg-primary-300"
           >
-            Yes
+            {t("delete.deleteButton")}
           </Button>
         </div>
       </div>
