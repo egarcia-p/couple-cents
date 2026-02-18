@@ -146,6 +146,12 @@
     "expenseButton": "Expense",
     "incomeButton": "Income",
     "currentPeriod": "Current Period",
+    "validation": {
+      "boolean": "Value must be a true or false",
+      "amount": "Please enter an amount greater than $0.",
+      "category": "Please select a category.",
+      "establishment": "Please enter an establishment."
+    },
     "create": {
       "createExpense": "Create Expense",
       "createIncome": "Create Income",
@@ -161,6 +167,7 @@
       "dateOfTransactionLabel": "Date",
       "cancelButton": "Cancel",
       "createButton": "Create Transaction",
+      "missingFieldsError": "Missing Fields. Failed to Create Transaction.",
       "invalidDateError": "Invalid date format.",
       "invalidDateMessage": "Invalid date format. Please enter a valid date.",
       "databaseError": "An error occurred while saving the transaction. Please try again."
@@ -180,6 +187,7 @@
       "dateOfTransactionLabel": "Date",
       "cancelButton": "Cancel",
       "updateButton": "Update Transaction",
+      "missingFieldsError": "Missing Fields. Failed to Update Transaction.",
       "invalidDateError": "Invalid date format.",
       "invalidDateMessage": "Invalid date format. Please enter a valid date.",
       "databaseError": "An error occurred while saving the transaction. Please try again."
@@ -189,7 +197,9 @@
       "deleteIncome": "Delete Income",
       "confirmationMessage": "Are you sure you want to delete this transaction?",
       "cancelButton": "No",
-      "deleteButton": "Yes"
+      "deleteButton": "Yes",
+      "success": "Transaction deleted successfully.",
+      "databaseError": "An error occurred while deleting the transaction. Please try again."
     }
   },
   "Buttons": {
@@ -249,12 +259,16 @@
       "languagePlaceholder": "Select a Language",
       "timezone": "Timezone",
       "timezonePlaceholder": "Select a timezone",
-      "saveButton": "Save Settings"
+      "saveButton": "Save Settings",
+      "missingRequiredFields": "Missing required fields. Please fill out all fields and try again.",
+      "databaseError": "An error occurred while saving the settings. Please try again."
     },
     "budget": {
       "title": "Budget Settings(Monthly)",
       "saveButton": "Save Budget",
-      "anualBudget": "Anual Budget"
+      "anualBudget": "Anual Budget",
+      "databaseError": "An error occurred while saving the budget settings. Please try again.",
+      "amount": "Please enter an amount greater than $0."
     }
   },
   "NavLinks": {

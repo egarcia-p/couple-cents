@@ -146,6 +146,12 @@
     "expenseButton": "Gasto",
     "incomeButton": "Ingreso",
     "currentPeriod": "Periodo actual",
+    "validation": {
+      "boolean": "El valor debe ser verdadero o falso",
+      "amount": "Por favor ingresa una cantidad mayor a $0.",
+      "category": "Por favor selecciona una categoría.",
+      "establishment": "Por favor ingresa un establecimiento."
+    },
     "create": {
       "createExpense": "Crear Gasto",
       "createIncome": "Crear Ingreso",
@@ -161,6 +167,7 @@
       "dateOfTransactionLabel": "Fecha",
       "cancelButton": "Cancelar",
       "createButton": "Crear",
+      "missingFieldsError": "Campos faltantes. No se pudo crear la transacción.",
       "invalidDateError": "Formato de fecha inválido.",
       "invalidDateMessage": "Formato de fecha inválido. Por favor ingresa una fecha válida.",
       "databaseError": "Ocurrió un error al guardar la transacción. Por favor inténtalo de nuevo."
@@ -180,6 +187,7 @@
       "dateOfTransactionLabel": "Fecha",
       "cancelButton": "Cancelar",
       "updateButton": "Editar",
+      "missingFieldsError": "Campos faltantes. No se pudo actualizar la transacción.",
       "invalidDateError": "Formato de fecha inválido.",
       "invalidDateMessage": "Formato de fecha inválido. Por favor ingresa una fecha válida.",
       "databaseError": "Ocurrió un error al guardar la transacción. Por favor inténtalo de nuevo."
@@ -189,7 +197,9 @@
       "deleteIncome": "Eliminar Ingreso",
       "confirmationMessage": "¿Estás seguro de que quieres eliminar esta transacción?",
       "cancelButton": "No",
-      "deleteButton": "Sí"
+      "deleteButton": "Sí",
+      "success": "Transacción eliminada exitosamente.",
+      "databaseError": "Ocurrió un error al eliminar la transacción. Por favor inténtalo de nuevo."
     }
   },
   "Buttons": {
@@ -249,12 +259,16 @@
       "languagePlaceholder": "Selecciona un idioma",
       "timezone": "Zona horaria",
       "timezonePlaceholder": "Selecciona una zona horaria",
-      "saveButton": "Guardar configuración"
+      "saveButton": "Guardar configuración",
+      "missingRequiredFields": "Campos faltantes. Por favor llena todos los campos e inténtalo de nuevo.",
+      "databaseError": "Ocurrió un error al guardar la configuración. Por favor inténtalo de nuevo."
     },
     "budget": {
       "title": "Configuración del presupuesto (mensual)",
       "saveButton": "Guardar presupuesto",
-      "anualBudget": "Presupuesto anual"
+      "anualBudget": "Presupuesto anual",
+      "databaseError": "Ocurrió un error al guardar la configuración del presupuesto. Por favor inténtalo de nuevo.",
+      "amount": "Por favor ingresa una cantidad mayor a $0."
     }
   },
   "NavLinks": {
