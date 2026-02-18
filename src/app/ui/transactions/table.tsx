@@ -96,7 +96,10 @@ export default async function DashboardTable({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateTransaction id={transaction.id} />
-                      <DeleteTransaction id={transaction.id} />
+                      <DeleteTransaction
+                        id={transaction.id}
+                        isExpense={transaction.isExpense}
+                      />
                     </div>
                   </td>
                 </tr>

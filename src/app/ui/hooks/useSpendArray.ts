@@ -6,7 +6,11 @@ interface Categories {
   [key: string]: string;
 }
 
-export function useSpendArray({ dataExpenses }: any) {
+interface UseSpendArrayProps {
+  dataExpenses: Map<string, number>;
+}
+
+export function useSpendArray({ dataExpenses }: UseSpendArrayProps) {
   //Conver Info into data array
   const allCategories = categories as Categories;
   const t = useTranslations("ExpensesCategoryChart");
@@ -15,7 +19,7 @@ export function useSpendArray({ dataExpenses }: any) {
   let spendArray = new Array<number>();
   let categoryArray = new Array<string>();
   Object.keys(allCategories).forEach((categoryKey) => {
-    spendArray.push(dataExpenses.get(categoryKey) | 0);
+    spendArray.push(dataExpenses.get(categoryKey) ?? 0);
     categoryArray.push(tCategories(categoryKey));
   });
 

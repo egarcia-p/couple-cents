@@ -23,19 +23,17 @@ import { getTranslations } from "next-intl/server";
 const booleanString = z
   .string()
   .refine((value) => value === "true" || value === "false", {
-    message: "Value must be a boolean",
+    message: "validation.boolean",
   })
   .transform((value) => value === "true");
 
 const FormSchema = z.object({
   id: z.string(),
   isExpense: z.coerce.boolean(),
-  amount: z.coerce
-    .number()
-    .gt(0, { message: "Please enter an amount greater than $0." }),
+  amount: z.coerce.number().gt(0, { message: "validation.amount" }), // Use key instead
   note: z.string().optional(),
-  establishment: z.string(),
-  category: z.string(),
+  establishment: z.string().min(1, { message: "validation.establishment" }),
+  category: z.string({ invalid_type_error: "validation.category" }),
   isEssential: z.coerce.boolean(),
   userId: z.string(),
   transactionDate: z.string(),
@@ -52,7 +50,7 @@ const UserBudgetSettings = z.object({
   userId: z.string(),
   category: z.string(),
   budget: z.coerce.number().gt(-1, {
-    message: "Please enter a budget that is greater or equal to $0",
+    message: "validation.amount",
   }),
 });
 const UserBudgetSettingsCreate = UserBudgetSettings.omit({ id: true });
@@ -67,21 +65,24 @@ const UserSettings = z.object({
 const UserSettingsCreate = UserSettings.omit({ id: true });
 
 export type State = {
-  errors?: {
-    isExpense?: string[];
-    amount?: string[];
-    note?: string[];
-    establishment?: string[];
-    category?: string[];
-    isEssential?: string[];
-    transactionDate?: string[];
-    language?: string[];
-    timezone?: string[];
-  };
+  errors?: Partial<{
+    isExpense: string[];
+    amount: string[];
+    note: string[];
+    establishment: string[];
+    category: string[];
+    isEssential: string[];
+    transactionDate: string[];
+    language: string[];
+    timezone: string[];
+  }>;
   message?: string | null;
 };
 
-export async function createTransaction(prevState: State, formData: FormData) {
+export async function createTransaction(
+  prevState: State,
+  formData: FormData,
+): Promise<State> {
   const translations = await getTranslations("TransactionsPage");
 
   const validatedFields = CreateTransaction.safeParse({
@@ -97,9 +98,19 @@ export async function createTransaction(prevState: State, formData: FormData) {
 
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
+    const translatedErrors = Object.entries(
+      validatedFields.error.flatten().fieldErrors,
+    ).reduce(
+      (acc, [key, errors]) => ({
+        ...acc,
+        [key]: errors?.map((e) => translations(e)), // Translate here
+      }),
+      {},
+    );
+
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to Create Transaction.",
+      errors: translatedErrors,
+      message: translations("create.missingFieldsError"),
     };
   }
 
@@ -132,8 +143,8 @@ export async function createTransaction(prevState: State, formData: FormData) {
 
     if (isNaN(timestamp.getTime())) {
       return {
-        errors: { transactionDate: [translations("invalidDateError")] },
-        message: translations("invalidDateMessage"),
+        errors: { transactionDate: [translations("create.invalidDateError")] },
+        message: translations("create.invalidDateMessage"),
       };
     }
 
@@ -152,7 +163,7 @@ export async function createTransaction(prevState: State, formData: FormData) {
     await db.insert(transactions).values(newTransaction);
   } catch (error) {
     return {
-      message: translations("databaseError"),
+      message: translations("create.databaseError"),
     };
   }
 
@@ -164,7 +175,7 @@ export async function updateTransaction(
   id: string,
   prevState: State,
   formData: FormData,
-) {
+): Promise<State> {
   const translations = await getTranslations("TransactionsPage");
 
   const validatedFields = UpdateTransaction.safeParse({
@@ -179,9 +190,18 @@ export async function updateTransaction(
   });
 
   if (!validatedFields.success) {
+    const translatedErrors = Object.entries(
+      validatedFields.error.flatten().fieldErrors,
+    ).reduce(
+      (acc, [key, errors]) => ({
+        ...acc,
+        [key]: errors?.map((e) => translations(e)), // Translate here
+      }),
+      {},
+    );
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to Update Transaction.",
+      errors: translatedErrors,
+      message: translations("edit.missingFieldsError"),
     };
   }
   const {
@@ -251,7 +271,7 @@ export async function updateTransaction(
 
     await db.update(transactions).set(setValues).where(eq(transactions.id, id));
   } catch (error) {
-    return { message: "Database Error: Failed to Update Transaction." };
+    return { message: translations("edit.databaseError") };
   }
 
   revalidatePath("/dashboard/transactions");
@@ -259,17 +279,19 @@ export async function updateTransaction(
 }
 
 export async function deleteTransaction(id: string) {
+  const translations = await getTranslations("TransactionsPage");
   try {
     await db.delete(transactions).where(eq(transactions.id, id));
 
     revalidatePath("/dashboard/transactions");
-    return { message: "Deleted Transaction." };
+    return { message: translations("delete.success") };
   } catch (error) {
-    return { message: "Database Error: Failed to Delete Transaction." };
+    return { message: translations("delete.databaseError") };
   }
 }
 
 export async function saveBudgetSettings(prevState: State, formData: FormData) {
+  const translations = await getTranslations("Profile");
   try {
     // create or save budget settings
     const userId = formData.get("userId") as string;
@@ -329,9 +351,8 @@ export async function saveBudgetSettings(prevState: State, formData: FormData) {
       }
     }
   } catch (error) {
-    console.error("Error saving budget settings:", error);
     return {
-      message: "Database Error: Failed to Save Budget Settings.",
+      message: translations("budget.databaseError"),
     };
   }
 
@@ -343,6 +364,7 @@ export async function saveLanguageSettings(
   prevState: State,
   formData: FormData,
 ) {
+  const translations = await getTranslations("Profile");
   try {
     // Save both locale and timezone settings to userSettings table
     const userId = formData.get("userId") as string;
@@ -351,7 +373,7 @@ export async function saveLanguageSettings(
 
     if (!userId || !locale || !timezone) {
       return {
-        message: "Missing required fields",
+        message: translations("missingRequiredFields"),
       };
     }
 
@@ -367,7 +389,7 @@ export async function saveLanguageSettings(
     if (!parsedSettings.success) {
       return {
         errors: parsedSettings.error.flatten().fieldErrors,
-        message: "Missing Fields. Failed to save settings.",
+        message: translations("missingRequiredFields"),
       };
     }
 
@@ -402,9 +424,8 @@ export async function saveLanguageSettings(
       sameSite: "lax",
     });
   } catch (error) {
-    console.error("Error saving settings:", error);
     return {
-      message: "Database Error: Failed to Save Settings.",
+      message: translations("saveSettings.databaseError"),
     };
   }
 

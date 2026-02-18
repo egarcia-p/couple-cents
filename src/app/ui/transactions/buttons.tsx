@@ -43,12 +43,21 @@ export function UpdateTransaction({ id }: { id: string }) {
   );
 }
 
-export function DeleteTransaction({ id }: { id: string }) {
+export function DeleteTransaction({
+  id,
+  isExpense,
+}: {
+  id: string;
+  isExpense: boolean;
+}) {
   const deleteTransactionWithId = deleteTransaction.bind(null, id);
 
   return (
     <>
-      <DeleteTransactionModal onConfirm={deleteTransactionWithId} />
+      <DeleteTransactionModal
+        onConfirm={deleteTransactionWithId}
+        isExpense={isExpense}
+      />
     </>
   );
 }
