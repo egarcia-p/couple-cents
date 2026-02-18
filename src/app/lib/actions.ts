@@ -65,21 +65,24 @@ const UserSettings = z.object({
 const UserSettingsCreate = UserSettings.omit({ id: true });
 
 export type State = {
-  errors?: {
-    isExpense?: string[];
-    amount?: string[];
-    note?: string[];
-    establishment?: string[];
-    category?: string[];
-    isEssential?: string[];
-    transactionDate?: string[];
-    language?: string[];
-    timezone?: string[];
-  };
+  errors?: Partial<{
+    isExpense: string[];
+    amount: string[];
+    note: string[];
+    establishment: string[];
+    category: string[];
+    isEssential: string[];
+    transactionDate: string[];
+    language: string[];
+    timezone: string[];
+  }>;
   message?: string | null;
 };
 
-export async function createTransaction(prevState: State, formData: FormData) {
+export async function createTransaction(
+  prevState: State,
+  formData: FormData,
+): Promise<State> {
   const translations = await getTranslations("TransactionsPage");
 
   const validatedFields = CreateTransaction.safeParse({
@@ -172,7 +175,7 @@ export async function updateTransaction(
   id: string,
   prevState: State,
   formData: FormData,
-) {
+): Promise<State> {
   const translations = await getTranslations("TransactionsPage");
 
   const validatedFields = UpdateTransaction.safeParse({
