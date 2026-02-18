@@ -42,11 +42,20 @@ export default async function DashboardTableMobile({
             key={transaction.id}
             className={`flex flex-row justify-between ${!transaction.isExpense ? "bg-primary-100" : "bg-white"}  m-1 rounded-lg`}
           >
-            <div className="py-3 pl-6 pr-3 inline-block w-1/2">
+            <div className="py-3 pl-6 pr-3 inline-block w-1/2 my-auto">
               <p className="line-clamp-1 ">{transaction.establishment}</p>
             </div>
-            <div className="py-3 pl-6 pr-3 font-bold ">
-              <span>{transaction.amount}</span>
+            <div className="flex flex-row gap-2 py-3 pl-6 pr-3 font-bold my-auto">
+              <div className="my-auto">
+                <span>{transaction.amount}</span>
+              </div>
+              <div className="flex justify-end gap-2">
+                <UpdateTransaction id={transaction.id} />
+                <DeleteTransaction
+                  id={transaction.id}
+                  isExpense={transaction.isExpense}
+                />
+              </div>
             </div>
           </div>
         ))}
