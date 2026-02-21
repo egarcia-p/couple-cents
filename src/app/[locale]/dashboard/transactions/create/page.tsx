@@ -1,10 +1,9 @@
 import Form from "@/app/ui/transactions/create-form";
 import { Metadata } from "next";
-import categories from "@/app/lib/data/categories.json";
-import categoriesForIncome from "@/app/lib/data/categoriesForIncome.json";
 import { verifySession } from "@/app/lib/dal";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
+import { getFormCategories } from "@/app/lib/helpers/categories";
 
 export const metadata: Metadata = {
   title: "Create",
@@ -22,12 +21,7 @@ export default async function Page({
   const locale = cookies().get("NEXT_LOCALE")?.value.toLowerCase() || "en";
 
   const isExpense = String(searchParams.isExpense).toLowerCase() === "true";
-  let formCategories = {};
-  if (isExpense) {
-    formCategories = categories;
-  } else {
-    formCategories = categoriesForIncome;
-  }
+  const formCategories = await getFormCategories(isExpense);
 
   return (
     <main>
