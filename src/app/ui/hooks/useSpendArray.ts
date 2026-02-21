@@ -1,23 +1,18 @@
-import categories from "@/app/lib/data/categories.json";
 import { useTranslations } from "next-intl";
-import { getTranslations } from "next-intl/server";
-
-interface Categories {
-  [key: string]: string;
-}
+import { Categories } from "@/app/lib/definitions";
+import { getExpenseCategories } from "@/app/lib/helpers/categories";
 
 interface UseSpendArrayProps {
   dataExpenses: Map<string, number>;
 }
 
 export function useSpendArray({ dataExpenses }: UseSpendArrayProps) {
-  //Conver Info into data array
-  const allCategories = categories as Categories;
-  const t = useTranslations("ExpensesCategoryChart");
+  const allCategories = getExpenseCategories();
   const tCategories = useTranslations("Categories");
 
-  let spendArray = new Array<number>();
-  let categoryArray = new Array<string>();
+  const spendArray: number[] = [];
+  const categoryArray: string[] = [];
+
   Object.keys(allCategories).forEach((categoryKey) => {
     spendArray.push(dataExpenses.get(categoryKey) ?? 0);
     categoryArray.push(tCategories(categoryKey));

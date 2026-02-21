@@ -4,18 +4,10 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
-import categories from "@/app/lib/data/categories.json";
 import { useTranslations } from "next-intl";
+import { useSpendArray } from "@/app/ui/hooks/useSpendArray";
 
 Chart.register(CategoryScale);
-
-interface Category {
-  id: string;
-  name: string;
-}
-interface Categories {
-  [key: string]: string;
-}
 
 const Doughnut = dynamic(
   () => import("react-chartjs-2").then((mod) => mod.Doughnut),
@@ -25,17 +17,8 @@ const Doughnut = dynamic(
 );
 
 export default function ExpensesCategoryChart({ dataExpenses }: any) {
-  //Conver Info into data array
-  const allCategories = categories as Categories;
   const t = useTranslations("ExpensesCategoryChart");
-  const tCategories = useTranslations("Categories");
-
-  let spendArray = new Array<number>();
-  let categoryArray = new Array<string>();
-  Object.keys(allCategories).forEach((categoryKey) => {
-    spendArray.push(dataExpenses.get(categoryKey) | 0);
-    categoryArray.push(tCategories(categoryKey));
-  });
+  const { spendArray, categoryArray } = useSpendArray({ dataExpenses });
 
   const colors = [
     "rgba(255, 99, 132, 0.2)",
