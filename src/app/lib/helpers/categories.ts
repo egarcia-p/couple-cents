@@ -44,3 +44,20 @@ export function getExpenseCategories(): Categories {
 export function getIncomeCategories(): Categories {
   return categoriesForIncome as Categories;
 }
+
+/**
+ * Gets combined map of all categories (expenses + income) - raw data
+ * Useful for non-translated lookups
+ */
+export function getAllCategoriesMap(): Categories {
+  return { ...categories, ...categoriesForIncome } as Categories;
+}
+
+/**
+ * Gets translated combined map of all categories (expenses + income)
+ * Server-side helper for use in Server Components
+ */
+export async function getTranslatedAllCategoriesMap(): Promise<Categories> {
+  const allCategories = getAllCategoriesMap();
+  return getTranslatedCategories(allCategories);
+}
