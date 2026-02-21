@@ -37,3 +37,12 @@ export type UserSettings = {
   language: string;
   timezone: string;
 };
+
+export type Category = {
+  id: string;
+  name: string;
+};
+
+export type Categories = {
+  [key: string]: string;
+};

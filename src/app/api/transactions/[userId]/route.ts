@@ -1,6 +1,4 @@
 import { and, or, ilike, sql, eq, count, sum, desc } from "drizzle-orm";
-import _categories from "@/app/lib/data/categories.json";
-import _categoriesIncome from "@/app/lib/data/categoriesForIncome.json";
 import { fetchAllFilteredTransactions } from "@/app/lib/data";
 import { verifySession } from "@/app/lib/dal";
 
@@ -12,8 +10,6 @@ type ResponseData = {
   message: string;
   data: Record<string, any>[];
 };
-
-const categoriesMap: ICategories = { ..._categories, ..._categoriesIncome };
 
 export async function GET(
   req: Request,

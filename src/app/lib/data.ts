@@ -8,20 +8,24 @@ import { db } from "./db";
 import { TransactionForm } from "./definitions";
 import { formatCurrency, formatPercentage } from "./utils";
 import { and, or, ilike, sql, eq, count, sum, desc } from "drizzle-orm";
-import _categories from "@/app/lib/data/categories.json";
-import _categoriesIncome from "@/app/lib/data/categoriesForIncome.json";
 import { getTranslations } from "next-intl/server";
+import {
+  getAllCategoriesMap,
+  getTranslatedAllCategoriesMap,
+} from "./helpers/categories";
 
 //Create an interface for categories.json and assign to new var categories
 interface ICategories {
   [key: string]: string;
 }
 
-const categoriesMap: ICategories = { ..._categories, ..._categoriesIncome };
+const categoriesMap: ICategories = getAllCategoriesMap();
 
 const ITEMS_PER_PAGE = 10;
 
 export async function fetchAllTransactions(userId: string) {
+  const translatedCategoriesMap = await getTranslatedAllCategoriesMap();
+
   try {
     const data = await db
       .select({
@@ -30,7 +34,7 @@ export async function fetchAllTransactions(userId: string) {
         transactionDate: transactions.transactionDate,
         category: sql<string>`category`.mapWith({
           mapFromDriverValue: (value: string) => {
-            const mappedValue = categoriesMap[value];
+            const mappedValue = translatedCategoriesMap[value];
             return mappedValue;
           },
         }),
@@ -98,6 +102,8 @@ export async function fetchAllFilteredTransactions({
   dates: string;
   userId: string;
 }) {
+  const translatedCategoriesMap = await getTranslatedAllCategoriesMap();
+
   const dateArray = dates.split("to");
   const startDate = dateArray[0];
   const endDate = dateArray[1];
@@ -105,7 +111,7 @@ export async function fetchAllFilteredTransactions({
   const userSettingsData = await fetchUserSettings(userId);
   const userLocale = userSettingsData[0]?.language || "en-US";
 
-  const matchingCodes = Object.entries(categoriesMap)
+  const matchingCodes = Object.entries(translatedCategoriesMap)
     .filter(([code, name]) => name.toLowerCase().includes(query.toLowerCase()))
     .map(([code]) => code);
 
@@ -117,7 +123,7 @@ export async function fetchAllFilteredTransactions({
         transactionDate: transactions.transactionDate,
         category: sql<string>`category`.mapWith({
           mapFromDriverValue: (value: string) => {
-            const mappedValue = categoriesMap[value];
+            const mappedValue = translatedCategoriesMap[value];
             return mappedValue;
           },
         }),
@@ -161,6 +167,8 @@ export async function fetchFilteredTransactions(
   currentPage: number,
   userId: string,
 ) {
+  const translatedCategoriesMap = await getTranslatedAllCategoriesMap();
+
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
   const dateArray = dates.split("to");
   const startDate = dateArray[0];
@@ -169,7 +177,7 @@ export async function fetchFilteredTransactions(
   const userSettingsData = await fetchUserSettings(userId);
   const userLocale = userSettingsData[0]?.language || "en-US";
 
-  const matchingCodes = Object.entries(categoriesMap)
+  const matchingCodes = Object.entries(translatedCategoriesMap)
     .filter(([code, name]) => name.toLowerCase().includes(query.toLowerCase()))
     .map(([code]) => code);
 
@@ -181,7 +189,10 @@ export async function fetchFilteredTransactions(
         transactionDate: transactions.transactionDate,
         category: sql<string>`category`.mapWith({
           mapFromDriverValue: (value: string) => {
-            const mappedValue = categoriesMap[value];
+            const mappedValue =
+              value in translatedCategoriesMap
+                ? translatedCategoriesMap[value]
+                : value;
             return mappedValue;
           },
         }),
