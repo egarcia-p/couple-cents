@@ -139,6 +139,21 @@
     "UTI": "Servicios públicos",
     "VAC": "Vacaciones"
   },
+  "CategoriesForIncome": {
+    "ALI": "Pensión alimenticia y manutención infantil",
+    "CAP": "Ganancias de capital",
+    "DIV": "Ingresos por dividendos",
+    "GIN": "Regalos y herencias",
+    "INT": "Ingresos por intereses",
+    "MIS": "Ventas misceláneas",
+    "OTH": "Otros ingresos",
+    "REI": "Reembolsos",
+    "REN": "Ingresos por renta",
+    "SAL": "Salario y sueldos",
+    "SEL": "Ingresos por trabajo independiente",
+    "SOC": "Beneficios del Seguro Social",
+    "UNE": "Beneficios por desempleo"
+  },
   "TransactionsPage": {
     "title": "Transacciones",
     "periodMobile": "Periodo: Mes actual",
