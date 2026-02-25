@@ -139,6 +139,21 @@
     "UTI": "Utilities",
     "VAC": "Vacations"
   },
+  "CategoriesForIncome": {
+    "ALI": "Alimony and Child Support",
+    "CAP": "Capital Gains",
+    "DIV": "Dividend Income",
+    "GIN": "Gifts and inheritances",
+    "INT": "Interest Income",
+    "MIS": "Miscellaneous sales",
+    "OTH": "Other Income",
+    "REI": "Reimbursements",
+    "REN": "Rental Income",
+    "SAL": "Salary and Wages",
+    "SEL": "Self-Employment Income",
+    "SOC": "Social Security Benefits",
+    "UNE": "Unemployment Benefits"
+  },
   "TransactionsPage": {
     "title": "Transactions",
     "periodMobile": "Period: Current Month",

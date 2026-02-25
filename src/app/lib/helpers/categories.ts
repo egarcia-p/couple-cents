@@ -9,12 +9,22 @@ import { Categories } from "../definitions";
  */
 export async function getTranslatedCategories(
   categoryData: Categories,
+  isExpense?: boolean,
 ): Promise<Categories> {
   const tCategories = await getTranslations("Categories");
+  const tIncomeCategories = await getTranslations("CategoriesForIncome");
+  const incomeCategoryKeys = new Set(Object.keys(categoriesForIncome));
 
   const translatedCategories: Categories = {};
   Object.keys(categoryData).forEach((categoryKey) => {
-    translatedCategories[categoryKey] = tCategories(categoryKey);
+    const useIncome =
+      isExpense !== undefined
+        ? !isExpense
+        : incomeCategoryKeys.has(categoryKey);
+
+    translatedCategories[categoryKey] = useIncome
+      ? tIncomeCategories(categoryKey)
+      : tCategories(categoryKey);
   });
 
   return translatedCategories;
@@ -28,7 +38,7 @@ export async function getFormCategories(
   isExpense: boolean,
 ): Promise<Categories> {
   const categoryData = isExpense ? categories : categoriesForIncome;
-  return getTranslatedCategories(categoryData as Categories);
+  return getTranslatedCategories(categoryData as Categories, isExpense);
 }
 
 /**
