@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.4] - 2026-02-24
+
+### Changed
+
+- Minor improvements and bug fixes to the income categories
+
 ## [0.8.3] - 2026-02-21
 
 ### Added
