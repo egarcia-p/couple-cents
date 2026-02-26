@@ -163,7 +163,7 @@ test("renders with Month period by default", async () => {
 
 test("renders with custom period from search params", async () => {
   const PageComponent = await Page({
-    searchParams: { period: "Year" },
+    searchParams: Promise.resolve({ period: "Year" }),
   });
   render(PageComponent);
 

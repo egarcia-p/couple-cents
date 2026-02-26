@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.7] - 2026-02-25
+
+### Added
+
+- **Test Suite Enhancements**
+  - Created comprehensive dashboard page tests (7 test cases)
+  - Added proper mocking for next-intl, Next.js components, and auth modules
+  - Validated cards, charts, and toggle components rendering
+
+### Fixed
+
+- Fixed 7 failing date-time utility tests by correcting date format handling
+- Fixed 3 landing page tests with proper NextIntlClientProvider mocking
+- Fixed API route tests to use `verifySession` instead of deprecated auth import
+- Added `@public` alias to vitest configuration for proper asset resolution
+
+### Security
+
+- **Next.js Upgrade**: Updated from 14.2.35 to 15.5.12 (addresses MEDIUM severity vulnerability)
+- Updated `eslint-config-next` to 15.5.12 to match Next.js version
+
 ## [0.8.6] - 2026-02-25
 
 ### Fixed

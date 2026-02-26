@@ -25,11 +25,11 @@ export const metadata: Metadata = {
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: {
+  searchParams?: Promise<{
     period?: string;
     year?: string;
     month?: string;
-  };
+  }>;
 }) {
   const session = await verifySession();
   const tHistory = await getTranslations("History");
@@ -53,9 +53,10 @@ export default async function Page({
   };
   if (!session) return null;
 
+  const params = await searchParams;
   let currentPeriod = "Month";
 
-  if (searchParams?.month == "00") {
+  if (params?.month == "00") {
     currentPeriod = "Year";
   }
 
@@ -64,7 +65,7 @@ export default async function Page({
   );
 
   //if year and month are not provided, return <h1>Select a year and month</h1>
-  if (!searchParams?.year && !searchParams?.month) {
+  if (!params?.year && !params?.month) {
     return (
       <main>
         <h1 className={`mb-4 text-xl md:text-2xl`}>
@@ -75,8 +76,8 @@ export default async function Page({
     );
   }
 
-  const currentYear = searchParams?.year || new Date().getFullYear();
-  const currentMonth = searchParams?.month || new Date().getMonth() + 1;
+  const currentYear = params?.year || new Date().getFullYear();
+  const currentMonth = params?.month || new Date().getMonth() + 1;
 
   //get budget
   const totalBudgetByMonth = await fetchUserBudgetByMonth(session.user.id);

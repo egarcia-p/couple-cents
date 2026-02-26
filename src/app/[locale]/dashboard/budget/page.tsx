@@ -9,6 +9,7 @@ import ExpensesTable from "@/app/components/budget/expenses-table";
 import Toggle from "@/app/ui/dashboard/Toggle";
 import { verifySession } from "@/app/lib/dal";
 import { getTranslations } from "next-intl/server";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Budget Tracker Dashboard",
@@ -16,16 +17,19 @@ export const metadata: Metadata = {
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: {
+  searchParams?: Promise<{
     period?: string;
-  };
+  }>;
 }) {
   const session = await verifySession();
   if (!session) return null;
   const t = await getTranslations("Budget");
   const userId = session.user?.id;
 
-  const currentPeriod = searchParams?.period || "Month";
+  const locale: string = (await cookies()).get("NEXT_LOCALE")?.value || "en-US";
+
+  const params = await searchParams;
+  const currentPeriod = params?.period || "Month";
 
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
@@ -74,6 +78,7 @@ export default async function Page({
           <ExpensesTable
             budgetSettings={budgetSettingsMap}
             expenses={spendByCategoryMap}
+            locale={locale}
           />
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import logo from "@public/logo.png";
 import Bench from "@public/bench_2.jpeg";
@@ -266,19 +267,19 @@ export default function Home() {
                       <div className="flex flex-col gap-4">
                         <p className="text-xs text-gray-600 dark:text-gray-400 text-center">
                           {t("bySigningIn")}{" "}
-                          <a
+                          <Link
                             href="/terms"
                             className="text-secondary hover:opacity-80 underline transition-opacity"
                           >
                             {t("termsOfService")}
-                          </a>{" "}
+                          </Link>{" "}
                           {t("and")}{" "}
-                          <a
+                          <Link
                             href="/privacy"
                             className="text-secondary hover:opacity-80 underline transition-opacity"
                           >
                             {t("privacyPolicy")}
-                          </a>
+                          </Link>
                         </p>
                       </div>
                     </div>
@@ -420,18 +421,18 @@ export default function Home() {
               </span>
             </div>
             <div className="flex gap-8">
-              <a
+              <Link
                 className="text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 hover:text-secondary transition-colors"
                 href="/privacy"
               >
                 {t("privacyPolicy")}
-              </a>
-              <a
+              </Link>
+              <Link
                 className="text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 hover:text-secondary transition-colors"
                 href="/terms"
               >
                 {t("termsOfService")}
-              </a>
+              </Link>
             </div>
           </div>
         </footer>

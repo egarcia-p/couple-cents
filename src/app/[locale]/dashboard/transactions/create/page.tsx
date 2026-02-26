@@ -12,15 +12,17 @@ export const metadata: Metadata = {
 export default async function Page({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const session = await verifySession();
   if (!session) return null;
 
   const t = await getTranslations("TransactionsPage");
-  const locale = cookies().get("NEXT_LOCALE")?.value.toLowerCase() || "en";
+  const locale =
+    (await cookies()).get("NEXT_LOCALE")?.value.toLowerCase() || "en";
 
-  const isExpense = String(searchParams.isExpense).toLowerCase() === "true";
+  const params = await searchParams;
+  const isExpense = String(params.isExpense).toLowerCase() === "true";
   const formCategories = await getFormCategories(isExpense);
 
   return (

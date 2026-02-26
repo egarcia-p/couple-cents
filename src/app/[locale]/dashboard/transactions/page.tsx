@@ -13,20 +13,21 @@ import { cookies } from "next/headers";
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: {
+  searchParams?: Promise<{
     query?: string;
     dates?: string;
     page?: string;
-  };
+  }>;
 }) {
   const session = await verifySession();
   if (!session) return null;
 
   const t = await getTranslations("TransactionsPage");
-  const locale = cookies().get("NEXT_LOCALE")?.value || "en-GB";
+  const locale = (await cookies()).get("NEXT_LOCALE")?.value || "en-GB";
 
-  const currentPage = Number(searchParams?.page) || 1;
-  const query = searchParams?.query || "";
+  const params = await searchParams;
+  const currentPage = Number(params?.page) || 1;
+  const query = params?.query || "";
 
   //TBD Fix according to the user's timezone
   const timeZone = "America/Mexico_City";
@@ -50,7 +51,7 @@ export default async function Page({
     .toLocaleDateString()
     .split("T")[0]
     .replace(/-/g, " ");
-  const dates = searchParams?.dates || firstDay + "to" + lastDay;
+  const dates = params?.dates || firstDay + "to" + lastDay;
   const totalPages = await fetchTransactionPages(query, dates, session.user.id);
 
   // console.warn("Date: new Date()", utcDate);
