@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.6] - 2026-02-25
+
+### Fixed
+
+- Fixed dashboard card titles overflow with text truncation and tooltip
+- Added `line-clamp-1` to prevent card titles from wrapping to multiple lines
+- Added hover tooltip to show full title text when truncated
+
 ## [0.8.5] - 2026-02-25
 
 ### Changed
