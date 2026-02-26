@@ -67,8 +67,9 @@ describe("Transaction DateTime - getTransactionDateWithTime()", () => {
   });
 
   describe("String Date Handling", () => {
-    it("should handle string dates in YYYY-MM-DD format", () => {
-      const pastDateString = "2025-01-10";
+    it("should handle string dates in locale format", () => {
+      // Use MM/dd/yyyy format for en-US locale
+      const pastDateString = "01/10/2025"; // January 10, 2025 in US format
       const timezone = "America/Mexico_City";
 
       const result = getTransactionDateWithTime(pastDateString, timezone);
@@ -77,12 +78,12 @@ describe("Transaction DateTime - getTransactionDateWithTime()", () => {
       expect(result.getTime()).toBeGreaterThan(0);
     });
 
-    it("should handle various date string formats", () => {
+    it("should handle various date string formats in locale format", () => {
       const testDates = [
-        "2025-01-01",
-        "2024-12-25",
-        "2023-06-15",
-        "2020-02-29", // Leap year
+        "01/01/2025", // January 1, 2025
+        "12/25/2024", // December 25, 2024
+        "06/15/2023", // June 15, 2023
+        "02/29/2020", // Leap year - February 29, 2020
       ];
 
       const timezone = "America/Mexico_City";
@@ -170,7 +171,7 @@ describe("Transaction DateTime - getTransactionDateWithTime()", () => {
   describe("Date Object Handling", () => {
     it("should accept both Date objects and strings", () => {
       const dateObj = new Date("2025-01-15");
-      const dateStr = "2025-01-15";
+      const dateStr = "01/15/2025"; // MM/dd/yyyy format for en-US
       const timezone = "America/Mexico_City";
 
       const result1 = getTransactionDateWithTime(dateObj, timezone);
@@ -185,7 +186,7 @@ describe("Transaction DateTime - getTransactionDateWithTime()", () => {
 
   describe("Edge Cases", () => {
     it("should handle dates at the beginning of the year", () => {
-      const newYearsDay = "2025-01-01";
+      const newYearsDay = new Date("2025-01-01");
       const timezone = "America/Mexico_City";
 
       const result = getTransactionDateWithTime(newYearsDay, timezone);
@@ -195,7 +196,7 @@ describe("Transaction DateTime - getTransactionDateWithTime()", () => {
     });
 
     it("should handle dates at the end of the year", () => {
-      const lastDayOfYear = "2024-12-31";
+      const lastDayOfYear = new Date("2024-12-31");
       const timezone = "America/Mexico_City";
 
       const result = getTransactionDateWithTime(lastDayOfYear, timezone);
@@ -205,7 +206,7 @@ describe("Transaction DateTime - getTransactionDateWithTime()", () => {
     });
 
     it("should handle leap year dates", () => {
-      const leapYearDate = "2024-02-29";
+      const leapYearDate = new Date("2024-02-29");
       const timezone = "America/Mexico_City";
 
       const result = getTransactionDateWithTime(leapYearDate, timezone);
@@ -219,7 +220,7 @@ describe("Transaction DateTime - getTransactionDateWithTime()", () => {
     it("should always return a valid Date object", () => {
       const testCases = [
         { date: new Date(), tz: "America/Mexico_City" },
-        { date: "2025-01-10", tz: "America/New_York" },
+        { date: new Date("2025-01-10"), tz: "America/New_York" },
         { date: new Date("2024-06-15"), tz: "Europe/London" },
       ];
 
@@ -241,7 +242,9 @@ describe("Transaction DateTime - getTransactionDateWithTime()", () => {
       expect(result.toISOString()).toBeDefined();
       expect(typeof result.toISOString()).toBe("string");
       // Should be in ISO format
-      expect(result.toISOString()).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/);
+      expect(result.toISOString()).toMatch(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/,
+      );
     });
   });
 });
