@@ -23,12 +23,13 @@ const options = {
           if (label) {
             label += ": ";
           }
-          if (context.parsed.y !== null) {
+          const value = context.parsed.y ?? context.parsed;
+          if (value !== null && value !== undefined) {
             label += new Intl.NumberFormat("en-US", {
               style: "currency",
               currency: "USD",
               minimumFractionDigits: 0,
-            }).format(context.parsed.y);
+            }).format(value);
           }
           return label;
         },
