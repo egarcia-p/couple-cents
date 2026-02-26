@@ -1,24 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { GET } from "../route";
-import { auth } from "@/auth";
+import { verifySession } from "@/app/lib/dal";
 import { fetchAllFilteredTransactions } from "@/app/lib/data";
 
 // src/app/api/transactions/[userId]/route.test.ts
 
 // Mock dependencies
-vi.mock("@/auth", () => ({
-  auth: vi.fn(),
+vi.mock("@/app/lib/dal", () => ({
+  verifySession: vi.fn(),
 }));
 
 vi.mock("@/app/lib/data", () => ({
   fetchAllFilteredTransactions: vi.fn(),
 }));
-
-// could be null
-interface User {
-  id: string;
-  name: string;
-}
 
 describe("GET /api/transactions/[userId]", () => {
   beforeEach(() => {
@@ -26,10 +20,7 @@ describe("GET /api/transactions/[userId]", () => {
   });
 
   it("should return 401 when there is no session", async () => {
-    vi.mocked(auth).mockResolvedValue({
-      user: { id: "any", name: "any" },
-      expires: new Date().toISOString(),
-    });
+    vi.mocked(verifySession).mockResolvedValue(null);
 
     const request = new Request("http://localhost:3000/api/transactions/123");
     const response = await GET(request, { params: { userId: "123" } });
@@ -37,15 +28,15 @@ describe("GET /api/transactions/[userId]", () => {
 
     expect(response.status).toBe(401);
     expect(body).toEqual({
-      message: "Unauthenticated user or wrong user",
+      message: "Unauthorized",
       data: [],
     });
   });
 
   it("should return 401 when user ID does not match", async () => {
-    vi.mocked(auth).mockResolvedValue({
-      user: { id: "wrong-id", name: "Test User" },
-      expires: new Date().toISOString(),
+    vi.mocked(verifySession).mockResolvedValue({
+      isAuth: true,
+      user: { id: "wrong-id", name: "Test User", email: "test@example.com" },
     });
 
     const request = new Request("http://localhost:3000/api/transactions/123");
@@ -61,9 +52,9 @@ describe("GET /api/transactions/[userId]", () => {
 
   it("should return 200 with transactions when authenticated", async () => {
     const mockData = [{ id: 1, amount: 100 }];
-    vi.mocked(auth).mockResolvedValue({
-      user: { id: "123", name: "Test User" } as User,
-      expires: new Date().toISOString(),
+    vi.mocked(verifySession).mockResolvedValue({
+      isAuth: true,
+      user: { id: "123", name: "Test User", email: "test@example.com" },
     });
     vi.mocked(fetchAllFilteredTransactions).mockResolvedValue(mockData);
 
@@ -85,9 +76,9 @@ describe("GET /api/transactions/[userId]", () => {
 
   it("should handle query parameters correctly", async () => {
     const mockData = [{ id: 1, amount: 100 }];
-    vi.mocked(auth).mockResolvedValue({
-      user: { id: "123", name: "Test User" } as User,
-      expires: new Date().toISOString(),
+    vi.mocked(verifySession).mockResolvedValue({
+      isAuth: true,
+      user: { id: "123", name: "Test User", email: "test@example.com" },
     });
     vi.mocked(fetchAllFilteredTransactions).mockResolvedValue(mockData);
 
