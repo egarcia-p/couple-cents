@@ -1,40 +1,48 @@
-const options = {
-  scales: {
-    y: {
-      ticks: {
-        // Include a dollar sign in the ticks
-        callback: function (value: any, index: any, ticks: any): string {
-          //return "$" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-          return new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 0,
-          }).format(value);
-        },
-      },
-    },
-  },
-  plugins: {
-    tooltip: {
-      callbacks: {
-        label: function (context: any) {
-          let label = context.dataset.label || "";
+import locales from "@/i18n/locales.json";
 
-          if (label) {
-            label += ": ";
-          }
-          const value = context.parsed.y ?? context.parsed;
-          if (value !== null && value !== undefined) {
-            label += new Intl.NumberFormat("en-US", {
+function getCurrency(locale: string): string {
+  const found = locales.find((l) => l.key === locale);
+  return found?.currency ?? "USD";
+}
+
+export default function getFinancialChartOptions(locale: string) {
+  const currency = getCurrency(locale);
+
+  return {
+    scales: {
+      y: {
+        ticks: {
+          callback: function (value: any): string {
+            return new Intl.NumberFormat(locale, {
               style: "currency",
-              currency: "USD",
+              currency,
               minimumFractionDigits: 0,
             }).format(value);
-          }
-          return label;
+          },
         },
       },
     },
-  },
-};
-export default options;
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function (context: any) {
+            let label = context.dataset.label || "";
+
+            if (label) {
+              label += ": ";
+            }
+            const value = context.parsed.y ?? context.parsed;
+            if (value !== null && value !== undefined) {
+              label += new Intl.NumberFormat(locale, {
+                style: "currency",
+                currency,
+                minimumFractionDigits: 0,
+              }).format(value);
+            }
+            return label;
+          },
+        },
+      },
+    },
+  };
+}

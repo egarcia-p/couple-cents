@@ -4,9 +4,9 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useSpendArray } from "@/app/ui/hooks/useSpendArray";
-import options from "./financial-chart-options";
+import getFinancialChartOptions from "./financial-chart-options";
 
 Chart.register(CategoryScale);
 
@@ -19,6 +19,8 @@ const Doughnut = dynamic(
 
 export default function ExpensesCategoryChart({ dataExpenses }: any) {
   const t = useTranslations("ExpensesCategoryChart");
+  const locale = useLocale();
+  const options = getFinancialChartOptions(locale);
   const { spendArray, categoryArray } = useSpendArray({ dataExpenses });
 
   const colors = [

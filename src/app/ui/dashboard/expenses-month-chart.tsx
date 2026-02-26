@@ -4,9 +4,9 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
-import options from "./financial-chart-options";
+import getFinancialChartOptions from "./financial-chart-options";
 import type { ChartData } from "chart.js";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 Chart.register(CategoryScale);
 
@@ -28,6 +28,8 @@ export default function ExpensesMonthChart({
 }: ExpensesMonthChartProps) {
   const t = useTranslations("ExpensesMonthChart");
   const tMonths = useTranslations("Months");
+  const locale = useLocale();
+  const options = getFinancialChartOptions(locale);
   const monthsDisplay = new Map<number, string>();
   monthsDisplay.set(1, tMonths("january"));
   monthsDisplay.set(2, tMonths("february"));

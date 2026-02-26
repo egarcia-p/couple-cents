@@ -3,10 +3,10 @@
 import dynamic from "next/dynamic";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useSpendArray } from "../hooks/useSpendArray";
 import { CalendarIcon } from "@heroicons/react/24/outline";
-import horizontalBarOptions from "./horizontal-bar-chart-options";
+import getHorizontalBarChartOptions from "./horizontal-bar-chart-options";
 
 Chart.register(CategoryScale);
 
@@ -20,6 +20,8 @@ const HorizontalBar = dynamic(
 export default function TopExpensesCategoryChart({ dataExpenses }: any) {
   //Conver Info into data array
   const t = useTranslations("TopExpensesCategoryChart");
+  const locale = useLocale();
+  const horizontalBarOptions = getHorizontalBarChartOptions(locale);
   const { spendArray, categoryArray } = useSpendArray({ dataExpenses });
 
   // sort spendArray and categoryArray in descending order based on spendArray values
