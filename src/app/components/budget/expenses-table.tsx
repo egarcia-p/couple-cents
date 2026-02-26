@@ -7,14 +7,15 @@ import {
 } from "@/app/lib/helpers/budget";
 import { formatCurrency, formatPercentage } from "@/app/lib/utils";
 import { useTranslations } from "next-intl";
-import { cookies } from "next/headers";
 
 export default function ExpensesTable({
   budgetSettings,
   expenses,
+  locale,
 }: {
   budgetSettings: UserBudgetSetting[];
   expenses: Map<string, number>;
+  locale: string;
 }) {
   const t = useTranslations("Budget");
   const budgetsPerCategorySettings = getBudgetsPerCategorySettings(
@@ -27,8 +28,6 @@ export default function ExpensesTable({
     budgetSettings,
     expenses,
   );
-
-  const locale: string = cookies().get("NEXT_LOCALE")?.value || "en-US";
 
   return (
     <>

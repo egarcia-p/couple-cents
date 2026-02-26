@@ -29,7 +29,7 @@ export default async function DashboardTable({
     userId,
   );
 
-  const locale: string = cookies().get("NEXT_LOCALE")?.value || "en-GB";
+  const locale: string = (await cookies()).get("NEXT_LOCALE")?.value || "en-GB";
 
   const userSettings = await fetchUserSettings(userId);
   const userLocale = userSettings[0]?.language || "en-US";

@@ -13,8 +13,9 @@ type ResponseData = {
 
 export async function GET(
   req: Request,
-  { params }: { params: { userId: string } },
+  { params }: { params: Promise<{ userId: string }> },
 ) {
+  const { userId } = await params;
   const session = await verifySession();
   if (!session) {
     return Response.json(
@@ -26,7 +27,7 @@ export async function GET(
     );
   }
 
-  if (!session.user || session.user.id != params.userId) {
+  if (!session.user || session.user.id != userId) {
     return Response.json(
       {
         message: "Unauthenticated user or wrong user",
@@ -41,7 +42,7 @@ export async function GET(
 
     const data = await fetchAllFilteredTransactions({
       query: query,
-      userId: params.userId,
+      userId: userId,
       dates: dates,
     });
 

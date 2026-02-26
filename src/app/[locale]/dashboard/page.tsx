@@ -24,15 +24,16 @@ export const metadata: Metadata = {
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: {
+  searchParams?: Promise<{
     period?: string;
-  };
+  }>;
 }) {
   const t = await getTranslations("DashboardPage");
   const session = await verifySession();
   if (!session) return null;
 
-  const currentPeriod = searchParams?.period || "Month";
+  const params = await searchParams;
+  const currentPeriod = params?.period || "Month";
 
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;

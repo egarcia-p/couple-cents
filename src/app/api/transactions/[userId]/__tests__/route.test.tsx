@@ -23,7 +23,9 @@ describe("GET /api/transactions/[userId]", () => {
     vi.mocked(verifySession).mockResolvedValue(null);
 
     const request = new Request("http://localhost:3000/api/transactions/123");
-    const response = await GET(request, { params: { userId: "123" } });
+    const response = await GET(request, {
+      params: Promise.resolve({ userId: "123" }),
+    });
     const body = await response.json();
 
     expect(response.status).toBe(401);
@@ -40,7 +42,9 @@ describe("GET /api/transactions/[userId]", () => {
     });
 
     const request = new Request("http://localhost:3000/api/transactions/123");
-    const response = await GET(request, { params: { userId: "123" } });
+    const response = await GET(request, {
+      params: Promise.resolve({ userId: "123" }),
+    });
     const body = await response.json();
 
     expect(response.status).toBe(401);
@@ -59,7 +63,9 @@ describe("GET /api/transactions/[userId]", () => {
     vi.mocked(fetchAllFilteredTransactions).mockResolvedValue(mockData);
 
     const request = new Request("http://localhost:3000/api/transactions/123");
-    const response = await GET(request, { params: { userId: "123" } });
+    const response = await GET(request, {
+      params: Promise.resolve({ userId: "123" }),
+    });
     const body = await response.json();
 
     expect(response.status).toBe(200);
@@ -85,7 +91,9 @@ describe("GET /api/transactions/[userId]", () => {
     const request = new Request(
       "http://localhost:3000/api/transactions/123?query=test&dates=2023",
     );
-    const response = await GET(request, { params: { userId: "123" } });
+    const response = await GET(request, {
+      params: Promise.resolve({ userId: "123" }),
+    });
     const body = await response.json();
 
     expect(response.status).toBe(200);
