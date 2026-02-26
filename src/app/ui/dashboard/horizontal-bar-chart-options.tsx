@@ -5,12 +5,15 @@ function getCurrency(locale: string): string {
   return found?.currency ?? "USD";
 }
 
-export default function getFinancialChartOptions(locale: string) {
+export default function getHorizontalBarChartOptions(locale: string) {
   const currency = getCurrency(locale);
 
   return {
+    indexAxis: "y" as const,
+    maintainAspectRatio: false,
     scales: {
-      y: {
+      x: {
+        beginAtZero: true,
         ticks: {
           callback: function (value: any): string {
             return new Intl.NumberFormat(locale, {
@@ -19,6 +22,13 @@ export default function getFinancialChartOptions(locale: string) {
               minimumFractionDigits: 0,
             }).format(value);
           },
+        },
+      },
+      y: {
+        ticks: {
+          autoSkip: false,
+          maxRotation: 90,
+          minRotation: 0,
         },
       },
     },
@@ -31,7 +41,7 @@ export default function getFinancialChartOptions(locale: string) {
             if (label) {
               label += ": ";
             }
-            const value = context.parsed.y ?? context.parsed;
+            const value = context.parsed.x ?? context.parsed;
             if (value !== null && value !== undefined) {
               label += new Intl.NumberFormat(locale, {
                 style: "currency",

@@ -4,9 +4,9 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
-import options from "./financial-chart-options";
+import getFinancialChartOptions from "./financial-chart-options";
 import { use } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 Chart.register(CategoryScale);
 
 const Line = dynamic(() => import("react-chartjs-2").then((mod) => mod.Line), {
@@ -19,6 +19,8 @@ export default function EssentialExpensesMonthChart({
 }: any) {
   const t = useTranslations("EssentialExpensesMonthChart");
   const tMonths = useTranslations("Months");
+  const locale = useLocale();
+  const options = getFinancialChartOptions(locale);
 
   const monthsDisplay = new Map<number, string>();
   monthsDisplay.set(1, tMonths("january"));

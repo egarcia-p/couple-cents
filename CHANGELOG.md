@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.5] - 2026-02-25
+
+### Changed
+
+- Fixed the dashboard charts tooltip to show the curency
+- Code quality enhancements for managing locale for charts.
+
 ## [0.8.4] - 2026-02-24
 
 ### Changed
