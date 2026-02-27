@@ -19,7 +19,7 @@ export default function SideNav() {
       await router.push("/");
       window.location.href = "/";
     } catch (error) {
-      console.error("Sign out error:", error);
+      // Sign out failed silently
     }
   };
   return (

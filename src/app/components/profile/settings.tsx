@@ -45,13 +45,11 @@ export default function UserSettings({
   budgetsPerCategorySettings.forEach((setting) => {
     initialBudgetValues[setting.categoryId] = Number(setting.budget) || 0;
   });
-  console.log("Initial budget values", initialBudgetValues);
 
   const [budgetValues, setBudgetValues] =
     useState<Record<string, number>>(initialBudgetValues);
 
   const handleBudgetChange = (categoryId: string, value: string) => {
-    console.log("Budget change", categoryId, value);
     setBudgetValues((prev) => ({
       ...prev,
       [categoryId]: Number(value) || 0,

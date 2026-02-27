@@ -75,7 +75,6 @@ export default function SignUp() {
         },
         onError: (ctx) => {
           // display the error message
-          console.log("Sign up error:", ctx.error);
           setError(ctx.error.message);
         },
       },

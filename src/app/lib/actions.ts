@@ -19,6 +19,7 @@ import {
 } from "./utils";
 import { fetchUserSettings } from "./data";
 import { getTranslations } from "next-intl/server";
+import { encrypt } from "./crypto";
 
 const booleanString = z
   .string()
@@ -151,9 +152,9 @@ export async function createTransaction(
     type NewTransaction = typeof transactions.$inferInsert;
     const newTransaction: NewTransaction = {
       isExpense,
-      amount: amountInCents.toString(),
+      amount: encrypt(amountInCents.toString()),
       note,
-      establishment,
+      establishment: encrypt(establishment),
       category,
       isEssential,
       userId,
@@ -260,9 +261,9 @@ export async function updateTransaction(
 
     const setValues = {
       isExpense: isExpense,
-      amount: amountInCents.toString(),
+      amount: encrypt(amountInCents.toString()),
       note: note,
-      establishment: establishment,
+      establishment: encrypt(establishment),
       category: category,
       isEssential: isEssential,
       userId: userId,
@@ -316,7 +317,7 @@ export async function saveBudgetSettings(prevState: State, formData: FormData) {
     const budgetSettingsToSave = parsedBudgetSettings.map((setting) => ({
       userId: userId,
       category: setting.category,
-      budget: Number(setting.budget).toString(),
+      budget: encrypt(Number(setting.budget).toString()),
     }));
 
     for (const setting of budgetSettingsToSave) {
@@ -335,9 +336,9 @@ export async function saveBudgetSettings(prevState: State, formData: FormData) {
       if (existingSetting.length === 0) {
         await db.insert(userBudgetSettings).values(setting);
       } else {
-        // If it exists, update the budget
+        // If it exists, update the budget (setting.budget is already encrypted)
         const setValues = {
-          budget: setting.budget.toString(),
+          budget: setting.budget,
         };
         await db
           .update(userBudgetSettings)

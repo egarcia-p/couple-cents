@@ -47,9 +47,9 @@ export const families = pgTable("families", {
 export const transactions = pgTable("transactions", {
   id: uuid("id").defaultRandom().primaryKey(),
   isExpense: boolean("isExpense").notNull(),
-  amount: numeric("amount").notNull(),
+  amount: text("amount").notNull(),
   note: text("note"),
-  establishment: varchar("establishment", { length: 255 }).notNull(),
+  establishment: text("establishment").notNull(),
   category: varchar("category", { length: 255 }).notNull(),
   isEssential: boolean("isEssential").notNull(),
   userId: text("userId").notNull(),
@@ -62,7 +62,7 @@ export const userBudgetSettings = pgTable("user_budget_settings", {
   id: serial("id").primaryKey(),
   userId: text("userId").notNull(),
   category: varchar("category", { length: 255 }).notNull(),
-  budget: numeric("budget").notNull(),
+  budget: text("budget").notNull(),
 });
 
 export const userSettings = pgTable("user_settings", {
@@ -77,6 +77,7 @@ export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
+  emailHash: text("email_hash"),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
