@@ -12,8 +12,11 @@ test.describe("Error Handling", () => {
 
     // Should show validation errors
     // Error divs have specific IDs like amount-error, establishment-error, category-error
+    // Use :first() to avoid strict mode error when multiple errors might appear
     await expect(
-      page.locator("#amount-error, #establishment-error, #category-error"),
+      page
+        .locator("#amount-error, #establishment-error, #category-error")
+        .first(),
     ).toBeVisible({
       timeout: 10000,
     });

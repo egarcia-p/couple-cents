@@ -27,28 +27,39 @@ test.describe("Search & Filtering", () => {
   }) => {
     await page.goto("/en-US/dashboard/transactions");
 
-    // Search input placeholder is "Search transactions..."
-    const searchInput = page.locator('input[placeholder*="Search"]');
+    // Search input placeholder is "Search transactions..." (there are 2: one desktop, one mobile)
+    // Use :visible and :first to get the one actually on screen
+    const searchInput = page
+      .locator('input[placeholder*="Search"]:visible')
+      .first();
     await searchInput.fill("UniqueSearch");
 
     // Wait for debounce (1000ms) + network
     await page.waitForTimeout(2000);
 
-    await expect(page.locator("text=UniqueSearchTerm")).toBeVisible({
+    await expect(
+      page.locator('table tbody td:has-text("UniqueSearchTerm")'),
+    ).toBeVisible({
       timeout: 10000,
     });
-    await expect(page.locator("text=AnotherShop")).not.toBeVisible();
+    await expect(
+      page.locator('table tbody td:has-text("AnotherShop")'),
+    ).not.toBeVisible();
   });
 
   test("Search is case-insensitive", async ({ authenticatedPage: page }) => {
     await page.goto("/en-US/dashboard/transactions");
 
-    const searchInput = page.locator('input[placeholder*="Search"]');
+    const searchInput = page
+      .locator('input[placeholder*="Search"]:visible')
+      .first();
     await searchInput.fill("uniquesearchterm");
 
     await page.waitForTimeout(2000);
 
-    await expect(page.locator("text=UniqueSearchTerm")).toBeVisible({
+    await expect(
+      page.locator('table tbody td:has-text("UniqueSearchTerm")').first(),
+    ).toBeVisible({
       timeout: 10000,
     });
   });
@@ -56,13 +67,17 @@ test.describe("Search & Filtering", () => {
   test("User can filter by category", async ({ authenticatedPage: page }) => {
     await page.goto("/en-US/dashboard/transactions");
 
-    const searchInput = page.locator('input[placeholder*="Search"]');
+    const searchInput = page
+      .locator('input[placeholder*="Search"]:visible')
+      .first();
     // Search by the establishment name that belongs to ENT category
     await searchInput.fill("UniqueSearchTerm");
 
     await page.waitForTimeout(2000);
 
-    await expect(page.locator("text=UniqueSearchTerm")).toBeVisible({
+    await expect(
+      page.locator('table tbody td:has-text("UniqueSearchTerm")').first(),
+    ).toBeVisible({
       timeout: 10000,
     });
   });
@@ -72,7 +87,9 @@ test.describe("Search & Filtering", () => {
   }) => {
     await page.goto("/en-US/dashboard/transactions");
 
-    const searchInput = page.locator('input[placeholder*="Search"]');
+    const searchInput = page
+      .locator('input[placeholder*="Search"]:visible')
+      .first();
     await searchInput.fill("NonExistentTermXYZ123");
 
     await page.waitForTimeout(2000);
