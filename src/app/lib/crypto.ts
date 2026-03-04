@@ -52,22 +52,31 @@ export function decrypt(encryptedText: string): string {
   const parts = encryptedText.split(":");
 
   if (parts.length !== 3) {
-    throw new Error(
-      "Invalid encrypted text format. Expected iv:ciphertext:authTag",
-    );
+    throw new Error("Decryption failed");
   }
 
-  const iv = Buffer.from(parts[0], ENCODING);
-  const encrypted = Buffer.from(parts[1], ENCODING);
-  const authTag = Buffer.from(parts[2], ENCODING);
+  try {
+    const iv = Buffer.from(parts[0], ENCODING);
+    const encrypted = Buffer.from(parts[1], ENCODING);
+    const authTag = Buffer.from(parts[2], ENCODING);
 
-  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
-  decipher.setAuthTag(authTag);
+    if (iv.length !== IV_LENGTH) {
+      throw new Error("Decryption failed");
+    }
+    if (authTag.length !== AUTH_TAG_LENGTH) {
+      throw new Error("Decryption failed");
+    }
 
-  let decrypted = decipher.update(encrypted);
-  decrypted = Buffer.concat([decrypted, decipher.final()]);
+    const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+    decipher.setAuthTag(authTag);
 
-  return decrypted.toString("utf8");
+    let decrypted = decipher.update(encrypted);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+    return decrypted.toString("utf8");
+  } catch {
+    throw new Error("Decryption failed");
+  }
 }
 
 /**
