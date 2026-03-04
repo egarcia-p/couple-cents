@@ -71,12 +71,12 @@ test.describe("Search & Filtering", () => {
       .locator('input[placeholder*="Search"]:visible')
       .first();
     // Search by the establishment name that belongs to ENT category
-    await searchInput.fill("UniqueSearchTerm");
+    await searchInput.fill("Entertainment");
 
     await page.waitForTimeout(2000);
 
     await expect(
-      page.locator('table tbody td:has-text("UniqueSearchTerm")').first(),
+      page.locator('table tbody td:has-text("Entertainment")').first(),
     ).toBeVisible({
       timeout: 10000,
     });
