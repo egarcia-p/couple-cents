@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.8] - 2026-03-05
+
+### Added
+
+- **Maintenance Mode Setup**
+
+  - Added `vercel.json` configuration for maintenance page redirects
+  - Created simple maintenance page (`public/maintenance.html`) for deployment downtime
+  - Allows easy deployment of bug fixes without affecting production visibility
+
+- **Security Improvements**
+  - Added encryption key generation script for AES-256 encryption setup
+  - Improved documentation for encryption management
+
+### Changed
+
+- Prepared infrastructure for bug deployment workflow
+
 ## [0.8.7] - 2026-02-25
 
 ### Added
