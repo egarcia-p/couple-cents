@@ -39,3 +39,7 @@ next-env.d.ts
 .nvmrc
 .vscode/settings.json
 notes.txt
+scripts/generateEncryptionKey.ts
+.env.test
+playwright-report/index.html
+test-results/.last-run.json
