@@ -62,7 +62,8 @@
     "forgotPassword": "Forgot Password?",
     "noAccount": "Don't have an account? Sign Up",
     "invalidCredentials": "Invalid email or password. Please try again.",
-    "areYouNew": "New to Couple Cents?"
+    "areYouNew": "New to Couple Cents?",
+    "or": "or"
   },
   "DashboardPage": {
     "Dashboard": "Dashboard"

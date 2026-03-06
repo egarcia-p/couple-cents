@@ -1,4 +1,3 @@
-import { use } from "react";
 import {
   transactions,
   userBudgetSettings,
@@ -13,6 +12,7 @@ import {
   getAllCategoriesMap,
   getTranslatedAllCategoriesMap,
 } from "./helpers/categories";
+import { safeDecrypt, encrypt } from "./crypto";
 
 //Create an interface for categories.json and assign to new var categories
 interface ICategories {
@@ -23,48 +23,31 @@ const categoriesMap: ICategories = getAllCategoriesMap();
 
 const ITEMS_PER_PAGE = 10;
 
+/**
+ * Decrypts the amount field from the DB and converts from cents to dollars.
+ */
+function decryptAmount(encryptedAmount: string | null | undefined): number {
+  if (!encryptedAmount) return 0;
+  const decrypted = safeDecrypt(encryptedAmount);
+  const cents = Number(decrypted);
+  if (isNaN(cents)) return 0;
+  return cents / 100;
+}
+
+/**
+ * Decrypts the budget field from the DB (stored in dollars, not cents).
+ */
+function decryptBudget(encryptedBudget: string | null | undefined): number {
+  if (!encryptedBudget) return 0;
+  const decrypted = safeDecrypt(encryptedBudget);
+  const value = Number(decrypted);
+  if (isNaN(value)) return 0;
+  return value;
+}
+
 export async function fetchAllTransactions(userId: string) {
   const translatedCategoriesMap = await getTranslatedAllCategoriesMap();
 
-  try {
-    const data = await db
-      .select({
-        id: transactions.id,
-        userId: transactions.userId,
-        transactionDate: transactions.transactionDate,
-        category: sql<string>`category`.mapWith({
-          mapFromDriverValue: (value: string) => {
-            const mappedValue = translatedCategoriesMap[value];
-            return mappedValue;
-          },
-        }),
-        establishment: transactions.establishment,
-        isExpense: transactions.isExpense,
-        isEssential: transactions.isEssential,
-        note: transactions.note,
-        amount: sql<string>`amount`.mapWith({
-          mapFromDriverValue: (value: any) => {
-            if (value === null || value === undefined) {
-              return "0";
-            }
-            let mappedValue = value / 100;
-
-            return mappedValue;
-          },
-        }),
-      })
-      .from(transactions)
-      .where(eq(transactions.userId, userId))
-      .orderBy(desc(transactions.transactionDate));
-
-    return data;
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch transactions.");
-  }
-}
-
-export async function fetchTransactionById(id: string) {
   try {
     const data = await db
       .select({
@@ -76,19 +59,49 @@ export async function fetchTransactionById(id: string) {
         isExpense: transactions.isExpense,
         isEssential: transactions.isEssential,
         note: transactions.note,
-        amount: sql<number>`amount`.mapWith({
-          mapFromDriverValue: (value: any) => {
-            const mappedValue = value / 100;
-            return mappedValue;
-          },
-        }),
+        amount: transactions.amount,
       })
       .from(transactions)
-      .where(eq(transactions.id, id));
+      .where(eq(transactions.userId, userId))
+      .orderBy(desc(transactions.transactionDate));
 
-    return data[0] as TransactionForm;
+    return data.map((row) => ({
+      ...row,
+      category: translatedCategoriesMap[row.category] ?? row.category,
+      establishment: safeDecrypt(row.establishment),
+      amount: decryptAmount(row.amount),
+    }));
   } catch (error) {
-    console.error("Database Error:", error);
+    throw new Error("Failed to fetch transactions.");
+  }
+}
+
+export async function fetchTransactionById(id: string, userId: string) {
+  try {
+    const data = await db
+      .select({
+        id: transactions.id,
+        userId: transactions.userId,
+        transactionDate: transactions.transactionDate,
+        category: transactions.category,
+        establishment: transactions.establishment,
+        isExpense: transactions.isExpense,
+        isEssential: transactions.isEssential,
+        note: transactions.note,
+        amount: transactions.amount,
+      })
+      .from(transactions)
+      .where(and(eq(transactions.id, id), eq(transactions.userId, userId)));
+
+    if (!data[0]) return undefined as unknown as TransactionForm;
+
+    const row = data[0];
+    return {
+      ...row,
+      establishment: safeDecrypt(row.establishment),
+      amount: decryptAmount(row.amount),
+    } as TransactionForm;
+  } catch (error) {
     throw new Error("Failed to fetch transaction.");
   }
 }
@@ -116,47 +129,50 @@ export async function fetchAllFilteredTransactions({
     .map(([code]) => code);
 
   try {
+    // Fetch all transactions in date range for this user, then filter in app layer
+    // since establishment is encrypted and can't be searched with ilike
     const data = await db
       .select({
         id: transactions.id,
         userId: transactions.userId,
         transactionDate: transactions.transactionDate,
-        category: sql<string>`category`.mapWith({
-          mapFromDriverValue: (value: string) => {
-            const mappedValue = translatedCategoriesMap[value];
-            return mappedValue;
-          },
-        }),
+        category: transactions.category,
         establishment: transactions.establishment,
         isExpense: transactions.isExpense,
         isEssential: transactions.isEssential,
         note: transactions.note,
-        amount: sql<string>`amount`.mapWith({
-          mapFromDriverValue: (value: any) => {
-            if (value === null || value === undefined) {
-              return "0";
-            }
-            return (value / 100).toString();
-          },
-        }),
+        amount: transactions.amount,
       })
       .from(transactions)
       .where(
         and(
-          or(
-            ...matchingCodes.map((code) => eq(transactions.category, code)),
-            ilike(transactions.establishment, `%${query}%`),
-            ilike(transactions.note, `%${query}%`),
-          ),
           eq(transactions.userId, userId),
           sql`CAST(${transactions.transactionDate} AS DATE) BETWEEN ${startDate} AND ${endDate}`,
         ),
       )
       .orderBy(desc(transactions.transactionDate));
 
-    return data;
+    const queryLower = query.toLowerCase();
+
+    return data
+      .map((row) => ({
+        ...row,
+        category: translatedCategoriesMap[row.category] ?? row.category,
+        rawCategory: row.category,
+        establishment: safeDecrypt(row.establishment),
+        amount: decryptAmount(row.amount),
+      }))
+      .filter((row) => {
+        if (!query) return true;
+        // Match by category code, decrypted establishment, or note
+        return (
+          matchingCodes.includes(row.rawCategory) ||
+          row.establishment.toLowerCase().includes(queryLower) ||
+          (row.note && row.note.toLowerCase().includes(queryLower))
+        );
+      })
+      .map(({ rawCategory, ...row }) => row);
   } catch (error) {
-    console.error("Database Error:", error);
     throw new Error("Failed to fetch all transactions filtered.");
   }
 }
@@ -169,7 +185,6 @@ export async function fetchFilteredTransactions(
 ) {
   const translatedCategoriesMap = await getTranslatedAllCategoriesMap();
 
-  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
   const dateArray = dates.split("to");
   const startDate = dateArray[0];
   const endDate = dateArray[1];
@@ -182,54 +197,56 @@ export async function fetchFilteredTransactions(
     .map(([code]) => code);
 
   try {
+    // Fetch all matching transactions for this user in date range,
+    // then filter and paginate in app layer since establishment is encrypted
     const data = await db
       .select({
         id: transactions.id,
         userId: transactions.userId,
         transactionDate: transactions.transactionDate,
-        category: sql<string>`category`.mapWith({
-          mapFromDriverValue: (value: string) => {
-            const mappedValue =
-              value in translatedCategoriesMap
-                ? translatedCategoriesMap[value]
-                : value;
-            return mappedValue;
-          },
-        }),
+        category: transactions.category,
         establishment: transactions.establishment,
         isExpense: transactions.isExpense,
         isEssential: transactions.isEssential,
         note: transactions.note,
-        amount: sql<string>`amount`.mapWith({
-          mapFromDriverValue: (value: any) => {
-            if (value === null || value === undefined) {
-              return "0";
-            }
-            return (value / 100).toString();
-          },
-        }),
+        amount: transactions.amount,
       })
       .from(transactions)
       .where(
         and(
-          or(
-            // ilike(transactions.transactionDate, `%${query}%`),
-            ...matchingCodes.map((code) => eq(transactions.category, code)),
-            ilike(transactions.establishment, `%${query}%`),
-            ilike(transactions.note, `%${query}%`),
-            // ilike(transactions.amount, `%${query}%`),
-          ),
           eq(transactions.userId, userId),
           sql`CAST(${transactions.transactionDate} AS DATE) BETWEEN ${startDate} AND ${endDate}`,
         ),
       )
-      .orderBy(desc(transactions.transactionDate))
-      .limit(ITEMS_PER_PAGE)
-      .offset(offset);
+      .orderBy(desc(transactions.transactionDate));
 
-    return data;
+    const queryLower = query.toLowerCase();
+
+    const filtered = data
+      .map((row) => ({
+        ...row,
+        category:
+          row.category in translatedCategoriesMap
+            ? translatedCategoriesMap[row.category]
+            : row.category,
+        rawCategory: row.category,
+        establishment: safeDecrypt(row.establishment),
+        amount: decryptAmount(row.amount),
+      }))
+      .filter((row) => {
+        if (!query) return true;
+        return (
+          matchingCodes.includes(row.rawCategory) ||
+          row.establishment.toLowerCase().includes(queryLower) ||
+          (row.note && row.note.toLowerCase().includes(queryLower))
+        );
+      })
+      .map(({ rawCategory, ...row }) => row);
+
+    // Apply pagination in app layer
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filtered.slice(offset, offset + ITEMS_PER_PAGE);
   } catch (error) {
-    console.error("Database Error:", error);
     throw new Error("Failed to fetch transactions.");
   }
 }
@@ -244,27 +261,42 @@ export async function fetchTransactionPages(
     const startDate = dateArray[0];
     const endDate = dateArray[1];
 
+    const translatedCategoriesMap = await getTranslatedAllCategoriesMap();
+    const matchingCodes = Object.entries(translatedCategoriesMap)
+      .filter(([code, name]) =>
+        name.toLowerCase().includes(query.toLowerCase()),
+      )
+      .map(([code]) => code);
+
+    // Fetch all rows in date range, decrypt, filter in app layer, then count
     const data = await db
-      .select({ count: sql`count(*)` })
+      .select({
+        category: transactions.category,
+        establishment: transactions.establishment,
+        note: transactions.note,
+      })
       .from(transactions)
       .where(
         and(
-          or(
-            // ilike(transactions.transactionDate, `%${query}%`),
-            ilike(transactions.category, `%${query}%`),
-            ilike(transactions.establishment, `%${query}%`),
-            ilike(transactions.note, `%${query}%`),
-            // ilike(transactions.amount, `%${query}%`),
-          ),
           eq(transactions.userId, userId),
           sql`CAST(${transactions.transactionDate} AS DATE) BETWEEN ${startDate} AND ${endDate}`,
         ),
       );
 
-    const totalPages = Math.ceil(Number(data[0].count) / ITEMS_PER_PAGE);
+    const queryLower = query.toLowerCase();
+    const filteredCount = data.filter((row) => {
+      if (!query) return true;
+      const decryptedEstablishment = safeDecrypt(row.establishment);
+      return (
+        matchingCodes.includes(row.category) ||
+        decryptedEstablishment.toLowerCase().includes(queryLower) ||
+        (row.note && row.note.toLowerCase().includes(queryLower))
+      );
+    }).length;
+
+    const totalPages = Math.ceil(filteredCount / ITEMS_PER_PAGE);
     return totalPages;
   } catch (error) {
-    console.error("Database Error:", error);
     throw new Error("Failed to fetch total number of transactions.");
   }
 }
@@ -279,62 +311,53 @@ export async function fetchCardData(
   const userLocale = userSettingsData[0]?.language || "en-US";
 
   try {
-    const totalMonthSpendData = db
-      .select({ value: sum(transactions.amount) })
+    // Fetch all transactions for this user in the given year, then aggregate in app layer
+    const yearTransactions = await db
+      .select({
+        amount: transactions.amount,
+        isExpense: transactions.isExpense,
+        transactionDate: transactions.transactionDate,
+      })
       .from(transactions)
       .where(
-        sql`EXTRACT(MONTH FROM ${transactions.transactionDate}) = ${month}
-    AND EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
-    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true
-    `,
+        and(
+          eq(transactions.userId, userId),
+          sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}`,
+        ),
       );
 
-    const totalMonthIncomeData = db
-      .select({ value: sum(transactions.amount) })
-      .from(transactions)
-      .where(
-        sql`EXTRACT(MONTH FROM ${transactions.transactionDate}) = ${month}
-    AND EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
-    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = false
-    `,
-      );
+    let totalMonthSpendDB = 0;
+    let totalMonthIncomeDB = 0;
+    let totalYearSpendDB = 0;
+    let totalYearIncomeDB = 0;
 
-    const totalYearSpendData = db
-      .select({ value: sum(transactions.amount) })
-      .from(transactions)
-      .where(
-        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
-    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true
-    `,
-      );
+    for (const tx of yearTransactions) {
+      const amountCents = decryptAmount(tx.amount) * 100; // decryptAmount returns dollars, we need cents for consistency
+      const txMonth = new Date(tx.transactionDate).getMonth() + 1;
 
-    const totalYearIncomeData = db
-      .select({ value: sum(transactions.amount) })
-      .from(transactions)
-      .where(
-        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
-    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = false
-    `,
-      );
+      if (tx.isExpense) {
+        totalYearSpendDB += amountCents;
+        if (txMonth === Number(month)) {
+          totalMonthSpendDB += amountCents;
+        }
+      } else {
+        totalYearIncomeDB += amountCents;
+        if (txMonth === Number(month)) {
+          totalMonthIncomeDB += amountCents;
+        }
+      }
+    }
 
-    const totalMonthBudgetData = db
-      .select({ value: sum(userBudgetSettings.budget) })
+    // Fetch budget data and aggregate in app layer
+    const budgetRows = await db
+      .select({ budget: userBudgetSettings.budget })
       .from(userBudgetSettings)
-      .where(sql`${userBudgetSettings.userId} = ${userId}`);
+      .where(eq(userBudgetSettings.userId, userId));
 
-    const data = await Promise.all([
-      totalMonthSpendData,
-      totalYearSpendData,
-      totalMonthIncomeData,
-      totalYearIncomeData,
-      totalMonthBudgetData,
-    ]);
-
-    const totalMonthSpendDB = Number(data[0][0].value);
-    const totalYearSpendDB = Number(data[1][0].value);
-    const totalMonthIncomeDB = Number(data[2][0].value);
-    const totalYearIncomeDB = Number(data[3][0].value);
-    const totalMonthBudgetDB = Number(data[4][0].value);
+    const totalMonthBudgetDB = budgetRows.reduce(
+      (sum, row) => sum + decryptBudget(row.budget),
+      0,
+    );
 
     let percentageOfIncomeSpentMonth: number | string;
     let percentageOfIncomeSpentYear: number | string;
@@ -356,6 +379,7 @@ export async function fetchCardData(
       percentageOfIncomeSpentYear = t("noIncome");
     }
 
+    // Values are in cents from the loop above — pass directly to formatCurrency
     const totalMonthSpend = await formatCurrency(
       totalMonthSpendDB ?? "0",
       true,
@@ -387,10 +411,10 @@ export async function fetchCardData(
       userLocale,
     );
 
+    // totalMonthBudgetDB is already in dollars (budget is stored in dollars)
     const totalMonthBudget = totalMonthBudgetDB
-      ? await formatCurrency(totalMonthBudgetDB * 100, true, userLocale) //convert from cents to dollars
+      ? await formatCurrency(totalMonthBudgetDB * 100, true, userLocale)
       : await formatCurrency(0, true, userLocale);
-    //Calculate total year budget
     const totalYearBudget = totalMonthBudgetDB
       ? await formatCurrency(totalMonthBudgetDB * 100 * 12, true, userLocale)
       : await formatCurrency(0, true, userLocale);
@@ -408,7 +432,6 @@ export async function fetchCardData(
       totalYearBudget,
     };
   } catch (error) {
-    console.error("Database Error:", error);
     throw new Error("Failed to fetch card data.");
   }
 }
@@ -418,26 +441,34 @@ export async function fetchEssentialSpendDataByMonth(
   year: string,
 ) {
   try {
-    const spendDataByMonth = await db
+    const data = await db
       .select({
-        month: sql`date_part('month',transactions."transactionDate")`,
-        total: sql`sum(transactions.amount) as total`.mapWith({
-          mapFromDriverValue: (value: any) => {
-            const mappedValue = value / 100;
-            return mappedValue;
-          },
-        }),
+        amount: transactions.amount,
+        transactionDate: transactions.transactionDate,
       })
       .from(transactions)
       .where(
-        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
-    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true AND ${transactions.isEssential} = true`,
-      )
-      .groupBy(sql`1`);
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.isExpense, true),
+          eq(transactions.isEssential, true),
+          sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}`,
+        ),
+      );
 
-    return spendDataByMonth;
+    // Aggregate by month in app layer
+    const monthTotals: Record<number, number> = {};
+    for (const row of data) {
+      const month = new Date(row.transactionDate).getMonth() + 1;
+      const amount = decryptAmount(row.amount);
+      monthTotals[month] = (monthTotals[month] || 0) + amount;
+    }
+
+    return Object.entries(monthTotals).map(([month, total]) => ({
+      month: Number(month),
+      total,
+    }));
   } catch (error) {
-    console.error("Database Error:", error);
     throw new Error("Failed to fetch expense data.");
   }
 }
@@ -447,104 +478,129 @@ export async function fetchNonEssentialSpendDataByMonth(
   year: string,
 ) {
   try {
-    const spendDataByMonth = await db
+    const data = await db
       .select({
-        month: sql`date_part('month',transactions."transactionDate")`,
-        total: sql`sum(transactions.amount) as total`.mapWith({
-          mapFromDriverValue: (value: any) => {
-            const mappedValue = value / 100;
-            return mappedValue;
-          },
-        }),
+        amount: transactions.amount,
+        transactionDate: transactions.transactionDate,
       })
       .from(transactions)
       .where(
-        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
-    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true AND ${transactions.isEssential} = false`,
-      )
-      .groupBy(sql`1`);
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.isExpense, true),
+          eq(transactions.isEssential, false),
+          sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}`,
+        ),
+      );
 
-    return spendDataByMonth;
+    const monthTotals: Record<number, number> = {};
+    for (const row of data) {
+      const month = new Date(row.transactionDate).getMonth() + 1;
+      const amount = decryptAmount(row.amount);
+      monthTotals[month] = (monthTotals[month] || 0) + amount;
+    }
+
+    return Object.entries(monthTotals).map(([month, total]) => ({
+      month: Number(month),
+      total,
+    }));
   } catch (error) {
-    console.error("Database Error:", error);
     throw new Error("Failed to fetch expense data.");
   }
 }
 
 export async function fetchSpendDataByMonth(userId: string, year: string) {
   try {
-    const spendDataByMonth = await db
+    const data = await db
       .select({
-        month: sql`date_part('month',transactions."transactionDate")`,
-        total: sql`sum(transactions.amount) as total`.mapWith({
-          mapFromDriverValue: (value: any) => {
-            const mappedValue = value / 100;
-            return mappedValue;
-          },
-        }),
+        amount: transactions.amount,
+        transactionDate: transactions.transactionDate,
       })
       .from(transactions)
       .where(
-        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
-    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true`,
-      )
-      .groupBy(sql`1`);
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.isExpense, true),
+          sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}`,
+        ),
+      );
 
-    return spendDataByMonth;
+    const monthTotals: Record<number, number> = {};
+    for (const row of data) {
+      const month = new Date(row.transactionDate).getMonth() + 1;
+      const amount = decryptAmount(row.amount);
+      monthTotals[month] = (monthTotals[month] || 0) + amount;
+    }
+
+    return Object.entries(monthTotals).map(([month, total]) => ({
+      month: Number(month),
+      total,
+    }));
   } catch (error) {
-    console.error("Database Error:", error);
     throw new Error("Failed to fetch expense data.");
   }
 }
 
 export async function fetchIncomedDataByMonth(userId: string, year: string) {
   try {
-    const incomeDataByMonth = await db
+    const data = await db
       .select({
-        month: sql`date_part('month',transactions."transactionDate")`,
-        total: sql`sum(transactions.amount) as total`.mapWith({
-          mapFromDriverValue: (value: any) => {
-            const mappedValue = value / 100;
-            return mappedValue;
-          },
-        }),
+        amount: transactions.amount,
+        transactionDate: transactions.transactionDate,
       })
       .from(transactions)
       .where(
-        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
-    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = false`,
-      )
-      .groupBy(sql`1`);
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.isExpense, false),
+          sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}`,
+        ),
+      );
 
-    return incomeDataByMonth;
+    const monthTotals: Record<number, number> = {};
+    for (const row of data) {
+      const month = new Date(row.transactionDate).getMonth() + 1;
+      const amount = decryptAmount(row.amount);
+      monthTotals[month] = (monthTotals[month] || 0) + amount;
+    }
+
+    return Object.entries(monthTotals).map(([month, total]) => ({
+      month: Number(month),
+      total,
+    }));
   } catch (error) {
-    console.error("Database Error:", error);
     throw new Error("Failed to fetch income data.");
   }
 }
 
 export async function fetchSpendDataByCategory(userId: string, year: string) {
   try {
-    const spendDataByCategory = await db
+    const data = await db
       .select({
-        category: sql<string>`transactions.category`,
-        total: sql`sum(transactions.amount) as total`.mapWith({
-          mapFromDriverValue: (value: any) => {
-            const mappedValue = value / 100;
-            return mappedValue;
-          },
-        }),
+        category: transactions.category,
+        amount: transactions.amount,
       })
       .from(transactions)
       .where(
-        sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
-    AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true`,
-      )
-      .groupBy(sql`1`);
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.isExpense, true),
+          sql`EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}`,
+        ),
+      );
 
-    return spendDataByCategory;
+    const categoryTotals: Record<string, number> = {};
+    for (const row of data) {
+      const amount = decryptAmount(row.amount);
+      categoryTotals[row.category] =
+        (categoryTotals[row.category] || 0) + amount;
+    }
+
+    return Object.entries(categoryTotals).map(([category, total]) => ({
+      category,
+      total,
+    }));
   } catch (error) {
-    console.error("Database Error:", error);
     throw new Error("Failed to fetch card data.");
   }
 }
@@ -555,26 +611,34 @@ export async function fetchSpendDataByCategoryMonthly(
   year: string,
 ) {
   try {
-    const spendDataByCategory = await db
+    const data = await db
       .select({
-        category: sql<string>`transactions.category`,
-        total: sql`sum(transactions.amount) as total`.mapWith({
-          mapFromDriverValue: (value: any) => {
-            const mappedValue = value / 100;
-            return mappedValue;
-          },
-        }),
+        category: transactions.category,
+        amount: transactions.amount,
+        transactionDate: transactions.transactionDate,
       })
       .from(transactions)
       .where(
-        sql`EXTRACT(MONTH FROM ${transactions.transactionDate}) = ${month}
-        AND EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}
-        AND ${transactions.userId} = ${userId} AND ${transactions.isExpense} = true`,
-      )
-      .groupBy(sql`1`);
-    return spendDataByCategory;
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.isExpense, true),
+          sql`EXTRACT(MONTH FROM ${transactions.transactionDate}) = ${month}
+              AND EXTRACT(YEAR FROM ${transactions.transactionDate}) = ${year}`,
+        ),
+      );
+
+    const categoryTotals: Record<string, number> = {};
+    for (const row of data) {
+      const amount = decryptAmount(row.amount);
+      categoryTotals[row.category] =
+        (categoryTotals[row.category] || 0) + amount;
+    }
+
+    return Object.entries(categoryTotals).map(([category, total]) => ({
+      category,
+      total,
+    }));
   } catch (error) {
-    console.error("Database Error:", error);
     throw new Error("Failed to fetch card data.");
   }
 }
@@ -591,9 +655,11 @@ export async function fetchUserBudgetSettings(userId: string) {
       .from(userBudgetSettings)
       .where(eq(userBudgetSettings.userId, userId));
 
-    return data;
+    return data.map((row) => ({
+      ...row,
+      budget: decryptBudget(row.budget).toString(),
+    }));
   } catch (error) {
-    console.error("Database Error:", error);
     throw new Error("Failed to fetch user budget settings.");
   }
 }
@@ -612,7 +678,6 @@ export async function fetchUserSettings(userId: string) {
 
     return data;
   } catch (error) {
-    console.error("Database Error:", error);
     throw new Error("Failed to fetch user settings.");
   }
 }
@@ -621,14 +686,14 @@ export async function fetchUserBudgetByMonth(userId: string) {
   try {
     const data = await db
       .select({
-        total: sql`sum(budget)`,
+        budget: userBudgetSettings.budget,
       })
       .from(userBudgetSettings)
       .where(eq(userBudgetSettings.userId, userId));
 
-    return data ? data[0].total : 0;
+    const total = data.reduce((sum, row) => sum + decryptBudget(row.budget), 0);
+    return total || 0;
   } catch (error) {
-    console.error("Database Error:", error);
     throw new Error("Failed to fetch user budget settings by month.");
   }
 }

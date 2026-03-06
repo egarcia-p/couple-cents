@@ -223,6 +223,7 @@ export default function Form({
                     name="isEssential"
                     type="checkbox"
                     defaultChecked={false}
+                    className="h-4 w-4 rounded border-gray-300 cursor-pointer"
                     aria-describedby="isEssential-error"
                   />
                   {/* <  className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}

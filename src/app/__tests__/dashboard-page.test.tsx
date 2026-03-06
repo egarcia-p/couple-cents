@@ -11,6 +11,10 @@ vi.mock("@/app/lib/dal", () => ({
         id: "test-user-123",
         email: "test@example.com",
         name: "Test User",
+        emailVerified: false,
+        createdAt: new Date("2024-01-01"),
+        updatedAt: new Date("2024-01-01"),
+        image: null,
       },
     }),
   ),
@@ -144,7 +148,9 @@ test("renders Toggle component", async () => {
 
 test("returns null when user is not authenticated", async () => {
   const { verifySession } = await import("@/app/lib/dal");
-  vi.mocked(verifySession).mockResolvedValueOnce(null);
+  vi.mocked(verifySession).mockResolvedValueOnce(
+    undefined as unknown as Awaited<ReturnType<typeof verifySession>>,
+  );
 
   const PageComponent = await Page({});
   expect(PageComponent).toBeNull();

@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2026-03-03
+
+### Added
+
+- **E2E Test Suite for Search & Filtering**
+  - Comprehensive search functionality tests for transaction filtering
+  - Case-insensitive search validation
+  - Category filtering tests
+  - Empty state handling when no results found
+  - Support for both desktop and mobile search inputs
+
+### Changed
+
+- Enhanced test infrastructure with improved database seeding capabilities
+
+### Security
+
+- Reviewed and validated cryptographic implementation (AES-256-GCM)
+  - Confirmed authenticated encryption with random IVs
+  - Validated key management and environment-based configuration
+
 ## [0.8.8] - 2026-03-05
 
 ### Added

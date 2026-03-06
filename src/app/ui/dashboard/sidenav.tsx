@@ -19,7 +19,7 @@ export default function SideNav() {
       await router.push("/");
       window.location.href = "/";
     } catch (error) {
-      console.error("Sign out error:", error);
+      // Sign out failed silently
     }
   };
   return (
@@ -33,7 +33,7 @@ export default function SideNav() {
             <p className=" text-lg">{t("title")}</p>
           </div>
           <div className="m-auto text-secondary md:w-40 md:text-center">
-            <p className=" text-sm">v0.8.9</p>
+            <p className=" text-sm">v0.9.0</p>
           </div>
         </div>
       </Link>

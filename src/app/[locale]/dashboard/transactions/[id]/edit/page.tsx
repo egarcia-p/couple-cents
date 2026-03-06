@@ -5,6 +5,7 @@ import { fetchTransactionById } from "@/app/lib/data";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { getFormCategories } from "@/app/lib/helpers/categories";
+import { verifySession } from "@/app/lib/dal";
 
 export const metadata: Metadata = {
   title: "Edit",
@@ -16,7 +17,10 @@ export default async function Page({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [transaction] = await Promise.all([fetchTransactionById(id)]);
+  const session = await verifySession();
+  const [transaction] = await Promise.all([
+    fetchTransactionById(id, session.user.id),
+  ]);
   if (!transaction) {
     notFound();
   }

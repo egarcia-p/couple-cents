@@ -28,7 +28,6 @@ export async function GET() {
 
     return NextResponse.json({ locale });
   } catch (error) {
-    console.error("Error fetching user locale:", error);
     return NextResponse.json({ locale: "en-US" }, { status: 200 });
   }
 }

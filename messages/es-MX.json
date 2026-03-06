@@ -62,7 +62,8 @@
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "noAccount": "¿No tienes una cuenta? Regístrate",
     "invalidCredentials": "Correo o contraseña inválidos. Intenta de nuevo.",
-    "areYouNew": "¿Nuevo en Couple Cents?"
+    "areYouNew": "¿Nuevo en Couple Cents?",
+    "or": "o"
   },
   "DashboardPage": {
     "Dashboard": "Panel de control"

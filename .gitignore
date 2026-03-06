@@ -40,6 +40,8 @@ next-env.d.ts
 .vscode/settings.json
 notes.txt
 scripts/generateEncryptionKey.ts
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
 .env.test
-playwright-report/index.html
-test-results/.last-run.json
