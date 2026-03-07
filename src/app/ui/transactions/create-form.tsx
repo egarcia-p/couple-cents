@@ -1,7 +1,7 @@
 "use client";
 
 import { createTransaction, State } from "@/app/lib/actions";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { Button } from "../button";
 import Link from "next/link";
 
@@ -26,7 +26,7 @@ export default function Form({
   locale: string;
 }) {
   const initialState: State = { message: "", errors: {} };
-  const [state, dispatch] = useFormState(createTransaction, initialState);
+  const [state, dispatch] = useActionState(createTransaction, initialState);
 
   const t = useTranslations("TransactionsPage");
 
