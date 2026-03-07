@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.2] - 2026-03-07
+
+### Changed
+
+- **React Hook Migration**
+  - Migrated from deprecated `useFormState` (react-dom) to `useActionState` (react)
+  - Updated form components: create-form, edit-form, settings, and language-settings
+  - Ensures compatibility with React 19+ and maintains component functionality
+
 ## [0.9.0] - 2026-03-03
 
 ### Added

@@ -3,7 +3,7 @@
 import { saveBudgetSettings } from "@/app/lib/actions";
 import { Button } from "@/app/ui/button";
 import { BudgetField } from "@/app/ui/profile/budget-field";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { use, useEffect, useState } from "react";
 import categories from "@/app/lib/data/categories.json";
 import {
@@ -27,7 +27,7 @@ export default function UserSettings({
   const tCategories = useTranslations("Categories");
   const initialState = { message: "", errors: {} };
   const initialLanguageState = { message: "", errors: {} };
-  const [_, dispatch] = useFormState(saveBudgetSettings, initialState);
+  const [_, dispatch] = useActionState(saveBudgetSettings, initialState);
   const [totalBudget, setTotalBudget] = useState(0);
 
   const budgetsPerCategorySettings = Object.keys(categories).map(

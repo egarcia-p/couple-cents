@@ -6,7 +6,7 @@ import { user, userSettings } from "../../../../drizzle/schema";
 import locales from "@/i18n/locales.json";
 import timezones from "@/i18n/timezones.json";
 
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { saveLanguageSettings } from "@/app/lib/actions";
 import { useState } from "react";
 import { UserSettings } from "@/app/lib/definitions";
@@ -49,7 +49,7 @@ export default function LanguageSettings({
   const [region, setRegion] = useState<string>(initialRegion);
 
   const initialState = { message: "", errors: {} };
-  const [state, dispatch] = useFormState(saveLanguageSettings, initialState);
+  const [state, dispatch] = useActionState(saveLanguageSettings, initialState);
 
   return (
     <div className="rounded-lg bg-gray-50 p-2 ">

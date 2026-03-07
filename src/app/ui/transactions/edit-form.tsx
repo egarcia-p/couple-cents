@@ -1,7 +1,7 @@
 "use client";
 
 import { updateTransaction, State } from "@/app/lib/actions";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { Button } from "../button";
 import Link from "next/link";
 import { TransactionForm } from "@/app/lib/definitions";
@@ -29,7 +29,10 @@ export default function Form({
 }) {
   const initialState: State = { message: "", errors: {} };
   const updateTransactionWithId = updateTransaction.bind(null, transaction.id);
-  const [state, dispatch] = useFormState(updateTransactionWithId, initialState);
+  const [state, dispatch] = useActionState(
+    updateTransactionWithId,
+    initialState,
+  );
 
   const date = dayjs(transaction.transactionDate) as any;
   const [startDate, setStartDate] = useState<Dayjs>(date.utc());
