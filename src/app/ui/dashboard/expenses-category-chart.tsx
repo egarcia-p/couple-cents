@@ -32,7 +32,6 @@ export default function ExpensesCategoryChart({ dataExpenses }: any) {
     labels: categoryArray,
     datasets: [
       {
-        label: t("label"),
         data: spendArray,
         backgroundColor: colors,
         borderColor: borderColors,

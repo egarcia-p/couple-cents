@@ -42,7 +42,6 @@ export default function TopExpensesCategoryChart({ dataExpenses }: any) {
     datasets: [
       {
         axis: "y" as const,
-        label: t("label"),
         data: topSpendArray,
         backgroundColor: colors,
         borderColor: borderColors,
