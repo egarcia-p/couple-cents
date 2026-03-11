@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useSpendArray } from "../hooks/useSpendArray";
 import { CalendarIcon } from "@heroicons/react/24/outline";
 import getHorizontalBarChartOptions from "./horizontal-bar-chart-options";
+import { getCategoryColors } from "./chart-colors";
 
 Chart.register(CategoryScale);
 
@@ -32,48 +33,9 @@ export default function TopExpensesCategoryChart({ dataExpenses }: any) {
   const topSpendArray = sortedData.slice(0, 10).map((item) => item.value);
   const topCategoryArray = sortedData.slice(0, 10).map((item) => item.category);
 
-  //TODO check how to match colors with other charts
-  const colors = [
-    "rgba(255, 99, 132, 0.2)",
-    "rgba(54, 162, 235, 0.2)",
-    "rgba(75, 192, 192, 0.2)",
-    "rgba(255, 206, 86, 0.2)",
-    "rgba(153, 102, 255, 0.2)",
-    "rgba(255, 159, 64, 0.2)",
-    "rgba(255, 99, 64, 0.2)",
-    "rgba(54, 162, 64, 0.2)",
-    "rgba(255, 206, 132, 0.2)",
-    "rgba(75, 192, 235, 0.2)",
-    "rgba(153, 102, 86, 0.2)",
-    "rgba(255, 159, 192, 0.2)",
-    "rgba(255, 99, 255, 0.2)",
-    "rgba(54, 162, 99, 0.2)",
-    "rgba(255, 206, 153, 0.2)",
-    "rgba(75, 192, 64, 0.2)",
-    "rgba(153, 102, 235, 0.2)",
-    "rgba(255, 159, 132, 0.2)",
-  ];
-
-  const borderColors = [
-    "rgba(255, 99, 132, 1)",
-    "rgba(54, 162, 235, 1)",
-    "rgba(75, 192, 192, 1)",
-    "rgba(255, 206, 86, 1)",
-    "rgba(153, 102, 255, 1)",
-    "rgba(255, 159, 64, 1)",
-    "rgba(255, 99, 64, 1)",
-    "rgba(54, 162, 64, 1)",
-    "rgba(255, 206, 132, 1)",
-    "rgba(75, 192, 235, 1)",
-    "rgba(153, 102, 86, 1)",
-    "rgba(255, 159, 192, 1)",
-    "rgba(255, 99, 255, 1)",
-    "rgba(54, 162, 99, 1)",
-    "rgba(255, 206, 153, 1)",
-    "rgba(75, 192, 64, 1)",
-    "rgba(153, 102, 235, 1)",
-    "rgba(255, 159, 132, 1)",
-  ];
+  const categoryColors = getCategoryColors(topCategoryArray);
+  const colors = categoryColors.map((c) => c.backgroundColor);
+  const borderColors = categoryColors.map((c) => c.borderColor);
 
   const data = {
     labels: topCategoryArray,
