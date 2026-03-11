@@ -109,12 +109,10 @@
   },
   "ExpensesCategoryChart": {
     "title": "Gastos por categoría",
-    "label": "Gráfico de gastos",
     "currentPeriod": "Periodo actual"
   },
   "TopExpensesCategoryChart": {
     "title": "Principales gastos por categoría",
-    "label": "Principales gastos",
     "currentPeriod": "Periodo actual"
   },
   "DB": {

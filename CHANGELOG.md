@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.3] - 2026-03-10
+
+### Changed
+
+- **Chart Color Consistency Enhancement**
+  - Implemented shared color utility system for charts (`chart-colors.ts`)
+  - Category-based color assignment using hashing ensures consistent colors across all chart types
+  - Updated Doughnut and Horizontal Bar charts to use unified color mapping
+  - Resolves color mismatch when data is sorted (e.g., top expenses by spend)
+  - Update DoughnutChart to not use graph lines.
+
 ## [0.9.2] - 2026-03-07
 
 ### Changed

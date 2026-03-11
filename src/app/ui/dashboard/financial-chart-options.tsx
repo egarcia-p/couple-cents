@@ -9,19 +9,6 @@ export default function getFinancialChartOptions(locale: string) {
   const currency = getCurrency(locale);
 
   return {
-    scales: {
-      y: {
-        ticks: {
-          callback: function (value: any): string {
-            return new Intl.NumberFormat(locale, {
-              style: "currency",
-              currency,
-              minimumFractionDigits: 0,
-            }).format(value);
-          },
-        },
-      },
-    },
     plugins: {
       tooltip: {
         callbacks: {
