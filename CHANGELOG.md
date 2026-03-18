@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.4] - 2026-03-17
+
+### Changed
+
+- **Tailwind CSS Warning Fixes**
+  - Removed deprecated color names to eliminate Tailwind compilation warnings
+  - Updated to modern Tailwind color palette standards
+
+### Added
+
+- **AGENTS.md Documentation**
+  - Added comprehensive guidelines for AI agents working in the codebase
+  - Includes project overview, build commands, code style guidelines, and file organization
+  - Documents testing strategies, database patterns, and internationalization practices
+
 ## [0.9.3] - 2026-03-10
 
 ### Changed
