@@ -157,6 +157,8 @@
     "title": "Transacciones",
     "periodMobile": "Periodo: Mes actual",
     "searchPlaceholder": "Buscar transacciones...",
+    "tagFilterPlaceholder": "Filtrar por etiquetas...",
+    "tagFilterClear": "Limpiar",
     "expenseButton": "Gasto",
     "incomeButton": "Ingreso",
     "currentPeriod": "Periodo actual",
@@ -164,7 +166,9 @@
       "boolean": "El valor debe ser verdadero o falso",
       "amount": "Por favor ingresa una cantidad mayor a $0.",
       "category": "Por favor selecciona una categoría.",
-      "establishment": "Por favor ingresa un establecimiento."
+      "establishment": "Por favor ingresa un establecimiento.",
+      "tagName": "El nombre de la etiqueta debe tener entre 1 y 40 caracteres.",
+      "tagColor": "El color de la etiqueta debe ser un color hexadecimal válido (ej. #FF0000)."
     },
     "create": {
       "createExpense": "Crear Gasto",
@@ -180,6 +184,9 @@
       "essentialLabel": "¿Es un gasto esencial?",
       "dateOfTransactionLabel": "Fecha",
       "cancelButton": "Cancelar",
+      "tagsLabel": "Etiquetas",
+      "tagsPlaceholder": "Seleccionar etiquetas",
+      "allTagsSelected": "Todas las etiquetas seleccionadas",
       "createButton": "Crear",
       "missingFieldsError": "Campos faltantes. No se pudo crear la transacción.",
       "invalidDateError": "Formato de fecha inválido.",
@@ -200,6 +207,8 @@
       "essentialLabel": "¿Es un gasto esencial?",
       "dateOfTransactionLabel": "Fecha",
       "cancelButton": "Cancelar",
+      "tagsLabel": "Etiquetas",
+      "tagsPlaceholder": "Seleccionar etiquetas",
       "updateButton": "Editar",
       "missingFieldsError": "Campos faltantes. No se pudo actualizar la transacción.",
       "invalidDateError": "Formato de fecha inválido.",
@@ -235,7 +244,8 @@
     "category": "Categoría",
     "amount": "Monto",
     "note": "Nota",
-    "transactionDate": "Fecha"
+    "transactionDate": "Fecha",
+    "tags": "Etiquetas"
   },
   "History": {
     "title": "Historial",
@@ -283,6 +293,20 @@
       "anualBudget": "Presupuesto anual",
       "databaseError": "Ocurrió un error al guardar la configuración del presupuesto. Por favor inténtalo de nuevo.",
       "amount": "Por favor ingresa una cantidad mayor a $0."
+    },
+    "tags": {
+      "title": "Etiquetas",
+      "nameLabel": "Nombre",
+      "namePlaceholder": "Nombre de etiqueta (ej. Efectivo, Tarjeta)",
+      "colorLabel": "Color",
+      "addButton": "Agregar etiqueta",
+      "saveButton": "Guardar",
+      "cancelButton": "Cancelar",
+      "deleteConfirmation": "¿Estás seguro de que quieres eliminar esta etiqueta? Se eliminará de todas las transacciones.",
+      "deleteSuccess": "Etiqueta eliminada exitosamente.",
+      "missingFieldsError": "Por favor proporciona un nombre y color para la etiqueta.",
+      "databaseError": "Ocurrió un error al guardar la etiqueta. Por favor inténtalo de nuevo.",
+      "noTags": "No hay etiquetas aún. Crea tu primera etiqueta arriba."
     }
   },
   "NavLinks": {
