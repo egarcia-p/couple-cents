@@ -13,17 +13,21 @@ import "dayjs/locale"; //TODO fix this import to not import all locales
 
 import dayjs, { Dayjs } from "dayjs";
 import { useTranslations } from "next-intl";
+import { TagSelector } from "./tag-selector";
+import type { Tag } from "@/app/lib/definitions";
 
 export default function Form({
   userId,
   categories,
   isExpense,
   locale,
+  availableTags,
 }: {
   userId: string;
   categories: Object;
   isExpense: boolean;
   locale: string;
+  availableTags: Tag[];
 }) {
   const initialState: State = { message: "", errors: {} };
   const [state, dispatch] = useActionState(createTransaction, initialState);
@@ -253,6 +257,14 @@ export default function Form({
               </div>
             </div>
           </div>
+
+          {/* Tags */}
+          <TagSelector
+            availableTags={availableTags}
+            selectedTagIds={[]}
+            label={t("create.tagsLabel")}
+            placeholder={t("create.tagsPlaceholder")}
+          />
 
           {/* Transaction Date */}
           <div className="mb-4">

@@ -13,6 +13,8 @@ import "dayjs/locale"; //TODO fix this import to not import all locales
 
 import dayjs, { Dayjs } from "dayjs";
 import { useTranslations } from "next-intl";
+import { TagSelector } from "./tag-selector";
+import type { Tag } from "@/app/lib/definitions";
 var utc = require("dayjs/plugin/utc");
 // import utc from 'dayjs/plugin/utc' // ES 2015
 
@@ -22,10 +24,12 @@ export default function Form({
   transaction,
   categories,
   locale,
+  availableTags,
 }: {
   transaction: TransactionForm;
   categories: Object;
   locale: string;
+  availableTags: Tag[];
 }) {
   const initialState: State = { message: "", errors: {} };
   const updateTransactionWithId = updateTransaction.bind(null, transaction.id);
@@ -247,6 +251,14 @@ export default function Form({
               </div>
             </div>
           </div>
+
+          {/* Tags */}
+          <TagSelector
+            availableTags={availableTags}
+            selectedTagIds={transaction.tags.map((tag) => tag.id)}
+            label={t("edit.tagsLabel")}
+            placeholder={t("edit.tagsPlaceholder")}
+          />
 
           {/* Transaction Date */}
           <div className="mb-4">
