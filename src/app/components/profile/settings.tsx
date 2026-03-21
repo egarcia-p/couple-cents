@@ -9,19 +9,23 @@ import categories from "@/app/lib/data/categories.json";
 import {
   UserBudgetSetting,
   UserBudgetSettingForm,
+  Tag,
   UserSettings as UserSettingsType,
 } from "../../lib/definitions";
 import { useTranslations } from "next-intl";
 import LanguageSettings from "@/app/ui/profile/language-settings";
+import TagManagement from "@/app/ui/profile/tag-management";
 
 export default function UserSettings({
   userId,
   budgetSettings,
   userSettings,
+  tags,
 }: {
   userId: string;
   budgetSettings: UserBudgetSetting[];
   userSettings: UserSettingsType;
+  tags: Tag[];
 }) {
   const t = useTranslations("Profile");
   const tCategories = useTranslations("Categories");
@@ -71,6 +75,9 @@ export default function UserSettings({
     <div className="mt-6 flex flex-col gap-6">
       <div className="inline-block min-w-full align-middle">
         <LanguageSettings userId={userId} userSettings={userSettings} />
+      </div>
+      <div className="inline-block min-w-full align-middle">
+        <TagManagement userId={userId} tags={tags} />
       </div>
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 ">

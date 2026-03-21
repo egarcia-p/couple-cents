@@ -1,9 +1,14 @@
 import { Metadata } from "next";
 import UserAvatar from "@/app/components/profile/user-profile";
 import UserSettings from "@/app/components/profile/settings";
-import { fetchUserBudgetSettings, fetchUserSettings } from "@/app/lib/data";
+import {
+  fetchUserBudgetSettings,
+  fetchUserSettings,
+  fetchUserTags,
+} from "@/app/lib/data";
 import type {
   UserBudgetSetting,
+  Tag,
   UserSettings as UserSettingsType,
 } from "@/app/lib/definitions";
 import { verifySession } from "@/app/lib/dal";
@@ -17,12 +22,12 @@ export default async function Page() {
 
   const userId = session.user?.id;
 
-  const userBudgetSettingsData: UserBudgetSetting[] =
-    await fetchUserBudgetSettings(userId);
-
-  const userSettingsData: UserSettingsType = (
-    await fetchUserSettings(userId)
-  )[0]!;
+  const [userBudgetSettingsData, userSettingsData, userTags] =
+    await Promise.all([
+      fetchUserBudgetSettings(userId),
+      fetchUserSettings(userId),
+      fetchUserTags(userId),
+    ]);
 
   return (
     <main>
@@ -31,7 +36,8 @@ export default async function Page() {
       <UserSettings
         userId={userId}
         budgetSettings={userBudgetSettingsData}
-        userSettings={userSettingsData}
+        userSettings={userSettingsData[0]!}
+        tags={userTags}
       />
     </main>
   );
