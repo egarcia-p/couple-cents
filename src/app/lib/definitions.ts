@@ -8,6 +8,14 @@ export type TransactionForm = {
   isEssential: boolean;
   userId: string;
   transactionDate: Date;
+  tags: Tag[];
+};
+
+export type Tag = {
+  id: string;
+  name: string;
+  color: string;
+  userId: string;
 };
 
 export type UserBudgetSettingForm = {

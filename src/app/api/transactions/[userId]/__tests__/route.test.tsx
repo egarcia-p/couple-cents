@@ -34,6 +34,7 @@ const mockTransaction = {
   isEssential: true,
   note: null,
   amount: 100,
+  tags: [],
 };
 
 describe("GET /api/transactions/[userId]", () => {
@@ -127,6 +128,57 @@ describe("GET /api/transactions/[userId]", () => {
       query: "test",
       userId: "123",
       dates: "2023",
+    });
+  });
+
+  it("should pass tagIds to fetchAllFilteredTransactions when provided", async () => {
+    const mockData = [mockTransaction];
+    vi.mocked(verifySession).mockResolvedValue({
+      isAuth: true,
+      user: mockUser,
+    });
+    vi.mocked(fetchAllFilteredTransactions).mockResolvedValue(mockData);
+
+    const request = new Request(
+      "http://localhost:3000/api/transactions/123?query=&dates=2024&tagIds=tag-1,tag-2",
+    );
+    const response = await GET(request, {
+      params: Promise.resolve({ userId: "123" }),
+    });
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.message).toBe("Success");
+    expect(fetchAllFilteredTransactions).toHaveBeenCalledWith({
+      query: "",
+      userId: "123",
+      dates: "2024",
+      tagIds: ["tag-1", "tag-2"],
+    });
+  });
+
+  it("should not pass tagIds when parameter is absent", async () => {
+    const mockData = [mockTransaction];
+    vi.mocked(verifySession).mockResolvedValue({
+      isAuth: true,
+      user: mockUser,
+    });
+    vi.mocked(fetchAllFilteredTransactions).mockResolvedValue(mockData);
+
+    const request = new Request(
+      "http://localhost:3000/api/transactions/123?query=test&dates=2024",
+    );
+    const response = await GET(request, {
+      params: Promise.resolve({ userId: "123" }),
+    });
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(fetchAllFilteredTransactions).toHaveBeenCalledWith({
+      query: "test",
+      userId: "123",
+      dates: "2024",
+      tagIds: undefined,
     });
   });
 });

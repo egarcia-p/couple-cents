@@ -12,6 +12,7 @@ vi.mock("../db", () => ({
     where: vi.fn().mockReturnThis(),
     orderBy: vi.fn().mockReturnThis(),
     limit: vi.fn().mockReturnThis(),
+    innerJoin: vi.fn().mockReturnThis(),
   },
 }));
 
@@ -143,35 +144,198 @@ describe("data.ts - encryption integration", () => {
     });
   });
 
+  describe("fetchUserTags", () => {
+    it("should return tags for a given user", async () => {
+      const { db } = await import("../db");
+      vi.mocked(db.select).mockReturnValue({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            orderBy: vi.fn().mockResolvedValue([
+              {
+                id: "tag-1",
+                name: "Cash",
+                color: "#00FF00",
+                userId: "user-1",
+              },
+              {
+                id: "tag-2",
+                name: "Credit Card",
+                color: "#FF0000",
+                userId: "user-1",
+              },
+            ]),
+          }),
+        }),
+      } as any);
+
+      const { fetchUserTags } = await import("../data");
+      const result = await fetchUserTags("user-1");
+
+      expect(result).toHaveLength(2);
+      expect(result[0]).toEqual({
+        id: "tag-1",
+        name: "Cash",
+        color: "#00FF00",
+        userId: "user-1",
+      });
+      expect(result[1]).toEqual({
+        id: "tag-2",
+        name: "Credit Card",
+        color: "#FF0000",
+        userId: "user-1",
+      });
+    });
+
+    it("should return empty array when user has no tags", async () => {
+      const { db } = await import("../db");
+      vi.mocked(db.select).mockReturnValue({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            orderBy: vi.fn().mockResolvedValue([]),
+          }),
+        }),
+      } as any);
+
+      const { fetchUserTags } = await import("../data");
+      const result = await fetchUserTags("user-1");
+
+      expect(result).toHaveLength(0);
+    });
+
+    it("should throw error when database query fails", async () => {
+      const { db } = await import("../db");
+      vi.mocked(db.select).mockReturnValue({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            orderBy: vi.fn().mockRejectedValue(new Error("DB error")),
+          }),
+        }),
+      } as any);
+
+      const { fetchUserTags } = await import("../data");
+
+      await expect(fetchUserTags("user-1")).rejects.toThrow(
+        "Failed to fetch user tags.",
+      );
+    });
+  });
+
   describe("fetchTransactionById", () => {
     it("should decrypt amount and establishment for a single transaction", async () => {
       const encryptedAmount = encrypt("12345");
       const encryptedEstablishment = encrypt("Coffee Shop");
 
       const { db } = await import("../db");
-      vi.mocked(db.select).mockReturnValue({
-        from: vi.fn().mockReturnValue({
-          where: vi.fn().mockResolvedValue([
-            {
-              id: "tx-1",
-              userId: "user-1",
-              transactionDate: new Date("2024-03-01"),
-              category: "food",
-              establishment: encryptedEstablishment,
-              isExpense: true,
-              isEssential: false,
-              note: "morning coffee",
-              amount: encryptedAmount,
-            },
-          ]),
-        }),
-      } as any);
+      let callCount = 0;
+      vi.mocked(db.select).mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) {
+          // Main transaction query
+          return {
+            from: vi.fn().mockReturnValue({
+              where: vi.fn().mockResolvedValue([
+                {
+                  id: "tx-1",
+                  userId: "user-1",
+                  transactionDate: new Date("2024-03-01"),
+                  category: "food",
+                  establishment: encryptedEstablishment,
+                  isExpense: true,
+                  isEssential: false,
+                  note: "morning coffee",
+                  amount: encryptedAmount,
+                },
+              ]),
+            }),
+          } as any;
+        }
+        // fetchTagsForTransactions query
+        return {
+          from: vi.fn().mockReturnValue({
+            innerJoin: vi.fn().mockReturnValue({
+              where: vi.fn().mockResolvedValue([]),
+            }),
+          }),
+        } as any;
+      });
 
       const { fetchTransactionById } = await import("../data");
       const result = await fetchTransactionById("tx-1", "user-1");
 
       expect(result.amount).toBe(123.45); // 12345 cents -> $123.45
       expect(result.establishment).toBe("Coffee Shop");
+      expect(result.tags).toEqual([]);
+    });
+
+    it("should include tags when transaction has associated tags", async () => {
+      const encryptedAmount = encrypt("5000");
+      const encryptedEstablishment = encrypt("Tagged Store");
+
+      const { db } = await import("../db");
+      let callCount = 0;
+      vi.mocked(db.select).mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) {
+          // Main transaction query
+          return {
+            from: vi.fn().mockReturnValue({
+              where: vi.fn().mockResolvedValue([
+                {
+                  id: "tx-1",
+                  userId: "user-1",
+                  transactionDate: new Date("2024-03-01"),
+                  category: "food",
+                  establishment: encryptedEstablishment,
+                  isExpense: true,
+                  isEssential: false,
+                  note: null,
+                  amount: encryptedAmount,
+                },
+              ]),
+            }),
+          } as any;
+        }
+        // fetchTagsForTransactions query
+        return {
+          from: vi.fn().mockReturnValue({
+            innerJoin: vi.fn().mockReturnValue({
+              where: vi.fn().mockResolvedValue([
+                {
+                  transactionId: "tx-1",
+                  tagId: "tag-1",
+                  tagName: "Cash",
+                  tagColor: "#00FF00",
+                  tagUserId: "user-1",
+                },
+                {
+                  transactionId: "tx-1",
+                  tagId: "tag-2",
+                  tagName: "Groceries",
+                  tagColor: "#0000FF",
+                  tagUserId: "user-1",
+                },
+              ]),
+            }),
+          }),
+        } as any;
+      });
+
+      const { fetchTransactionById } = await import("../data");
+      const result = await fetchTransactionById("tx-1", "user-1");
+
+      expect(result.tags).toHaveLength(2);
+      expect(result.tags[0]).toEqual({
+        id: "tag-1",
+        name: "Cash",
+        color: "#00FF00",
+        userId: "user-1",
+      });
+      expect(result.tags[1]).toEqual({
+        id: "tag-2",
+        name: "Groceries",
+        color: "#0000FF",
+        userId: "user-1",
+      });
     });
 
     it("should return undefined when transaction not found", async () => {
@@ -251,34 +415,44 @@ describe("data.ts - encryption integration", () => {
             }),
           } as any;
         }
-        // Main query call
+        if (callCount === 2) {
+          // Main query call
+          return {
+            from: vi.fn().mockReturnValue({
+              where: vi.fn().mockReturnValue({
+                orderBy: vi.fn().mockResolvedValue([
+                  {
+                    id: "tx-1",
+                    userId: "user-1",
+                    transactionDate: new Date("2024-01-15"),
+                    category: "food",
+                    establishment: encryptedEstablishment1,
+                    isExpense: true,
+                    isEssential: true,
+                    note: null,
+                    amount: encryptedAmount1,
+                  },
+                  {
+                    id: "tx-2",
+                    userId: "user-1",
+                    transactionDate: new Date("2024-01-16"),
+                    category: "food",
+                    establishment: encryptedEstablishment2,
+                    isExpense: true,
+                    isEssential: false,
+                    note: null,
+                    amount: encryptedAmount2,
+                  },
+                ]),
+              }),
+            }),
+          } as any;
+        }
+        // fetchTagsForTransactions query
         return {
           from: vi.fn().mockReturnValue({
-            where: vi.fn().mockReturnValue({
-              orderBy: vi.fn().mockResolvedValue([
-                {
-                  id: "tx-1",
-                  userId: "user-1",
-                  transactionDate: new Date("2024-01-15"),
-                  category: "food",
-                  establishment: encryptedEstablishment1,
-                  isExpense: true,
-                  isEssential: true,
-                  note: null,
-                  amount: encryptedAmount1,
-                },
-                {
-                  id: "tx-2",
-                  userId: "user-1",
-                  transactionDate: new Date("2024-01-16"),
-                  category: "food",
-                  establishment: encryptedEstablishment2,
-                  isExpense: true,
-                  isEssential: false,
-                  note: null,
-                  amount: encryptedAmount2,
-                },
-              ]),
+            innerJoin: vi.fn().mockReturnValue({
+              where: vi.fn().mockResolvedValue([]),
             }),
           }),
         } as any;
@@ -332,11 +506,21 @@ describe("data.ts - encryption integration", () => {
             }),
           } as any;
         }
-        // Main query
+        if (callCount === 2) {
+          // Main query
+          return {
+            from: vi.fn().mockReturnValue({
+              where: vi.fn().mockReturnValue({
+                orderBy: vi.fn().mockResolvedValue(encryptedTransactions),
+              }),
+            }),
+          } as any;
+        }
+        // fetchTagsForTransactions query
         return {
           from: vi.fn().mockReturnValue({
-            where: vi.fn().mockReturnValue({
-              orderBy: vi.fn().mockResolvedValue(encryptedTransactions),
+            innerJoin: vi.fn().mockReturnValue({
+              where: vi.fn().mockResolvedValue([]),
             }),
           }),
         } as any;
@@ -368,6 +552,7 @@ describe("data.ts - encryption integration", () => {
   describe("fetchTransactionPages", () => {
     it("should count pages based on decrypted and filtered results", async () => {
       const encryptedTransactions = Array.from({ length: 25 }, (_, i) => ({
+        id: `tx-${i}`,
         category: "food",
         establishment: encrypt(`Store ${i}`),
         note: null,
@@ -393,9 +578,20 @@ describe("data.ts - encryption integration", () => {
 
     it("should filter by decrypted establishment before counting pages", async () => {
       const encryptedTransactions = [
-        { category: "food", establishment: encrypt("Walmart"), note: null },
-        { category: "food", establishment: encrypt("Target"), note: null },
         {
+          id: "tx-1",
+          category: "food",
+          establishment: encrypt("Walmart"),
+          note: null,
+        },
+        {
+          id: "tx-2",
+          category: "food",
+          establishment: encrypt("Target"),
+          note: null,
+        },
+        {
+          id: "tx-3",
           category: "food",
           establishment: encrypt("Walmart Supercenter"),
           note: null,
@@ -418,6 +614,373 @@ describe("data.ts - encryption integration", () => {
 
       // 2 items match "walmart" / 10 per page = 1 page
       expect(pages).toBe(1);
+    });
+
+    it("should filter by tagIds before counting pages", async () => {
+      const encryptedTransactions = [
+        {
+          id: "tx-1",
+          category: "food",
+          establishment: encrypt("Store A"),
+          note: null,
+        },
+        {
+          id: "tx-2",
+          category: "food",
+          establishment: encrypt("Store B"),
+          note: null,
+        },
+        {
+          id: "tx-3",
+          category: "food",
+          establishment: encrypt("Store C"),
+          note: null,
+        },
+      ];
+
+      const { db } = await import("../db");
+      let callCount = 0;
+      vi.mocked(db.select).mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) {
+          // Main transaction query
+          return {
+            from: vi.fn().mockReturnValue({
+              where: vi.fn().mockResolvedValue(encryptedTransactions),
+            }),
+          } as any;
+        }
+        // fetchTagsForTransactions query
+        return {
+          from: vi.fn().mockReturnValue({
+            innerJoin: vi.fn().mockReturnValue({
+              where: vi.fn().mockResolvedValue([
+                {
+                  transactionId: "tx-1",
+                  tagId: "tag-1",
+                  tagName: "Cash",
+                  tagColor: "#00FF00",
+                  tagUserId: "user-1",
+                },
+                {
+                  transactionId: "tx-3",
+                  tagId: "tag-1",
+                  tagName: "Cash",
+                  tagColor: "#00FF00",
+                  tagUserId: "user-1",
+                },
+              ]),
+            }),
+          }),
+        } as any;
+      });
+
+      const { fetchTransactionPages } = await import("../data");
+      const pages = await fetchTransactionPages(
+        "",
+        "2024-01-01to2024-12-31",
+        "user-1",
+        ["tag-1"],
+      );
+
+      // Only tx-1 and tx-3 have tag-1, so 2 items / 10 per page = 1 page
+      expect(pages).toBe(1);
+    });
+  });
+
+  describe("fetchFilteredTransactions - tag filtering", () => {
+    it("should filter transactions by tagIds", async () => {
+      const encryptedTransactions = [
+        {
+          id: "tx-1",
+          userId: "user-1",
+          transactionDate: new Date("2024-01-15"),
+          category: "food",
+          establishment: encrypt("Store A"),
+          isExpense: true,
+          isEssential: true,
+          note: null,
+          amount: encrypt("1000"),
+        },
+        {
+          id: "tx-2",
+          userId: "user-1",
+          transactionDate: new Date("2024-01-16"),
+          category: "food",
+          establishment: encrypt("Store B"),
+          isExpense: true,
+          isEssential: false,
+          note: null,
+          amount: encrypt("2000"),
+        },
+        {
+          id: "tx-3",
+          userId: "user-1",
+          transactionDate: new Date("2024-01-17"),
+          category: "food",
+          establishment: encrypt("Store C"),
+          isExpense: true,
+          isEssential: true,
+          note: null,
+          amount: encrypt("3000"),
+        },
+      ];
+
+      const { db } = await import("../db");
+      let callCount = 0;
+      vi.mocked(db.select).mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) {
+          // fetchUserSettings call
+          return {
+            from: vi.fn().mockReturnValue({
+              where: vi
+                .fn()
+                .mockResolvedValue([
+                  {
+                    id: 1,
+                    userId: "user-1",
+                    language: "en-US",
+                    timezone: "UTC",
+                  },
+                ]),
+            }),
+          } as any;
+        }
+        if (callCount === 2) {
+          // Main query
+          return {
+            from: vi.fn().mockReturnValue({
+              where: vi.fn().mockReturnValue({
+                orderBy: vi.fn().mockResolvedValue(encryptedTransactions),
+              }),
+            }),
+          } as any;
+        }
+        // fetchTagsForTransactions query
+        return {
+          from: vi.fn().mockReturnValue({
+            innerJoin: vi.fn().mockReturnValue({
+              where: vi.fn().mockResolvedValue([
+                {
+                  transactionId: "tx-1",
+                  tagId: "tag-cash",
+                  tagName: "Cash",
+                  tagColor: "#00FF00",
+                  tagUserId: "user-1",
+                },
+                {
+                  transactionId: "tx-3",
+                  tagId: "tag-cash",
+                  tagName: "Cash",
+                  tagColor: "#00FF00",
+                  tagUserId: "user-1",
+                },
+                {
+                  transactionId: "tx-2",
+                  tagId: "tag-cc",
+                  tagName: "Credit Card",
+                  tagColor: "#FF0000",
+                  tagUserId: "user-1",
+                },
+              ]),
+            }),
+          }),
+        } as any;
+      });
+
+      const { fetchFilteredTransactions } = await import("../data");
+      const result = await fetchFilteredTransactions(
+        "",
+        "2024-01-01to2024-01-31",
+        1,
+        "user-1",
+        ["tag-cash"],
+      );
+
+      // Only tx-1 and tx-3 have tag-cash
+      expect(result).toHaveLength(2);
+      expect(result[0].establishment).toBe("Store A");
+      expect(result[1].establishment).toBe("Store C");
+
+      // Each result should have tags populated
+      expect(result[0].tags).toHaveLength(1);
+      expect(result[0].tags[0].name).toBe("Cash");
+    });
+
+    it("should return all transactions when tagIds is undefined", async () => {
+      const encryptedTransactions = [
+        {
+          id: "tx-1",
+          userId: "user-1",
+          transactionDate: new Date("2024-01-15"),
+          category: "food",
+          establishment: encrypt("Store A"),
+          isExpense: true,
+          isEssential: true,
+          note: null,
+          amount: encrypt("1000"),
+        },
+        {
+          id: "tx-2",
+          userId: "user-1",
+          transactionDate: new Date("2024-01-16"),
+          category: "food",
+          establishment: encrypt("Store B"),
+          isExpense: true,
+          isEssential: false,
+          note: null,
+          amount: encrypt("2000"),
+        },
+      ];
+
+      const { db } = await import("../db");
+      let callCount = 0;
+      vi.mocked(db.select).mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) {
+          return {
+            from: vi.fn().mockReturnValue({
+              where: vi
+                .fn()
+                .mockResolvedValue([
+                  {
+                    id: 1,
+                    userId: "user-1",
+                    language: "en-US",
+                    timezone: "UTC",
+                  },
+                ]),
+            }),
+          } as any;
+        }
+        if (callCount === 2) {
+          return {
+            from: vi.fn().mockReturnValue({
+              where: vi.fn().mockReturnValue({
+                orderBy: vi.fn().mockResolvedValue(encryptedTransactions),
+              }),
+            }),
+          } as any;
+        }
+        // fetchTagsForTransactions query
+        return {
+          from: vi.fn().mockReturnValue({
+            innerJoin: vi.fn().mockReturnValue({
+              where: vi.fn().mockResolvedValue([]),
+            }),
+          }),
+        } as any;
+      });
+
+      const { fetchFilteredTransactions } = await import("../data");
+      const result = await fetchFilteredTransactions(
+        "",
+        "2024-01-01to2024-01-31",
+        1,
+        "user-1",
+        // No tagIds passed
+      );
+
+      // All transactions should be returned
+      expect(result).toHaveLength(2);
+    });
+  });
+
+  describe("fetchAllFilteredTransactions - tag filtering", () => {
+    it("should filter by tagIds", async () => {
+      const encryptedEstablishment1 = encrypt("Store Alpha");
+      const encryptedEstablishment2 = encrypt("Store Beta");
+      const encryptedAmount1 = encrypt("1000");
+      const encryptedAmount2 = encrypt("2000");
+
+      const { db } = await import("../db");
+      let callCount = 0;
+      vi.mocked(db.select).mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) {
+          // fetchUserSettings call
+          return {
+            from: vi.fn().mockReturnValue({
+              where: vi
+                .fn()
+                .mockResolvedValue([
+                  {
+                    id: 1,
+                    userId: "user-1",
+                    language: "en-US",
+                    timezone: "UTC",
+                  },
+                ]),
+            }),
+          } as any;
+        }
+        if (callCount === 2) {
+          // Main query
+          return {
+            from: vi.fn().mockReturnValue({
+              where: vi.fn().mockReturnValue({
+                orderBy: vi.fn().mockResolvedValue([
+                  {
+                    id: "tx-1",
+                    userId: "user-1",
+                    transactionDate: new Date("2024-01-15"),
+                    category: "food",
+                    establishment: encryptedEstablishment1,
+                    isExpense: true,
+                    isEssential: true,
+                    note: null,
+                    amount: encryptedAmount1,
+                  },
+                  {
+                    id: "tx-2",
+                    userId: "user-1",
+                    transactionDate: new Date("2024-01-16"),
+                    category: "food",
+                    establishment: encryptedEstablishment2,
+                    isExpense: true,
+                    isEssential: false,
+                    note: null,
+                    amount: encryptedAmount2,
+                  },
+                ]),
+              }),
+            }),
+          } as any;
+        }
+        // fetchTagsForTransactions query
+        return {
+          from: vi.fn().mockReturnValue({
+            innerJoin: vi.fn().mockReturnValue({
+              where: vi
+                .fn()
+                .mockResolvedValue([
+                  {
+                    transactionId: "tx-1",
+                    tagId: "tag-a",
+                    tagName: "TagA",
+                    tagColor: "#111111",
+                    tagUserId: "user-1",
+                  },
+                ]),
+            }),
+          }),
+        } as any;
+      });
+
+      const { fetchAllFilteredTransactions } = await import("../data");
+      const result = await fetchAllFilteredTransactions({
+        query: "",
+        dates: "2024-01-01to2024-01-31",
+        userId: "user-1",
+        tagIds: ["tag-a"],
+      });
+
+      // Only tx-1 has tag-a
+      expect(result).toHaveLength(1);
+      expect(result[0].establishment).toBe("Store Alpha");
+      expect(result[0].tags).toHaveLength(1);
+      expect(result[0].tags[0].name).toBe("TagA");
     });
   });
 
