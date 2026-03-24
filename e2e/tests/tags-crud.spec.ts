@@ -465,25 +465,15 @@ test.describe("Tags CRUD", () => {
       await tagFilter.click();
       await page.locator('button:has-text("ClearFilterTag")').click();
 
-      await page.waitForTimeout(2000);
-
       // Verify filter is active
-      expect(page.url()).toContain("tagIds=");
+      await expect(page).toHaveURL(/tagIds=/, { timeout: 10000 });
 
-      // Click "Clear" to remove the filter
-      // The clear button appears inside the dropdown when tags are selected
-      // Need to reopen dropdown if it closed
-      const filterArea = page
-        .locator("text=ClearFilterTag")
-        .first()
-        .locator("../..");
-      await filterArea.click();
-      await page.locator('button:has-text("Clear")').click();
-
-      await page.waitForTimeout(2000);
+      // The dropdown stays open after selecting a tag (React preserves
+      // component state during soft navigation). Click "Clear" directly.
+      await page.getByRole("button", { name: "Clear", exact: true }).click();
 
       // URL should no longer have tagIds
-      expect(page.url()).not.toContain("tagIds=");
+      await expect(page).not.toHaveURL(/tagIds=/, { timeout: 10000 });
     });
   });
 });
