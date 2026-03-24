@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2026-03-23
+
+### Added
+
+- **Addition of Tags to Transactions**
+  - Implemented tagging functionality for transactions, allowing users to associate multiple tags with each transaction
+  - Updated transaction forms to include tag selection and creation
+  - Enhanced database schema to support many-to-many relationship between transactions and tags
+  - Updated API routes to handle tag associations during transaction creation and editing
+  - Added UI components for displaying tags on transaction cards and details
+  - Implemented tag management features, including creating, editing, and deleting tags
+  - Added E2E tests for tag functionality, ensuring proper creation, editing, deletion, and association with transactions.
+
 ## [0.9.4] - 2026-03-17
 
 ### Changed
