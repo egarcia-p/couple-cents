@@ -1,20 +1,21 @@
 import { fetchFilteredTransactions, fetchUserSettings } from "@/app/lib/data";
 import { DeleteTransaction, UpdateTransaction } from "./buttons";
 import { verifySession } from "@/app/lib/dal";
-import { userSettings } from "../../../../drizzle/schema";
-import { tr } from "@faker-js/faker";
 import { formatCurrency } from "@/app/lib/utils";
+import { TagBadge } from "./tag-badge";
 
 export default async function DashboardTableMobile({
   query,
   dates,
   currentPage,
   userId,
+  tagIds,
 }: {
   query: string;
   dates: string;
   currentPage: number;
   userId: string;
+  tagIds?: string[];
 }) {
   const session = await verifySession();
   if (!session) return null;
@@ -24,6 +25,7 @@ export default async function DashboardTableMobile({
     dates,
     currentPage,
     userId,
+    tagIds,
   );
 
   const userSettings = await fetchUserSettings(userId);
@@ -44,6 +46,13 @@ export default async function DashboardTableMobile({
           >
             <div className="py-3 pl-6 pr-3 inline-block w-1/2 my-auto">
               <p className="line-clamp-1 ">{transaction.establishment}</p>
+              {transaction.tags && transaction.tags.length > 0 && (
+                <div className="mt-1 flex flex-wrap gap-1">
+                  {transaction.tags.map((tag) => (
+                    <TagBadge key={tag.id} name={tag.name} color={tag.color} />
+                  ))}
+                </div>
+              )}
             </div>
             <div className="flex flex-row gap-2 py-3 pl-6 pr-3 font-bold my-auto">
               <div className="my-auto">

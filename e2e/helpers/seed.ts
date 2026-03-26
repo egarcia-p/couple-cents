@@ -47,6 +47,37 @@ export async function createTransaction(
   return res.rows[0].id;
 }
 
+export async function createTag(
+  pool: Pool,
+  userId: string,
+  data: {
+    name: string;
+    color: string;
+  },
+): Promise<string> {
+  const { name, color } = data;
+  const res = await pool.query(
+    `INSERT INTO "tags" (id, name, color, "userId")
+     VALUES ($1, $2, $3, $4)
+     RETURNING id`,
+    [crypto.randomUUID(), name, color, userId],
+  );
+  return res.rows[0].id;
+}
+
+export async function addTagToTransaction(
+  pool: Pool,
+  transactionId: string,
+  tagId: string,
+): Promise<void> {
+  await pool.query(
+    `INSERT INTO "transaction_tags" ("transactionId", "tagId")
+     VALUES ($1, $2)
+     ON CONFLICT DO NOTHING`,
+    [transactionId, tagId],
+  );
+}
+
 export async function setBudget(
   pool: Pool,
   userId: string,

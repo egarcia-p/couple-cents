@@ -4,6 +4,7 @@ import { verifySession } from "@/app/lib/dal";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { getFormCategories } from "@/app/lib/helpers/categories";
+import { fetchUserTags } from "@/app/lib/data";
 
 export const metadata: Metadata = {
   title: "Create",
@@ -23,7 +24,11 @@ export default async function Page({
 
   const params = await searchParams;
   const isExpense = String(params.isExpense).toLowerCase() === "true";
-  const formCategories = await getFormCategories(isExpense);
+
+  const [formCategories, userTags] = await Promise.all([
+    getFormCategories(isExpense),
+    fetchUserTags(session.user.id),
+  ]);
 
   return (
     <main>
@@ -34,6 +39,7 @@ export default async function Page({
         categories={formCategories}
         isExpense={isExpense}
         locale={locale}
+        availableTags={userTags}
       />
     </main>
   );

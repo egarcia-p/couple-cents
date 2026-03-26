@@ -1,12 +1,14 @@
 import {
   transactions,
+  transactionTags,
+  tags,
   userBudgetSettings,
   userSettings,
 } from "../../../drizzle/schema";
 import { db } from "./db";
-import { TransactionForm } from "./definitions";
+import { TransactionForm, Tag } from "./definitions";
 import { formatCurrency, formatPercentage } from "./utils";
-import { and, or, ilike, sql, eq, count, sum, desc } from "drizzle-orm";
+import { and, sql, eq, desc, inArray } from "drizzle-orm";
 import { getTranslations } from "next-intl/server";
 import {
   getAllCategoriesMap,
@@ -43,6 +45,61 @@ function decryptBudget(encryptedBudget: string | null | undefined): number {
   const value = Number(decrypted);
   if (isNaN(value)) return 0;
   return value;
+}
+
+/**
+ * Fetches tags for a list of transaction IDs, returning a map of
+ * transactionId -> Tag[].
+ */
+async function fetchTagsForTransactions(
+  transactionIds: string[],
+): Promise<Record<string, Tag[]>> {
+  if (transactionIds.length === 0) return {};
+
+  const rows = await db
+    .select({
+      transactionId: transactionTags.transactionId,
+      tagId: tags.id,
+      tagName: tags.name,
+      tagColor: tags.color,
+      tagUserId: tags.userId,
+    })
+    .from(transactionTags)
+    .innerJoin(tags, eq(transactionTags.tagId, tags.id))
+    .where(inArray(transactionTags.transactionId, transactionIds));
+
+  const map: Record<string, Tag[]> = {};
+  for (const row of rows) {
+    if (!map[row.transactionId]) {
+      map[row.transactionId] = [];
+    }
+    map[row.transactionId].push({
+      id: row.tagId,
+      name: row.tagName,
+      color: row.tagColor,
+      userId: row.tagUserId,
+    });
+  }
+  return map;
+}
+
+export async function fetchUserTags(userId: string): Promise<Tag[]> {
+  try {
+    const data = await db
+      .select({
+        id: tags.id,
+        name: tags.name,
+        color: tags.color,
+        userId: tags.userId,
+      })
+      .from(tags)
+      .where(eq(tags.userId, userId))
+      .orderBy(tags.name);
+
+    return data;
+  } catch (error) {
+    throw new Error("Failed to fetch user tags.");
+  }
 }
 
 export async function fetchAllTransactions(userId: string) {
@@ -96,10 +153,15 @@ export async function fetchTransactionById(id: string, userId: string) {
     if (!data[0]) return undefined as unknown as TransactionForm;
 
     const row = data[0];
+
+    // Fetch tags for this transaction
+    const tagsMap = await fetchTagsForTransactions([row.id]);
+
     return {
       ...row,
       establishment: safeDecrypt(row.establishment),
       amount: decryptAmount(row.amount),
+      tags: tagsMap[row.id] || [],
     } as TransactionForm;
   } catch (error) {
     throw new Error("Failed to fetch transaction.");
@@ -110,10 +172,12 @@ export async function fetchAllFilteredTransactions({
   query,
   dates,
   userId,
+  tagIds,
 }: {
   query: string;
   dates: string;
   userId: string;
+  tagIds?: string[];
 }) {
   const translatedCategoriesMap = await getTranslatedAllCategoriesMap();
 
@@ -154,6 +218,10 @@ export async function fetchAllFilteredTransactions({
 
     const queryLower = query.toLowerCase();
 
+    // Fetch tags for all transactions in the result set
+    const txIds = data.map((row) => row.id);
+    const tagsMap = await fetchTagsForTransactions(txIds);
+
     return data
       .map((row) => ({
         ...row,
@@ -161,6 +229,7 @@ export async function fetchAllFilteredTransactions({
         rawCategory: row.category,
         establishment: safeDecrypt(row.establishment),
         amount: decryptAmount(row.amount),
+        tags: tagsMap[row.id] || [],
       }))
       .filter((row) => {
         if (!query) return true;
@@ -170,6 +239,10 @@ export async function fetchAllFilteredTransactions({
           row.establishment.toLowerCase().includes(queryLower) ||
           (row.note && row.note.toLowerCase().includes(queryLower))
         );
+      })
+      .filter((row) => {
+        if (!tagIds || tagIds.length === 0) return true;
+        return row.tags.some((tag) => tagIds.includes(tag.id));
       })
       .map(({ rawCategory, ...row }) => row);
   } catch (error) {
@@ -182,6 +255,7 @@ export async function fetchFilteredTransactions(
   dates: string,
   currentPage: number,
   userId: string,
+  tagIds?: string[],
 ) {
   const translatedCategoriesMap = await getTranslatedAllCategoriesMap();
 
@@ -222,6 +296,10 @@ export async function fetchFilteredTransactions(
 
     const queryLower = query.toLowerCase();
 
+    // Fetch tags for all transactions in the result set
+    const txIds = data.map((row) => row.id);
+    const tagsMap = await fetchTagsForTransactions(txIds);
+
     const filtered = data
       .map((row) => ({
         ...row,
@@ -232,6 +310,7 @@ export async function fetchFilteredTransactions(
         rawCategory: row.category,
         establishment: safeDecrypt(row.establishment),
         amount: decryptAmount(row.amount),
+        tags: tagsMap[row.id] || [],
       }))
       .filter((row) => {
         if (!query) return true;
@@ -240,6 +319,10 @@ export async function fetchFilteredTransactions(
           row.establishment.toLowerCase().includes(queryLower) ||
           (row.note && row.note.toLowerCase().includes(queryLower))
         );
+      })
+      .filter((row) => {
+        if (!tagIds || tagIds.length === 0) return true;
+        return row.tags.some((tag) => tagIds.includes(tag.id));
       })
       .map(({ rawCategory, ...row }) => row);
 
@@ -255,6 +338,7 @@ export async function fetchTransactionPages(
   query: string,
   dates: string,
   userId: string,
+  tagIds?: string[],
 ) {
   try {
     const dateArray = dates.split("to");
@@ -271,6 +355,7 @@ export async function fetchTransactionPages(
     // Fetch all rows in date range, decrypt, filter in app layer, then count
     const data = await db
       .select({
+        id: transactions.id,
         category: transactions.category,
         establishment: transactions.establishment,
         note: transactions.note,
@@ -283,16 +368,28 @@ export async function fetchTransactionPages(
         ),
       );
 
+    // Fetch tags if tag filtering is needed
+    const tagsMap =
+      tagIds && tagIds.length > 0
+        ? await fetchTagsForTransactions(data.map((row) => row.id))
+        : {};
+
     const queryLower = query.toLowerCase();
-    const filteredCount = data.filter((row) => {
-      if (!query) return true;
-      const decryptedEstablishment = safeDecrypt(row.establishment);
-      return (
-        matchingCodes.includes(row.category) ||
-        decryptedEstablishment.toLowerCase().includes(queryLower) ||
-        (row.note && row.note.toLowerCase().includes(queryLower))
-      );
-    }).length;
+    const filteredCount = data
+      .filter((row) => {
+        if (!query) return true;
+        const decryptedEstablishment = safeDecrypt(row.establishment);
+        return (
+          matchingCodes.includes(row.category) ||
+          decryptedEstablishment.toLowerCase().includes(queryLower) ||
+          (row.note && row.note.toLowerCase().includes(queryLower))
+        );
+      })
+      .filter((row) => {
+        if (!tagIds || tagIds.length === 0) return true;
+        const rowTags = tagsMap[row.id] || [];
+        return rowTags.some((tag) => tagIds.includes(tag.id));
+      }).length;
 
     const totalPages = Math.ceil(filteredCount / ITEMS_PER_PAGE);
     return totalPages;

@@ -39,11 +39,16 @@ export async function GET(
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("query") || "";
     const dates = searchParams.get("dates") || "";
+    const tagIdsParam = searchParams.get("tagIds");
+    const tagIds = tagIdsParam
+      ? tagIdsParam.split(",").filter(Boolean)
+      : undefined;
 
     const data = await fetchAllFilteredTransactions({
       query: query,
       userId: userId,
       dates: dates,
+      tagIds: tagIds,
     });
 
     return Response.json({ message: "Success", data }, { status: 200 });

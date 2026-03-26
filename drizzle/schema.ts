@@ -29,11 +29,7 @@ export const users = pgTable(
 
     image: text("image"),
   },
-  (users) => {
-    return {
-      uniqueIdx: uniqueIndex("unique_idx").on(users.email),
-    };
-  },
+  (users) => [uniqueIndex("unique_idx").on(users.email)],
 );
 
 export const families = pgTable("families", {
@@ -133,6 +129,31 @@ export const verification = pgTable("verification", {
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
 });
+
+export const tags = pgTable("tags", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name", { length: 40 }).notNull(),
+  color: varchar("color", { length: 7 }).notNull(),
+  userId: text("userId").notNull(),
+  createdAt: timestamp("createdAt", {
+    withTimezone: true,
+  })
+    .defaultNow()
+    .notNull(),
+});
+
+export const transactionTags = pgTable(
+  "transaction_tags",
+  {
+    transactionId: uuid("transactionId")
+      .notNull()
+      .references(() => transactions.id, { onDelete: "cascade" }),
+    tagId: uuid("tagId")
+      .notNull()
+      .references(() => tags.id, { onDelete: "cascade" }),
+  },
+  (table) => [primaryKey({ columns: [table.transactionId, table.tagId] })],
+);
 
 // ...
 

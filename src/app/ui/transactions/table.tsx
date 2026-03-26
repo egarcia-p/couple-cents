@@ -5,17 +5,20 @@ import DownloadCSV from "./download-button";
 import { verifySession } from "@/app/lib/dal";
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
+import { TagBadge } from "./tag-badge";
 
 export default async function DashboardTable({
   query,
   dates,
   currentPage,
   userId,
+  tagIds,
 }: {
   query: string;
   dates: string;
   currentPage: number;
   userId: string;
+  tagIds?: string[];
 }) {
   const session = await verifySession();
   if (!session) return null;
@@ -27,6 +30,7 @@ export default async function DashboardTable({
     dates,
     currentPage,
     userId,
+    tagIds,
   );
 
   const locale: string = (await cookies()).get("NEXT_LOCALE")?.value || "en-GB";
@@ -61,6 +65,9 @@ export default async function DashboardTable({
                 <th scope="col" className="px-3 py-5 font-medium">
                   {t("transactionDate")}
                 </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  {t("tags")}
+                </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
                 </th>
@@ -92,6 +99,17 @@ export default async function DashboardTable({
                       userSettings[0]?.timezone || "UTC",
                       locale,
                     )}
+                  </td>
+                  <td className="px-3 py-3">
+                    <div className="flex flex-wrap gap-1">
+                      {transaction.tags?.map((tag) => (
+                        <TagBadge
+                          key={tag.id}
+                          name={tag.name}
+                          color={tag.color}
+                        />
+                      ))}
+                    </div>
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">

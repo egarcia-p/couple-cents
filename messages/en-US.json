@@ -157,6 +157,8 @@
     "title": "Transactions",
     "periodMobile": "Period: Current Month",
     "searchPlaceholder": "Search transactions...",
+    "tagFilterPlaceholder": "Filter by tags...",
+    "tagFilterClear": "Clear",
     "expenseButton": "Expense",
     "incomeButton": "Income",
     "currentPeriod": "Current Period",
@@ -164,7 +166,9 @@
       "boolean": "Value must be a true or false",
       "amount": "Please enter an amount greater than $0.",
       "category": "Please select a category.",
-      "establishment": "Please enter an establishment."
+      "establishment": "Please enter an establishment.",
+      "tagName": "Tag name must be between 1 and 40 characters.",
+      "tagColor": "Tag color must be a valid hex color (e.g. #FF0000)."
     },
     "create": {
       "createExpense": "Create Expense",
@@ -180,6 +184,9 @@
       "essentialLabel": "Choose if is an essential expense",
       "dateOfTransactionLabel": "Date",
       "cancelButton": "Cancel",
+      "tagsLabel": "Tags",
+      "tagsPlaceholder": "Select tags",
+      "allTagsSelected": "All tags selected",
       "createButton": "Create Transaction",
       "missingFieldsError": "Missing Fields. Failed to Create Transaction.",
       "invalidDateError": "Invalid date format.",
@@ -200,6 +207,8 @@
       "essentialLabel": "Choose if is an essential expense",
       "dateOfTransactionLabel": "Date",
       "cancelButton": "Cancel",
+      "tagsLabel": "Tags",
+      "tagsPlaceholder": "Select tags",
       "updateButton": "Update Transaction",
       "missingFieldsError": "Missing Fields. Failed to Update Transaction.",
       "invalidDateError": "Invalid date format.",
@@ -235,7 +244,8 @@
     "category": "Category",
     "amount": "Amount",
     "note": "Note",
-    "transactionDate": "Date"
+    "transactionDate": "Date",
+    "tags": "Tags"
   },
   "History": {
     "title": "History",
@@ -283,6 +293,20 @@
       "anualBudget": "Anual Budget",
       "databaseError": "An error occurred while saving the budget settings. Please try again.",
       "amount": "Please enter an amount greater than $0."
+    },
+    "tags": {
+      "title": "Tags",
+      "nameLabel": "Name",
+      "namePlaceholder": "Tag name (e.g. Cash, Credit Card)",
+      "colorLabel": "Color",
+      "addButton": "Add Tag",
+      "saveButton": "Save",
+      "cancelButton": "Cancel",
+      "deleteConfirmation": "Are you sure you want to delete this tag? It will be removed from all transactions.",
+      "deleteSuccess": "Tag deleted successfully.",
+      "missingFieldsError": "Please provide a tag name and color.",
+      "databaseError": "An error occurred while saving the tag. Please try again.",
+      "noTags": "No tags yet. Create your first tag above."
     }
   },
   "NavLinks": {

@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 import { db } from "./db";
 import {
   transactions,
+  transactionTags,
+  tags,
   userBudgetSettings,
   userSettings,
 } from "../../../drizzle/schema";
@@ -65,6 +67,17 @@ const UserSettings = z.object({
 
 const UserSettingsCreate = UserSettings.omit({ id: true });
 
+const TagSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, { message: "validation.tagName" }).max(40),
+  color: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/, { message: "validation.tagColor" }),
+  userId: z.string(),
+});
+const CreateTag = TagSchema.omit({ id: true });
+const UpdateTag = TagSchema;
+
 export type State = {
   errors?: Partial<{
     isExpense: string[];
@@ -76,6 +89,8 @@ export type State = {
     transactionDate: string[];
     language: string[];
     timezone: string[];
+    name: string[];
+    color: string[];
   }>;
   message?: string | null;
 };
@@ -161,7 +176,21 @@ export async function createTransaction(
       transactionDate: timestamp,
     };
 
-    await db.insert(transactions).values(newTransaction);
+    const [inserted] = await db
+      .insert(transactions)
+      .values(newTransaction)
+      .returning({ id: transactions.id });
+
+    // Save tags if provided
+    const tagIds = formData.getAll("tags") as string[];
+    if (tagIds.length > 0 && inserted) {
+      await db.insert(transactionTags).values(
+        tagIds.map((tagId) => ({
+          transactionId: inserted.id,
+          tagId,
+        })),
+      );
+    }
   } catch (error) {
     return {
       message: translations("create.databaseError"),
@@ -271,6 +300,20 @@ export async function updateTransaction(
     };
 
     await db.update(transactions).set(setValues).where(eq(transactions.id, id));
+
+    // Update tags: delete existing, re-insert new
+    await db
+      .delete(transactionTags)
+      .where(eq(transactionTags.transactionId, id));
+    const tagIds = formData.getAll("tags") as string[];
+    if (tagIds.length > 0) {
+      await db.insert(transactionTags).values(
+        tagIds.map((tagId) => ({
+          transactionId: id,
+          tagId,
+        })),
+      );
+    }
   } catch (error) {
     return { message: translations("edit.databaseError") };
   }
@@ -432,4 +475,101 @@ export async function saveLanguageSettings(
 
   revalidatePath("/dashboard");
   redirect("/dashboard");
+}
+
+export async function createTag(
+  prevState: State,
+  formData: FormData,
+): Promise<State> {
+  const translations = await getTranslations("Profile");
+
+  const validatedFields = CreateTag.safeParse({
+    name: formData.get("name"),
+    color: formData.get("color"),
+    userId: formData.get("userId"),
+  });
+
+  if (!validatedFields.success) {
+    const translatedErrors = Object.entries(
+      validatedFields.error.flatten().fieldErrors,
+    ).reduce(
+      (acc, [key, errors]) => ({
+        ...acc,
+        [key]: errors?.map((e) => translations(e)),
+      }),
+      {},
+    );
+    return {
+      errors: translatedErrors,
+      message: translations("tags.missingFieldsError"),
+    };
+  }
+
+  const { name, color, userId } = validatedFields.data;
+
+  try {
+    await db.insert(tags).values({ name, color, userId });
+  } catch (error) {
+    return { message: translations("tags.databaseError") };
+  }
+
+  revalidatePath("/dashboard/profile");
+  redirect("/dashboard/profile");
+}
+
+export async function updateTag(
+  id: string,
+  prevState: State,
+  formData: FormData,
+): Promise<State> {
+  const translations = await getTranslations("Profile");
+
+  const validatedFields = UpdateTag.safeParse({
+    id,
+    name: formData.get("name"),
+    color: formData.get("color"),
+    userId: formData.get("userId"),
+  });
+
+  if (!validatedFields.success) {
+    const translatedErrors = Object.entries(
+      validatedFields.error.flatten().fieldErrors,
+    ).reduce(
+      (acc, [key, errors]) => ({
+        ...acc,
+        [key]: errors?.map((e) => translations(e)),
+      }),
+      {},
+    );
+    return {
+      errors: translatedErrors,
+      message: translations("tags.missingFieldsError"),
+    };
+  }
+
+  const { name, color, userId } = validatedFields.data;
+
+  try {
+    await db
+      .update(tags)
+      .set({ name, color })
+      .where(and(eq(tags.id, id), eq(tags.userId, userId)));
+  } catch (error) {
+    return { message: translations("tags.databaseError") };
+  }
+
+  revalidatePath("/dashboard/profile");
+  redirect("/dashboard/profile");
+}
+
+export async function deleteTag(id: string) {
+  const translations = await getTranslations("Profile");
+  try {
+    await db.delete(tags).where(eq(tags.id, id));
+
+    revalidatePath("/dashboard/profile");
+    return { message: translations("tags.deleteSuccess") };
+  } catch (error) {
+    return { message: translations("tags.databaseError") };
+  }
 }

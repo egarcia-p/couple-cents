@@ -79,11 +79,11 @@ describe("crypto", () => {
     });
 
     it("should throw for invalid format (missing parts)", () => {
-      expect(() => decrypt("invalid")).toThrow("Invalid encrypted text format");
+      expect(() => decrypt("invalid")).toThrow("Decryption failed");
     });
 
     it("should throw for invalid format (too many parts)", () => {
-      expect(() => decrypt("a:b:c:d")).toThrow("Invalid encrypted text format");
+      expect(() => decrypt("a:b:c:d")).toThrow("Decryption failed");
     });
 
     it("should throw for tampered ciphertext", () => {

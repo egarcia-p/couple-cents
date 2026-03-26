@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Form from "@/app/ui/transactions/edit-form";
-import { fetchTransactionById } from "@/app/lib/data";
+import { fetchTransactionById, fetchUserTags } from "@/app/lib/data";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { getFormCategories } from "@/app/lib/helpers/categories";
@@ -18,8 +18,9 @@ export default async function Page({
 }) {
   const { id } = await params;
   const session = await verifySession();
-  const [transaction] = await Promise.all([
+  const [transaction, userTags] = await Promise.all([
     fetchTransactionById(id, session.user.id),
+    fetchUserTags(session.user.id),
   ]);
   if (!transaction) {
     notFound();
@@ -41,6 +42,7 @@ export default async function Page({
         transaction={transaction}
         categories={formCategories}
         locale={locale}
+        availableTags={userTags}
       />
     </main>
   );
