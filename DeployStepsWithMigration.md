@@ -24,15 +24,17 @@ Then deploy the big change with migration branch to production. The build comman
 if you have to run a one off script to modify exisitng data like for example encrypting existing data, you can create a script and refernece it in the package.json scripts section, and then run it in the build command before the next build command. For example:
 
 Using vercel cli:
-`vercel env pull`
+`vercel pull --environment=production`
 
 Make sure the POSTGRES_URL env is set to run one of scripts.
 
 Execute db migrations or scripts examples
 
-`npx drizzle-kit up` to apply pending migrations
-`npx drizzle-kit migrate` to generate and apply new migrations
-`npm run db:encrypt`
+`npx dotenv -e .vercel/.env.production.local -- npx drizzle-kit up` to apply pending migrations
+
+`npx dotenv -e .vercel/.env.production.local -- npx drizzle-kit migrate` to generate and apply new migrations
+
+`npx dotenv -e .vercel/.env.production.local -- npm run db:encrypt`
 
 # Post-Deployment
 
