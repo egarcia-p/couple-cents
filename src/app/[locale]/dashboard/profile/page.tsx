@@ -12,6 +12,7 @@ import type {
   UserSettings as UserSettingsType,
 } from "@/app/lib/definitions";
 import { verifySession } from "@/app/lib/dal";
+import ThemeSettings from "@/app/ui/profile/theme-settings";
 
 export const metadata: Metadata = {
   title: "Profile",
@@ -33,6 +34,9 @@ export default async function Page() {
     <main>
       <h1 className={`mb-4 text-xl md:text-2xl`}>Profile Settings</h1>
       <UserAvatar />
+      <div className="mt-6">
+        <ThemeSettings userId={userId} />
+      </div>
       <UserSettings
         userId={userId}
         budgetSettings={userBudgetSettingsData}

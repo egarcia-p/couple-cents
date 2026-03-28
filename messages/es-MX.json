@@ -307,6 +307,13 @@
       "missingFieldsError": "Por favor proporciona un nombre y color para la etiqueta.",
       "databaseError": "Ocurrió un error al guardar la etiqueta. Por favor inténtalo de nuevo.",
       "noTags": "No hay etiquetas aún. Crea tu primera etiqueta arriba."
+    },
+    "theme": {
+      "title": "Apariencia",
+      "light": "Claro",
+      "dark": "Oscuro",
+      "system": "Sistema (seguir SO)",
+      "databaseError": "Ocurrió un error al guardar el tema. Por favor inténtalo de nuevo."
     }
   },
   "NavLinks": {

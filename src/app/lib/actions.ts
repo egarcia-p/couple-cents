@@ -63,6 +63,7 @@ const UserSettings = z.object({
   userId: z.string(),
   language: z.string(),
   timezone: z.string(),
+  theme: z.enum(["light", "dark", "system"]).default("system"),
 });
 
 const UserSettingsCreate = UserSettings.omit({ id: true });
@@ -571,5 +572,56 @@ export async function deleteTag(id: string) {
     return { message: translations("tags.deleteSuccess") };
   } catch (error) {
     return { message: translations("tags.databaseError") };
+  }
+}
+
+export async function saveThemeSettings(
+  prevState: State,
+  formData: FormData,
+): Promise<State> {
+  const translations = await getTranslations("Profile");
+  try {
+    const userId = formData.get("userId") as string;
+    const theme = formData.get("theme") as string;
+
+    if (!userId || !theme) {
+      return { message: translations("theme.databaseError") };
+    }
+
+    if (!["light", "dark", "system"].includes(theme)) {
+      return { message: translations("theme.databaseError") };
+    }
+
+    const existingSetting = await db
+      .select()
+      .from(userSettings)
+      .where(eq(userSettings.userId, userId))
+      .limit(1)
+      .execute();
+
+    if (existingSetting.length === 0) {
+      await db.insert(userSettings).values({
+        userId,
+        language: "en-US",
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        theme,
+      });
+    } else {
+      await db
+        .update(userSettings)
+        .set({ theme })
+        .where(eq(userSettings.userId, userId));
+    }
+
+    (await cookies()).set("NEXT_THEME", theme, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+    });
+
+    revalidatePath("/dashboard");
+    return { message: null };
+  } catch (error) {
+    return { message: translations("theme.databaseError") };
   }
 }

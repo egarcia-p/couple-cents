@@ -307,6 +307,13 @@
       "missingFieldsError": "Please provide a tag name and color.",
       "databaseError": "An error occurred while saving the tag. Please try again.",
       "noTags": "No tags yet. Create your first tag above."
+    },
+    "theme": {
+      "title": "Appearance",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System (follow OS)",
+      "databaseError": "An error occurred while saving the theme. Please try again."
     }
   },
   "NavLinks": {
