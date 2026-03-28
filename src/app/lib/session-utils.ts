@@ -5,6 +5,8 @@ import { userSettings } from "../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { fetchUserSettings } from "./data";
 
+import type { Theme } from "@/app/components/theme/theme-provider";
+
 /**
  * Fetches the current user's preferred locale from the userSettings table
  * This is called from Server Components (pages/layouts), not middleware
@@ -40,5 +42,40 @@ export async function getUserPreferredLocale(): Promise<string> {
   } catch (error) {
     // If not authenticated or error, return default
     return "en-US";
+  }
+}
+
+/**
+ * Fetches the current user's preferred theme from the cookie or userSettings table.
+ * Returns "system" as default if not authenticated or no preference is set.
+ */
+export async function getUserPreferredTheme(): Promise<Theme> {
+  try {
+    const cookieStore = await cookies();
+    const themeFromCookie = cookieStore.get("NEXT_THEME")?.value;
+    if (
+      themeFromCookie &&
+      ["light", "dark", "system"].includes(themeFromCookie)
+    ) {
+      return themeFromCookie as Theme;
+    }
+
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user?.id) {
+      return "system";
+    }
+
+    const userSetting = await fetchUserSettings(session.user.id);
+
+    if (userSetting.length > 0 && userSetting[0].theme) {
+      return userSetting[0].theme as Theme;
+    }
+
+    return "system";
+  } catch (error) {
+    return "system";
   }
 }
