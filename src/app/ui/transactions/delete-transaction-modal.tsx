@@ -20,7 +20,7 @@ export default function DeleteTransactionModal(props: Props) {
   return (
     <div>
       <IconButton
-        className="rounded-md border p-2 hover:bg-gray-100"
+        className="rounded-md border p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
         aria-label="delete"
         onClick={() => setConfirmOpen(true)}
       >

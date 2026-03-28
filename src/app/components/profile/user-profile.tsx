@@ -13,7 +13,7 @@ export default async function UserAvatar() {
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 ">
+        <div className="rounded-lg bg-gray-50 dark:bg-gray-800 p-2 ">
           <div className="flex">
             <div className="h-16 w-16 overflow-hidden rounded-full">
               <img
@@ -24,7 +24,7 @@ export default async function UserAvatar() {
             </div>
             <div className="ml-4 flex flex-col justify-center">
               <h1 className="text-lg font-bold">{session.user.name}</h1>
-              <p className="text-sm text-gray-500">{session.user.email}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{session.user.email}</p>
             </div>
           </div>
         </div>

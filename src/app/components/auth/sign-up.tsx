@@ -141,7 +141,7 @@ export default function SignUp() {
           type="checkbox"
           className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
         /> */}
-        <label htmlFor="remember" className="ml-2 block text-sm text-gray-900">
+        <label htmlFor="remember" className="ml-2 block text-sm text-gray-900 dark:text-gray-100">
           {t("newAccountMessage")}
           <a href="#" className="text-primary-600 hover:text-primary-500">
             {t("termsAndPrivacy")}

@@ -56,7 +56,7 @@ export function TagFilter({
   return (
     <div className="relative">
       <div
-        className="flex min-h-[38px] cursor-pointer items-center gap-1 rounded-md border border-gray-200 bg-white px-3 py-1 text-sm"
+        className="flex min-h-[38px] cursor-pointer items-center gap-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1 text-sm"
         onClick={() => setIsOpen(!isOpen)}
       >
         {selectedTags.length > 0 ? (
@@ -66,7 +66,7 @@ export function TagFilter({
             ))}
           </div>
         ) : (
-          <span className="text-gray-500">{placeholder}</span>
+          <span className="text-gray-500 dark:text-gray-400">{placeholder}</span>
         )}
         <svg
           className={`ml-auto h-4 w-4 shrink-0 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
@@ -84,7 +84,7 @@ export function TagFilter({
       </div>
 
       {isOpen && (
-        <div className="absolute z-10 mt-1 max-h-48 w-full min-w-[200px] overflow-auto rounded-md border border-gray-200 bg-white shadow-lg">
+        <div className="absolute z-10 mt-1 max-h-48 w-full min-w-[200px] overflow-auto rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg">
           {availableTags.map((tag) => {
             const isSelected = currentTagIds.includes(tag.id);
             return (
@@ -92,10 +92,10 @@ export function TagFilter({
                 key={tag.id}
                 type="button"
                 onClick={() => toggleTag(tag.id)}
-                className={`flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-gray-50 ${isSelected ? "bg-gray-50" : ""}`}
+                className={`flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-800 ${isSelected ? "bg-gray-50 dark:bg-gray-800" : ""}`}
               >
                 <span
-                  className={`flex h-4 w-4 items-center justify-center rounded border ${isSelected ? "border-primary-600 bg-primary-600" : "border-gray-300"}`}
+                  className={`flex h-4 w-4 items-center justify-center rounded border ${isSelected ? "border-primary-600 bg-primary-600" : "border-gray-300 dark:border-gray-600"}`}
                 >
                   {isSelected && (
                     <svg
@@ -121,11 +121,11 @@ export function TagFilter({
           })}
           {currentTagIds.length > 0 && (
             <>
-              <div className="border-t border-gray-100" />
+              <div className="border-t border-gray-100 dark:border-gray-800" />
               <button
                 type="button"
                 onClick={clearFilter}
-                className="flex w-full items-center justify-center px-3 py-2 text-sm text-gray-500 hover:bg-gray-50"
+                className="flex w-full items-center justify-center px-3 py-2 text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
               >
                 {clearLabel}
               </button>
