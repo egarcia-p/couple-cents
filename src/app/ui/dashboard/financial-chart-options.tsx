@@ -5,11 +5,29 @@ function getCurrency(locale: string): string {
   return found?.currency ?? "USD";
 }
 
-export default function getFinancialChartOptions(locale: string) {
+export default function getFinancialChartOptions(
+  locale: string,
+  isDark = false,
+) {
   const currency = getCurrency(locale);
+  const textColor = isDark ? "#d1d5db" : undefined;
+  const gridColor = isDark ? "rgba(75, 85, 99, 0.3)" : undefined;
 
   return {
+    scales: {
+      x: {
+        ticks: { color: textColor },
+        grid: { color: gridColor },
+      },
+      y: {
+        ticks: { color: textColor },
+        grid: { color: gridColor },
+      },
+    },
     plugins: {
+      legend: {
+        labels: { color: textColor },
+      },
       tooltip: {
         callbacks: {
           label: function (context: any) {

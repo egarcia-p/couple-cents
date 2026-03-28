@@ -5,8 +5,8 @@ import dynamic from "next/dynamic";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
 import getFinancialChartOptions from "./financial-chart-options";
-import { use } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { useTheme } from "@/app/ui/hooks/useTheme";
 Chart.register(CategoryScale);
 
 const Line = dynamic(() => import("react-chartjs-2").then((mod) => mod.Line), {
@@ -20,7 +20,9 @@ export default function EssentialExpensesMonthChart({
   const t = useTranslations("EssentialExpensesMonthChart");
   const tMonths = useTranslations("Months");
   const locale = useLocale();
-  const options = getFinancialChartOptions(locale);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const options = getFinancialChartOptions(locale, isDark);
 
   const monthsDisplay = new Map<number, string>();
   monthsDisplay.set(1, tMonths("january"));
@@ -77,13 +79,15 @@ export default function EssentialExpensesMonthChart({
       <h2 className={`mb-4 text-xl md:text-2xl`}>{t("title")}</h2>
 
       {
-        <div className="rounded-xl bg-gray-50 p-4">
-          <div className="sm:grid-cols-13 mt-0 grid grid-cols-12 items-end gap-2 rounded-md bg-white p-4 md:gap-4">
+        <div className="rounded-xl bg-gray-50 dark:bg-gray-800 p-4">
+          <div className="sm:grid-cols-13 mt-0 grid grid-cols-12 items-end gap-2 rounded-md bg-white dark:bg-gray-900 p-4 md:gap-4">
             <Line data={data} options={options} />
           </div>
           <div className="flex items-center pb-2 pt-6">
-            <CalendarIcon className="h-5 w-5 text-gray-500" />
-            <h3 className="ml-2 text-sm text-gray-500 ">{t("currentYear")}</h3>
+            <CalendarIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+            <h3 className="ml-2 text-sm text-gray-500 dark:text-gray-400">
+              {t("currentYear")}
+            </h3>
           </div>
         </div>
       }
