@@ -57,6 +57,13 @@
       "when": 1773804695231,
       "tag": "0007_dashing_grim_reaper",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1774721868732,
+      "tag": "0008_mysterious_hammerhead",
+      "breakpoints": true
     }
   ]
 }
