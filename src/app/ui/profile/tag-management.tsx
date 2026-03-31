@@ -56,7 +56,7 @@ export default function TagManagement({
   };
 
   return (
-    <div className="rounded-lg bg-gray-50 p-2">
+    <div className="rounded-lg bg-gray-50 dark:bg-gray-800 p-2">
       <div className="ml-4 m-4 flex flex-col gap-4">
         <h1 className="text-xl font-bold">{t("tags.title")}</h1>
 
@@ -67,7 +67,7 @@ export default function TagManagement({
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="tag-name"
-                className="text-sm font-medium text-gray-700"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300"
               >
                 {t("tags.nameLabel")}
               </label>
@@ -77,14 +77,14 @@ export default function TagManagement({
                 type="text"
                 maxLength={40}
                 placeholder={t("tags.namePlaceholder")}
-                className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+                className="rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm dark:bg-gray-900 dark:text-gray-100"
                 aria-describedby="tag-name-error"
               />
             </div>
             <div className="flex flex-col gap-1">
               <label
                 htmlFor="tag-color"
-                className="text-sm font-medium text-gray-700"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300"
               >
                 {t("tags.colorLabel")}
               </label>
@@ -95,7 +95,7 @@ export default function TagManagement({
                   type="color"
                   value={newColor}
                   onChange={(e) => setNewColor(e.target.value.toUpperCase())}
-                  className="h-9 w-9 cursor-pointer rounded border border-gray-300 p-0.5"
+                  className="h-9 w-9 cursor-pointer rounded border border-gray-300 dark:border-gray-600 p-0.5"
                 />
                 <div className="flex gap-1">
                   {DEFAULT_COLORS.map((color) => (
@@ -140,13 +140,13 @@ export default function TagManagement({
 
         {/* Existing tags list */}
         {tags.length === 0 ? (
-          <p className="text-sm text-gray-500">{t("tags.noTags")}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{t("tags.noTags")}</p>
         ) : (
           <div className="flex flex-col gap-2">
             {tags.map((tag) => (
               <div
                 key={tag.id}
-                className="flex items-center gap-3 rounded-md border border-gray-200 bg-white px-3 py-2"
+                className="flex items-center gap-3 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2"
               >
                 {editingTagId === tag.id ? (
                   <EditTagForm
@@ -162,12 +162,12 @@ export default function TagManagement({
                 ) : (
                   <>
                     <TagBadge name={tag.name} color={tag.color} size="md" />
-                    <span className="text-xs text-gray-400">{tag.color}</span>
+                    <span className="text-xs text-gray-400 dark:text-gray-500">{tag.color}</span>
                     <div className="ml-auto flex gap-2">
                       <Button
                         type="button"
                         onClick={() => startEditing(tag)}
-                        className="h-auto rounded bg-gray-100 px-2 py-1 text-gray-600 hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+                        className="h-auto rounded bg-gray-100 dark:bg-gray-700 px-2 py-1 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
                       >
                         <svg
                           className="h-4 w-4"
@@ -246,14 +246,14 @@ function EditTagForm({
         maxLength={40}
         value={editName}
         onChange={(e) => onEditNameChange(e.target.value)}
-        className="rounded-md border border-gray-300 px-3 py-1 text-sm"
+        className="rounded-md border border-gray-300 dark:border-gray-600 px-3 py-1 text-sm dark:bg-gray-900 dark:text-gray-100"
       />
       <input
         name="color"
         type="color"
         value={editColor}
         onChange={(e) => onEditColorChange(e.target.value.toUpperCase())}
-        className="h-8 w-8 cursor-pointer rounded border border-gray-300 p-0.5"
+        className="h-8 w-8 cursor-pointer rounded border border-gray-300 dark:border-gray-600 p-0.5"
       />
       <TagBadge
         name={editName || tag.name}
@@ -265,7 +265,7 @@ function EditTagForm({
         <Button
           type="button"
           onClick={onCancel}
-          className="bg-gray-100 text-gray-600 hover:bg-gray-200"
+          className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600"
         >
           {t("tags.cancelButton")}
         </Button>

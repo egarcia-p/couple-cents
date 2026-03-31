@@ -80,7 +80,7 @@ export default function UserSettings({
         <TagManagement userId={userId} tags={tags} />
       </div>
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 ">
+        <div className="rounded-lg bg-gray-50 dark:bg-gray-800 p-2 ">
           <div className="ml-4 m-4 flex flex-col gap-4">
             <h1 className="text-xl font-bold">{t("budget.title")}</h1>
             <form action={dispatch}>

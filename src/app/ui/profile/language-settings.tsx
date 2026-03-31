@@ -52,7 +52,7 @@ export default function LanguageSettings({
   const [state, dispatch] = useActionState(saveLanguageSettings, initialState);
 
   return (
-    <div className="rounded-lg bg-gray-50 p-2 ">
+    <div className="rounded-lg bg-gray-50 dark:bg-gray-800 p-2 ">
       <div className="ml-4 m-4 flex flex-col gap-4">
         <h1 className="text-xl font-bold">{t("settings.title")}</h1>
 
@@ -73,7 +73,7 @@ export default function LanguageSettings({
                   <select
                     id="locale"
                     name="locale"
-                    className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                    className="peer block w-full cursor-pointer rounded-md border border-gray-200 dark:border-gray-700 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 dark:placeholder:text-gray-400 dark:bg-gray-800 dark:text-gray-100"
                     defaultValue={userSettings?.language}
                     aria-describedby="locale-error"
                   >
@@ -100,12 +100,12 @@ export default function LanguageSettings({
 
             {/* Timezone Setting */}
             <div className="flex">
-              <span className="text-gray-700">{t("settings.timezone")}</span>
+              <span className="text-gray-700 dark:text-gray-300">{t("settings.timezone")}</span>
             </div>
             <div className="flex gap-4">
               <select
                 value={region}
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 dark:border-gray-700 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 dark:placeholder:text-gray-400 dark:bg-gray-800 dark:text-gray-100"
                 onChange={(e) => setRegion(e.target.value)}
               >
                 {Object.keys(zones).map((r) => (
@@ -117,7 +117,7 @@ export default function LanguageSettings({
 
               <select
                 name="timezone"
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 dark:border-gray-700 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 dark:placeholder:text-gray-400 dark:bg-gray-800 dark:text-gray-100"
                 defaultValue={defaultTimezone}
               >
                 {zones[region].map((tz) => (

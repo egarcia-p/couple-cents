@@ -1,0 +1,1 @@
+ALTER TABLE "user_settings" ADD COLUMN "theme" varchar(10) DEFAULT 'system' NOT NULL;

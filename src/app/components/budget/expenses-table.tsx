@@ -34,8 +34,8 @@ export default function ExpensesTable({
       <div className="hidden w-full md:block">
         <div className="mt-6 flow-root">
           <div className="inline-block min-w-full align-middle">
-            <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
-              <table className="hidden min-w-full text-gray-900 md:table">
+            <div className="rounded-lg bg-gray-50 dark:bg-gray-800 p-2 md:pt-0">
+              <table className="hidden min-w-full text-gray-900 dark:text-gray-100 md:table">
                 <thead className="rounded-lg text-left text-sm font-normal">
                   <tr>
                     <th></th>
@@ -87,7 +87,7 @@ export default function ExpensesTable({
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white">
+                <tbody className="bg-white dark:bg-gray-900">
                   {budgetVsExpenses.map((category) => {
                     const variance = Number(category.budget) - category.expense;
                     const percentage = // Percentage for formatPercentage in 0.00 to 1.00
@@ -147,8 +147,8 @@ export default function ExpensesTable({
         {/* Mobile view for expenses table */}
         <div className="mt-6 flow-root">
           <div className="inline-block min-w-full align-middle">
-            <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
-              <table className=" min-w-full text-gray-900 md:table">
+            <div className="rounded-lg bg-gray-50 dark:bg-gray-800 p-2 md:pt-0">
+              <table className=" min-w-full text-gray-900 dark:text-gray-100 md:table">
                 <thead className="rounded-lg text-left text-sm font-normal">
                   <tr>
                     <th></th>
@@ -181,7 +181,7 @@ export default function ExpensesTable({
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white">
+                <tbody className="bg-white dark:bg-gray-900">
                   {budgetVsExpenses.map((category) => {
                     const variance = Number(category.budget) - category.expense;
                     const percentage = // Percentage for formatPercentage in 0.00 to 1.00

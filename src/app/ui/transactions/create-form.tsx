@@ -62,7 +62,7 @@ export default function Form({
         )}
       </div>
       <form action={dispatch}>
-        <div className="rounded-md bg-gray-50 p-4 md:p-6 text-black">
+        <div className="rounded-md bg-gray-50 dark:bg-gray-800 p-4 md:p-6 text-black dark:text-gray-100">
           {/* Transaction isExpense */}
           <div className="mb-4">
             <div className="relative mt-2 rounded-md">
@@ -91,7 +91,7 @@ export default function Form({
                   type="number"
                   step="0.01"
                   placeholder={t("create.amountPlaceholder")}
-                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                  className="peer block w-full rounded-md border border-gray-200 dark:border-gray-700 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 dark:placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100"
                   aria-describedby="amount-error"
                 />
                 {/* <  className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}
@@ -122,7 +122,7 @@ export default function Form({
                   name="establishment"
                   type="text"
                   placeholder={t("create.establishmentPlaceholder")}
-                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                  className="peer block w-full rounded-md border border-gray-200 dark:border-gray-700 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 dark:placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100"
                   aria-describedby="establishment-error"
                 />
                 {/* <  className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}
@@ -155,7 +155,7 @@ export default function Form({
                 <select
                   id="category"
                   name="category"
-                  className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                  className="peer block w-full cursor-pointer rounded-md border border-gray-200 dark:border-gray-700 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 dark:placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100"
                   defaultValue=""
                   aria-describedby="category-error"
                 >
@@ -195,7 +195,7 @@ export default function Form({
                   name="note"
                   type="text"
                   placeholder={t("create.notePlaceholder")}
-                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                  className="peer block w-full rounded-md border border-gray-200 dark:border-gray-700 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 dark:placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100"
                   aria-describedby="note-error"
                 />
                 {/* <  className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}
@@ -227,7 +227,7 @@ export default function Form({
                     name="isEssential"
                     type="checkbox"
                     defaultChecked={false}
-                    className="h-4 w-4 rounded border-gray-300 cursor-pointer"
+                    className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 cursor-pointer"
                     aria-describedby="isEssential-error"
                   />
                   {/* <  className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}
@@ -316,7 +316,7 @@ export default function Form({
         <div className="mt-6 flex justify-end gap-4">
           <Link
             href="/dashboard/transactions"
-            className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+            className="flex h-10 items-center rounded-lg bg-gray-100 dark:bg-gray-700 px-4 text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors hover:bg-gray-200 dark:hover:bg-gray-600"
           >
             {t("create.cancelButton")}
           </Link>

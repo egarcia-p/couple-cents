@@ -44,6 +44,7 @@ export type UserSettings = {
   userId: string;
   language: string;
   timezone: string;
+  theme: string;
 };
 
 export type Category = {

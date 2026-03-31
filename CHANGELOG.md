@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.0] - 2026-03-30
+
+### Changed
+
+- **Added Themese**
+
+  - Added new themes: "light", "dark", and "system" to the application
+  - Updated theme toggle component to support new themes with appropriate icons
+  - Updated UI components to respond to theme changes for consistent styling
+
+- **Button Component — Ghost Variant**
+
+  - Added `variant` prop (`"primary" | "ghost"`) to the shared `Button` component
+  - Added `title` prop support to `Button`
+  - `ThemeToggle` now uses `Button` with `variant="ghost"` for visual consistency
+
+- **ThemeToggle Visibility**
+  - Theme toggle is now hidden on mobile (`hidden sm:flex`) to avoid consuming space on small screens
+
 ## [0.10.0] - 2026-03-23
 
 ### Added

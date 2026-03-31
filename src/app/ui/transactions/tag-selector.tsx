@@ -55,7 +55,7 @@ export function TagSelector({
 
         {/* Selected tags display + dropdown trigger */}
         <div
-          className="flex min-h-[42px] cursor-pointer flex-wrap items-center gap-1 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+          className="flex min-h-[42px] cursor-pointer flex-wrap items-center gap-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm"
           onClick={() => setIsOpen(!isOpen)}
         >
           {selectedTags.length > 0 ? (
@@ -68,7 +68,7 @@ export function TagSelector({
               />
             ))
           ) : (
-            <span className="text-gray-500">{placeholder}</span>
+            <span className="text-gray-500 dark:text-gray-400">{placeholder}</span>
           )}
           <svg
             className={`ml-auto h-4 w-4 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
@@ -87,10 +87,10 @@ export function TagSelector({
 
         {/* Dropdown */}
         {isOpen && (
-          <div className="absolute z-10 mt-1 max-h-48 w-full overflow-auto rounded-md border border-gray-200 bg-white shadow-lg">
+          <div className="absolute z-10 mt-1 max-h-48 w-full overflow-auto rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg">
             {unselectedTags.length === 0 &&
             selectedTags.length === availableTags.length ? (
-              <div className="px-3 py-2 text-sm text-gray-500">
+              <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
                 {translations("create.allTagsSelected")}
               </div>
             ) : (
@@ -99,7 +99,7 @@ export function TagSelector({
                   key={tag.id}
                   type="button"
                   onClick={() => toggleTag(tag.id)}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-gray-50"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-800"
                 >
                   <span
                     className="inline-block h-3 w-3 rounded-full"
@@ -111,13 +111,13 @@ export function TagSelector({
             )}
             {selectedTags.length > 0 && (
               <>
-                <div className="border-t border-gray-100" />
+                <div className="border-t border-gray-100 dark:border-gray-800" />
                 {selectedTags.map((tag) => (
                   <button
                     key={tag.id}
                     type="button"
                     onClick={() => toggleTag(tag.id)}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-gray-50"
+                    className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-800"
                   >
                     <svg
                       className="h-3 w-3 text-primary-600"

@@ -769,6 +769,7 @@ export async function fetchUserSettings(userId: string) {
         userId: userSettings.userId,
         language: userSettings.language,
         timezone: userSettings.timezone,
+        theme: userSettings.theme,
       })
       .from(userSettings)
       .where(eq(userSettings.userId, userId));

@@ -36,7 +36,7 @@ export default function Filter({
         <select
           id="month"
           name="month"
-          className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+          className="peer block w-full cursor-pointer rounded-md border border-gray-200 dark:border-gray-700 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 dark:placeholder:text-gray-400 dark:bg-gray-800 dark:text-gray-100"
           defaultValue=""
           aria-describedby="month-error"
           onChange={handleMonthChange}
@@ -56,7 +56,7 @@ export default function Filter({
         <select
           id="year"
           name="year"
-          className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+          className="peer block w-full cursor-pointer rounded-md border border-gray-200 dark:border-gray-700 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 dark:placeholder:text-gray-400 dark:bg-gray-800 dark:text-gray-100"
           defaultValue=""
           aria-describedby="year-error"
           onChange={handleYearChange}

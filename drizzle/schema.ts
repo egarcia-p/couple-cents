@@ -66,6 +66,7 @@ export const userSettings = pgTable("user_settings", {
   userId: text("userId").notNull(),
   language: varchar("language", { length: 255 }).notNull(),
   timezone: varchar("timezone", { length: 255 }).notNull(),
+  theme: varchar("theme", { length: 10 }).notNull().default("system"),
 });
 
 //  Better Auth Tables

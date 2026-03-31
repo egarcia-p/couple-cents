@@ -38,11 +38,11 @@ export default async function DashboardTableMobile({
 
   return (
     <div className="mt-2 flex-row ">
-      <div className="min-w-full rounded-lg bg-gray-50 p-2 md:pt-0">
+      <div className="min-w-full rounded-lg bg-gray-50 dark:bg-gray-800 p-2 md:pt-0">
         {formattedTransactions?.map((transaction) => (
           <div
             key={transaction.id}
-            className={`flex flex-row justify-between ${!transaction.isExpense ? "bg-primary-100" : "bg-white"}  m-1 rounded-lg`}
+            className={`flex flex-row justify-between ${!transaction.isExpense ? "bg-primary-100 dark:bg-primary-600/20" : "bg-white dark:bg-gray-900"}  m-1 rounded-lg`}
           >
             <div className="py-3 pl-6 pr-3 inline-block w-1/2 my-auto">
               <p className="line-clamp-1 ">{transaction.establishment}</p>

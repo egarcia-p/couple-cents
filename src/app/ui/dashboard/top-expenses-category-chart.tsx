@@ -5,6 +5,7 @@ import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
 import { useLocale, useTranslations } from "next-intl";
 import { useSpendArray } from "../hooks/useSpendArray";
+import { useTheme } from "@/app/ui/hooks/useTheme";
 import { CalendarIcon } from "@heroicons/react/24/outline";
 import getHorizontalBarChartOptions from "./horizontal-bar-chart-options";
 import { getCategoryColors } from "./chart-colors";
@@ -22,7 +23,9 @@ export default function TopExpensesCategoryChart({ dataExpenses }: any) {
   //Conver Info into data array
   const t = useTranslations("TopExpensesCategoryChart");
   const locale = useLocale();
-  const horizontalBarOptions = getHorizontalBarChartOptions(locale);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const horizontalBarOptions = getHorizontalBarChartOptions(locale, isDark);
   const { spendArray, categoryArray } = useSpendArray({ dataExpenses });
 
   // sort spendArray and categoryArray in descending order based on spendArray values
@@ -60,13 +63,13 @@ export default function TopExpensesCategoryChart({ dataExpenses }: any) {
           <h2 className={`mb-4 text-xl md:text-2xl`}>{t("title")}</h2>
         </div>
 
-        <div className="h-full rounded-xl bg-gray-50 p-4">
-          <div className="h-[92%] sm:grid-cols-13 mt-0 grid grid-cols-12 items-end gap-2 rounded-md bg-white p-4 md:gap-4">
+        <div className="h-full rounded-xl bg-gray-50 dark:bg-gray-800 p-4">
+          <div className="h-[92%] sm:grid-cols-13 mt-0 grid grid-cols-12 items-end gap-2 rounded-md bg-white dark:bg-gray-900 p-4 md:gap-4">
             <HorizontalBar data={data} options={horizontalBarOptions} />
           </div>
           <div className="flex items-center pb-2 pt-6">
-            <CalendarIcon className="h-5 w-5 text-gray-500" />
-            <h3 className="ml-2 text-sm text-gray-500 ">
+            <CalendarIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+            <h3 className="ml-2 text-sm text-gray-500 dark:text-gray-400">
               {t("currentPeriod")}
             </h3>
           </div>

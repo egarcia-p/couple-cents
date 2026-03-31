@@ -12,7 +12,7 @@ export function BudgetField({
   return (
     <div className="grid grid-cols-2 w-1/4 content-start gap-4">
       <div className="flex">
-        <span className="text-gray-700">{category}</span>
+        <span className="text-gray-700 dark:text-gray-300">{category}</span>
       </div>
       <div className="flex w-full">
         <input
@@ -22,7 +22,7 @@ export function BudgetField({
           defaultValue={budget}
           onChange={(e) => onBudgetChange(categoryId, e.target.value)}
           step="1"
-          className="ml-4 rounded border border-gray-300 p-1"
+          className="ml-4 rounded border border-gray-300 dark:border-gray-600 p-1 dark:bg-gray-900 dark:text-gray-100"
         />
       </div>
     </div>
