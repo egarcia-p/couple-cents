@@ -4,6 +4,7 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { TagBadge } from "./tag-badge";
 import type { Tag } from "@/app/lib/definitions";
+import { useClickOutside } from "@/app/ui/hooks/useClickOutside";
 
 interface TagFilterProps {
   availableTags: Tag[];
@@ -23,6 +24,7 @@ export function TagFilter({
   const currentTagIds =
     searchParams.get("tagIds")?.split(",").filter(Boolean) || [];
   const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
   const selectedTags = availableTags.filter((tag) =>
     currentTagIds.includes(tag.id),
@@ -54,7 +56,7 @@ export function TagFilter({
   if (availableTags.length === 0) return null;
 
   return (
-    <div className="relative">
+    <div className="relative" ref={containerRef}>
       <div
         className="flex min-h-[38px] cursor-pointer items-center gap-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1 text-sm"
         onClick={() => setIsOpen(!isOpen)}

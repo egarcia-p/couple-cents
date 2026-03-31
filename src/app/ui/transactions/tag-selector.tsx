@@ -4,6 +4,7 @@ import { useState } from "react";
 import { TagBadge } from "./tag-badge";
 import type { Tag } from "@/app/lib/definitions";
 import { useTranslations } from "next-intl";
+import { useClickOutside } from "@/app/ui/hooks/useClickOutside";
 
 interface TagSelectorProps {
   availableTags: Tag[];
@@ -20,6 +21,7 @@ export function TagSelector({
 }: TagSelectorProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>(initialSelectedIds);
   const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
   const translations = useTranslations("TransactionsPage");
 
@@ -47,7 +49,7 @@ export function TagSelector({
   return (
     <div className="mb-4">
       <label className="mb-2 block text-sm font-medium">{label}</label>
-      <div className="relative">
+      <div className="relative" ref={containerRef}>
         {/* Hidden inputs for form submission */}
         {selectedIds.map((id) => (
           <input key={id} type="hidden" name="tags" value={id} />
