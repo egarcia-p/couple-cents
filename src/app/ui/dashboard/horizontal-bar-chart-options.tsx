@@ -33,6 +33,9 @@ export default function getHorizontalBarChartOptions(locale: string) {
       },
     },
     plugins: {
+      legend: {
+        display: false,
+      },
       tooltip: {
         callbacks: {
           label: function (context: any) {
