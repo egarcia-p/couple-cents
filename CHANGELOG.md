@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.2] - 2026-03-30
+
+### Changed
+
+- **Fix Tag Dropdown**
+  - Resolved issue with tag dropdown not displaying correctly in transaction forms
+
 ## [0.11.1] - 2026-03-30
 
 ### Changed
