@@ -43,7 +43,7 @@ export default function getHorizontalBarChartOptions(
     },
     plugins: {
       legend: {
-        labels: { color: textColor },
+        display: false,
       },
       tooltip: {
         callbacks: {
