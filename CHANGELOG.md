@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.1] - 2026-03-30
+
+### Changed
+
+- **Dashboard Chart Label Cleanup**
+  - Adjusted top expenses per category chart label handling to prevent unexpected legend text.
+
 ## [0.11.0] - 2026-03-30
 
 ### Changed
