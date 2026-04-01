@@ -1,4 +1,4 @@
-import { fetchTransactionPages, fetchUserTags } from "@/app/lib/data";
+import { fetchTransactionPages, fetchUserSettings, fetchUserTags } from "@/app/lib/data";
 import Search from "@/app/ui/search";
 import { CreateTransaction } from "@/app/ui/transactions/buttons";
 import DatePicker from "@/app/ui/transactions/date-picker";
@@ -32,28 +32,24 @@ export default async function Page({
   const query = params?.query || "";
   const tagIds = params?.tagIds?.split(",").filter(Boolean) || [];
 
-  //TBD Fix according to the user's timezone
-  const timeZone = "America/Mexico_City";
+  const userSettingsData = await fetchUserSettings(session.user.id);
+  const userTimezone =
+    userSettingsData[0]?.timezone || "America/Mexico_City";
   const utcDate = new Date();
-  const mexicoDate = toZonedTime(utcDate, timeZone);
+  const mexicoDate = toZonedTime(utcDate, userTimezone);
   const formattedMexicoDate = format(mexicoDate, "yyyy-MM-dd'T'HH:mm:ssXXX", {
-    timeZone,
+    timeZone: userTimezone,
   });
   const formattedMexicoDateParts = formattedMexicoDate.split("T")[0];
   // Create first and last day of the month based on the user's timezone
   // This will ensure that the date range is correct regardless of the user's timezone
-  // This is a temporary fix, ideally we should use the user's timezone to get the correct
-  // first and last day of the month.
   const date = new Date(formattedMexicoDateParts);
 
-  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
-    .toLocaleDateString()
-    .split("T")[0]
-    .replace(/-/g, " ");
-  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
-    .toLocaleDateString()
-    .split("T")[0]
-    .replace(/-/g, " ");
+  const year = date.getUTCFullYear();
+  const month = date.getUTCMonth();
+  const lastDayNum = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+  const firstDay = `${year}-${String(month + 1).padStart(2, "0")}-01`;
+  const lastDay = `${year}-${String(month + 1).padStart(2, "0")}-${String(lastDayNum).padStart(2, "0")}`;
   const dates = params?.dates || firstDay + "to" + lastDay;
 
   const [totalPages, userTags] = await Promise.all([
