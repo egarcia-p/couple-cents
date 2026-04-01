@@ -24,6 +24,7 @@ interface ICategories {
 const categoriesMap: ICategories = getAllCategoriesMap();
 
 const ITEMS_PER_PAGE = 10;
+const DEFAULT_TIMEZONE = "America/Mexico_City";
 
 /**
  * Decrypts the amount field from the DB and converts from cents to dollars.
@@ -187,6 +188,7 @@ export async function fetchAllFilteredTransactions({
 
   const userSettingsData = await fetchUserSettings(userId);
   const userLocale = userSettingsData[0]?.language || "en-US";
+  const userTimezone = userSettingsData[0]?.timezone || DEFAULT_TIMEZONE;
 
   const matchingCodes = Object.entries(translatedCategoriesMap)
     .filter(([code, name]) => name.toLowerCase().includes(query.toLowerCase()))
@@ -211,7 +213,7 @@ export async function fetchAllFilteredTransactions({
       .where(
         and(
           eq(transactions.userId, userId),
-          sql`CAST(${transactions.transactionDate} AS DATE) BETWEEN ${startDate} AND ${endDate}`,
+          sql`CAST(${transactions.transactionDate} AT TIME ZONE ${userTimezone} AS DATE) BETWEEN ${startDate} AND ${endDate}`,
         ),
       )
       .orderBy(desc(transactions.transactionDate));
@@ -265,6 +267,7 @@ export async function fetchFilteredTransactions(
 
   const userSettingsData = await fetchUserSettings(userId);
   const userLocale = userSettingsData[0]?.language || "en-US";
+  const userTimezone = userSettingsData[0]?.timezone || DEFAULT_TIMEZONE;
 
   const matchingCodes = Object.entries(translatedCategoriesMap)
     .filter(([code, name]) => name.toLowerCase().includes(query.toLowerCase()))
@@ -289,7 +292,7 @@ export async function fetchFilteredTransactions(
       .where(
         and(
           eq(transactions.userId, userId),
-          sql`CAST(${transactions.transactionDate} AS DATE) BETWEEN ${startDate} AND ${endDate}`,
+          sql`CAST(${transactions.transactionDate} AT TIME ZONE ${userTimezone} AS DATE) BETWEEN ${startDate} AND ${endDate}`,
         ),
       )
       .orderBy(desc(transactions.transactionDate));
@@ -345,7 +348,12 @@ export async function fetchTransactionPages(
     const startDate = dateArray[0];
     const endDate = dateArray[1];
 
-    const translatedCategoriesMap = await getTranslatedAllCategoriesMap();
+    const [translatedCategoriesMap, userSettingsData] = await Promise.all([
+      getTranslatedAllCategoriesMap(),
+      fetchUserSettings(userId),
+    ]);
+    const userTimezone =
+      userSettingsData[0]?.timezone || DEFAULT_TIMEZONE;
     const matchingCodes = Object.entries(translatedCategoriesMap)
       .filter(([code, name]) =>
         name.toLowerCase().includes(query.toLowerCase()),
@@ -364,7 +372,7 @@ export async function fetchTransactionPages(
       .where(
         and(
           eq(transactions.userId, userId),
-          sql`CAST(${transactions.transactionDate} AS DATE) BETWEEN ${startDate} AND ${endDate}`,
+          sql`CAST(${transactions.transactionDate} AT TIME ZONE ${userTimezone} AS DATE) BETWEEN ${startDate} AND ${endDate}`,
         ),
       );
 

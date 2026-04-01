@@ -643,6 +643,21 @@ describe("data.ts - encryption integration", () => {
       vi.mocked(db.select).mockImplementation(() => {
         callCount++;
         if (callCount === 1) {
+          // fetchUserSettings call
+          return {
+            from: vi.fn().mockReturnValue({
+              where: vi.fn().mockResolvedValue([
+                {
+                  id: 1,
+                  userId: "user-1",
+                  language: "en-US",
+                  timezone: "UTC",
+                },
+              ]),
+            }),
+          } as any;
+        }
+        if (callCount === 2) {
           // Main transaction query
           return {
             from: vi.fn().mockReturnValue({
