@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.3] - 2026-04-07
+
+### Changed
+
+- **Fix Date Transaction Error**
+  - Resolved issue with transactions not shown in the last day of the month.
+
 ## [0.11.2] - 2026-03-30
 
 ### Changed
