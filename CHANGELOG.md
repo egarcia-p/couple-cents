@@ -11,10 +11,8 @@ All notable changes to this project will be documented in this file.
 - **Tag Validation**
   - Added missing validation error messages for tags in transaction forms.
 
-
-
-
 ## [0.11.3] - 2026-04-07
+
 
 ### Changed
 
