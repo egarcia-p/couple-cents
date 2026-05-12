@@ -314,6 +314,10 @@
       "dark": "Dark",
       "system": "System (follow OS)",
       "databaseError": "An error occurred while saving the theme. Please try again."
+    },
+    "validation": {
+      "tagName": "Tag name must be between 1 and 40 characters.",
+      "tagColor": "Tag color must be a valid hex color (e.g. #FF0000)."
     }
   },
   "NavLinks": {

@@ -168,7 +168,8 @@
       "category": "Por favor selecciona una categoría.",
       "establishment": "Por favor ingresa un establecimiento.",
       "tagName": "El nombre de la etiqueta debe tener entre 1 y 40 caracteres.",
-      "tagColor": "El color de la etiqueta debe ser un color hexadecimal válido (ej. #FF0000)."
+      "tagColor": "El color de la etiqueta debe ser un color hexadecimal válido (ej. #FF0000).",
+      "tagName": ""
     },
     "create": {
       "createExpense": "Crear Gasto",
@@ -314,6 +315,10 @@
       "dark": "Oscuro",
       "system": "Sistema (seguir SO)",
       "databaseError": "Ocurrió un error al guardar el tema. Por favor inténtalo de nuevo."
+    },
+    "validation": {
+      "tagName": "El nombre de la etiqueta debe tener entre 1 y 40 caracteres.",
+      "tagColor": "El color de la etiqueta debe ser un color hexadecimal válido (ej. #FF0000)."
     }
   },
   "NavLinks": {
