@@ -36,7 +36,7 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+      <body className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 touch-manipulation">
         <ThemeProvider initialTheme={userPreferredTheme}>
           <MuiThemeProvider>
             <NextIntlClientProvider locale={userPreferredLocale}>

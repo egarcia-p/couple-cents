@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.4] - 2026-05-11
+
+### Fixed
+
+- **Mobile Zoom & Double-Tap Behavior**
+  - Applied `touch-manipulation` to the global layout to prevent unwanted zooming and horizontal scrolling on mobile devices when focusing on inputs or double-tapping.
+- **Tag Validation**
+  - Added missing validation error messages for tags in transaction forms.
+
 ## [0.11.3] - 2026-04-07
+
 
 ### Changed
 
