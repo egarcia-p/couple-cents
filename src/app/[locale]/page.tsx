@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import logo from "@public/logo.png";
-import Bench from "@public/bench_2.jpeg";
+import Bench from "@public/image-landing.png";
 import Dashboard from "@public/history_dashboard.png";
 import { SignInWithGitHub } from "../components/auth/sign-in-github";
 import SignUp from "../components/auth/sign-up";
