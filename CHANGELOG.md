@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.6] - 2026-06-16
+
+### Changed
+
+- **Landing Page Image Update**
+  - Updated the landing page image from `bench_2.jpeg` to `image-landing.png` for better aesthetics.
+
 ## [0.11.5] - 2026-06-16
 
 ### Added
