@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.5] - 2026-06-16
+
+### Added
+
+- **Mobile Transaction Notes**
+  - Added transaction notes to the mobile table view, displayed as a small caption below the establishment name. Truncated the note using `line-clamp-1` to preserve layout on small screens.
+
 ## [0.11.4] - 2026-05-11
 
 ### Fixed
