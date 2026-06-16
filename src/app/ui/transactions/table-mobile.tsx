@@ -46,6 +46,11 @@ export default async function DashboardTableMobile({
           >
             <div className="py-3 pl-6 pr-3 inline-block w-1/2 my-auto">
               <p className="line-clamp-1 ">{transaction.establishment}</p>
+              {transaction.note && (
+                <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1 mt-0.5">
+                  {transaction.note}
+                </p>
+              )}
               {transaction.tags && transaction.tags.length > 0 && (
                 <div className="mt-1 flex flex-wrap gap-1">
                   {transaction.tags.map((tag) => (
