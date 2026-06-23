@@ -275,6 +275,7 @@ describe("Telegram Webhook Route", () => {
       expect(postBody.text).toContain("Groceries (GRO)");
       expect(postBody.text).toContain("Walmart");
       expect(postBody.text).toContain("weekly groceries");
+      expect(postBody.text).toContain("Non-essential");
     });
 
     it("should also support /gasto and category name mapping", async () => {
@@ -304,6 +305,109 @@ describe("Telegram Webhook Route", () => {
       expect(insertedData.category).toBe("GRO");
       expect(insertedData.note).toBeNull();
       expect(insertedData.userId).toBe("user_456");
+    });
+
+    it("should mark transaction as essential when 'essential' keyword is used", async () => {
+      const { db } = await import("@/app/lib/db");
+      const mockValues = vi.fn().mockResolvedValue(undefined);
+      vi.mocked(db.insert).mockReturnValue({ values: mockValues } as any);
+
+      const req = new Request("http://localhost:3000/api/webhooks/telegram", {
+        method: "POST",
+        body: JSON.stringify({
+          message: {
+            chat: { id: 12345 },
+            text: "/spend 14.50 HOU Electricity essential",
+          },
+        }),
+      });
+
+      const response = await POST(req);
+      const body = await response.json();
+      expect(response.status).toBe(200);
+      expect(body.success).toBe(true);
+
+      const insertedData = mockValues.mock.calls[0][0];
+      expect(insertedData.isEssential).toBe(true);
+      expect(insertedData.note).toBeNull();
+
+      const postBody = JSON.parse(mockFetch.mock.calls[0][1].body);
+      expect(postBody.text).toContain("Essential");
+    });
+
+    it("should mark essential and preserve the note after the keyword", async () => {
+      const { db } = await import("@/app/lib/db");
+      const mockValues = vi.fn().mockResolvedValue(undefined);
+      vi.mocked(db.insert).mockReturnValue({ values: mockValues } as any);
+
+      const req = new Request("http://localhost:3000/api/webhooks/telegram", {
+        method: "POST",
+        body: JSON.stringify({
+          message: {
+            chat: { id: 12345 },
+            text: '/spend 18.50 DIN "Burger King" essential team lunch',
+          },
+        }),
+      });
+
+      const response = await POST(req);
+      const body = await response.json();
+      expect(response.status).toBe(200);
+      expect(body.success).toBe(true);
+
+      const insertedData = mockValues.mock.calls[0][0];
+      expect(insertedData.isEssential).toBe(true);
+      expect(insertedData.note).toBe("team lunch");
+      expect(decrypt(insertedData.establishment)).toBe("Burger King");
+    });
+
+    it("should support Spanish 'esencial' keyword for essential flag", async () => {
+      const { db } = await import("@/app/lib/db");
+      const mockValues = vi.fn().mockResolvedValue(undefined);
+      vi.mocked(db.insert).mockReturnValue({ values: mockValues } as any);
+
+      const req = new Request("http://localhost:3000/api/webhooks/telegram", {
+        method: "POST",
+        body: JSON.stringify({
+          message: {
+            chat: { id: 12345 },
+            text: "/gasto 250 GRO Walmart esencial compra semanal",
+          },
+        }),
+      });
+
+      const response = await POST(req);
+      const body = await response.json();
+      expect(response.status).toBe(200);
+      expect(body.success).toBe(true);
+
+      const insertedData = mockValues.mock.calls[0][0];
+      expect(insertedData.isEssential).toBe(true);
+      expect(insertedData.note).toBe("compra semanal");
+    });
+
+    it("should default to non-essential when keyword is absent", async () => {
+      const { db } = await import("@/app/lib/db");
+      const mockValues = vi.fn().mockResolvedValue(undefined);
+      vi.mocked(db.insert).mockReturnValue({ values: mockValues } as any);
+
+      const req = new Request("http://localhost:3000/api/webhooks/telegram", {
+        method: "POST",
+        body: JSON.stringify({
+          message: {
+            chat: { id: 12345 },
+            text: "/spend 14.50 GRO Walmart weekly run",
+          },
+        }),
+      });
+
+      const response = await POST(req);
+      const body = await response.json();
+      expect(response.status).toBe(200);
+
+      const insertedData = mockValues.mock.calls[0][0];
+      expect(insertedData.isEssential).toBe(false);
+      expect(insertedData.note).toBe("weekly run");
     });
 
     it("should support quoted multi-word establishment names", async () => {
