@@ -410,6 +410,34 @@ describe("Telegram Webhook Route", () => {
       expect(insertedData.note).toBe("weekly run");
     });
 
+    it("should handle smart/curly quotes from phone keyboards", async () => {
+      const { db } = await import("@/app/lib/db");
+      const mockValues = vi.fn().mockResolvedValue(undefined);
+      vi.mocked(db.insert).mockReturnValue({ values: mockValues } as any);
+
+      const req = new Request("http://localhost:3000/api/webhooks/telegram", {
+        method: "POST",
+        body: JSON.stringify({
+          message: {
+            chat: { id: 12345 },
+            // U+201C and U+201D are the curly/smart quotes phones auto-correct to
+            text: "/spend 14.50 GRO \u201CWalmart Supercenter\u201D essential test notes",
+          },
+        }),
+      });
+
+      const response = await POST(req);
+      const body = await response.json();
+      expect(response.status).toBe(200);
+      expect(body.success).toBe(true);
+
+      const insertedData = mockValues.mock.calls[0][0];
+      expect(decrypt(insertedData.establishment)).toBe("Walmart Supercenter");
+      expect(insertedData.isEssential).toBe(true);
+      expect(insertedData.note).toBe("test notes");
+      expect(insertedData.category).toBe("GRO");
+    });
+
     it("should support quoted multi-word establishment names", async () => {
       const { db } = await import("@/app/lib/db");
       const mockValues = vi.fn().mockResolvedValue(undefined);

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.12.2] - 2026-06-23
+
+### Fixed
+
+- **Telegram Bot Input Normalization**
+  - Added normalization of smart/curly quotes (`“` and `”`) from mobile/phone keyboards to straight double quotes (`"`) during command parsing. This ensures multi-word establishment names are parsed correctly even when auto-corrected by mobile devices.
+
 ## [0.12.1] - 2026-06-23
 
 ### Added
