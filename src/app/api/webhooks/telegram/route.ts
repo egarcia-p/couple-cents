@@ -90,9 +90,20 @@ export async function POST(req: Request) {
 
     const text = payload.message.text.trim();
     const isSpendOrGasto = /^\/(spend|gasto)\b/i.test(text);
+    const isCategoriesCommand = /^\/(categories|categorias)\b/i.test(text);
+
+    // Handle /categories command
+    if (isCategoriesCommand) {
+      const categoryList = Object.entries(categories)
+        .map(([key, name]) => `• <b>${key}</b>: ${name}`)
+        .join("\n");
+      const categoriesMessage = `📋 <b>Available Categories</b>\n\nUse the code or the full name when logging a transaction:\n\n${categoryList}\n\n<b>Example:</b>\n<code>/spend 14.50 GRO Walmart</code>\n<code>/spend 14.50 Groceries Walmart</code>`;
+      await sendTelegramMessage(chatId, categoriesMessage);
+      return Response.json({ success: true, message: "Categories list sent" }, { status: 200 });
+    }
 
     if (!isSpendOrGasto) {
-      const helpMessage = `👋 <b>Welcome to couple-cents!</b>\n\nYou can log transactions directly from here.\n\n<b>Usage:</b>\n<code>/spend &lt;amount&gt; &lt;category&gt; &lt;establishment&gt; [note]</code>\n\n<b>Example:</b>\n<code>/spend 14.50 GRO Walmart weekly groceries</code>`;
+      const helpMessage = `👋 <b>Welcome to couple-cents!</b>\n\nYou can log transactions directly from here.\n\n<b>Commands:</b>\n• <code>/spend &lt;amount&gt; &lt;category&gt; &lt;establishment&gt; [note]</code>\n• <code>/categories</code> — list all category codes\n\n<b>Example:</b>\n<code>/spend 14.50 GRO Walmart weekly groceries</code>`;
       await sendTelegramMessage(chatId, helpMessage);
       return Response.json({ success: true, message: "Help message sent" }, { status: 200 });
     }

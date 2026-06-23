@@ -132,6 +132,51 @@ describe("Telegram Webhook Route", () => {
       expect(mockFetch).toHaveBeenCalled();
       const postBody = JSON.parse(mockFetch.mock.calls[0][1].body);
       expect(postBody.text).toContain("Welcome to couple-cents!");
+      expect(postBody.text).toContain("/categories");
+    });
+
+    it("should return category list for /categories command", async () => {
+      const req = new Request("http://localhost:3000/api/webhooks/telegram", {
+        method: "POST",
+        body: JSON.stringify({
+          message: {
+            chat: { id: 12345 },
+            text: "/categories",
+          },
+        }),
+      });
+
+      const response = await POST(req);
+      const body = await response.json();
+      expect(response.status).toBe(200);
+      expect(body.success).toBe(true);
+      expect(body.message).toBe("Categories list sent");
+
+      expect(mockFetch).toHaveBeenCalled();
+      const postBody = JSON.parse(mockFetch.mock.calls[0][1].body);
+      expect(postBody.text).toContain("Available Categories");
+      expect(postBody.text).toContain("GRO");
+      expect(postBody.text).toContain("Groceries");
+      expect(postBody.text).toContain("DIN");
+      expect(postBody.text).toContain("Dining Out");
+    });
+
+    it("should return category list for /categorias command (Spanish alias)", async () => {
+      const req = new Request("http://localhost:3000/api/webhooks/telegram", {
+        method: "POST",
+        body: JSON.stringify({
+          message: {
+            chat: { id: 12345 },
+            text: "/categorias",
+          },
+        }),
+      });
+
+      const response = await POST(req);
+      const body = await response.json();
+      expect(response.status).toBe(200);
+      expect(body.success).toBe(true);
+      expect(body.message).toBe("Categories list sent");
     });
 
     it("should return format error reply for malformed spend commands", async () => {
