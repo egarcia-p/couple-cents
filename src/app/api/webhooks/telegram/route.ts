@@ -43,6 +43,18 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  // 0. Verify secret token if configured
+  const secretToken = process.env.TELEGRAM_WEBHOOK_SECRET;
+  if (secretToken) {
+    const headerToken = req.headers.get("X-Telegram-Bot-Api-Secret-Token");
+    if (headerToken !== secretToken) {
+      return Response.json(
+        { success: false, error: "Unauthorized origin" },
+        { status: 403 },
+      );
+    }
+  }
+
   let chatId = "";
   try {
     const payload = await req.json().catch(() => null);

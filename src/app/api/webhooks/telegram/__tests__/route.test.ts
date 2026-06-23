@@ -288,5 +288,56 @@ describe("Telegram Webhook Route", () => {
       const postBody = JSON.parse(mockFetch.mock.calls[0][1].body);
       expect(postBody.text).toContain("System Error");
     });
+
+    it("should return 403 when TELEGRAM_WEBHOOK_SECRET is set but header is missing or mismatch", async () => {
+      vi.stubEnv("TELEGRAM_WEBHOOK_SECRET", "super_secret");
+
+      const req = new Request("http://localhost:3000/api/webhooks/telegram", {
+        method: "POST",
+        headers: {
+          // missing or wrong secret header
+          "X-Telegram-Bot-Api-Secret-Token": "wrong_secret",
+        },
+        body: JSON.stringify({
+          message: {
+            chat: { id: 12345 },
+            text: "/spend 14.50 GRO Walmart",
+          },
+        }),
+      });
+
+      const response = await POST(req);
+      const body = await response.json();
+
+      expect(response.status).toBe(403);
+      expect(body.success).toBe(false);
+      expect(body.error).toBe("Unauthorized origin");
+    });
+
+    it("should succeed when TELEGRAM_WEBHOOK_SECRET is set and header is correct", async () => {
+      vi.stubEnv("TELEGRAM_WEBHOOK_SECRET", "super_secret");
+      const { db } = await import("@/app/lib/db");
+      const mockValues = vi.fn().mockResolvedValue(undefined);
+      vi.mocked(db.insert).mockReturnValue({ values: mockValues } as any);
+
+      const req = new Request("http://localhost:3000/api/webhooks/telegram", {
+        method: "POST",
+        headers: {
+          "X-Telegram-Bot-Api-Secret-Token": "super_secret",
+        },
+        body: JSON.stringify({
+          message: {
+            chat: { id: 12345 },
+            text: "/spend 14.50 GRO Walmart",
+          },
+        }),
+      });
+
+      const response = await POST(req);
+      const body = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(body.success).toBe(true);
+    });
   });
 });
