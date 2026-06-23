@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.12.1] - 2026-06-23
+
+### Added
+
+- **Telegram Bot Command Enhancements**
+  - Added support for `/categories` (or `/categorias`) command to view all available category codes and names directly in the chat.
+  - Added `essential` (or `esencial`) flag support in command trailing arguments to log transactions as essential (e.g. `/spend 14.50 GRO Walmart essential`).
+
+### Fixed
+
+- **Telegram Webhook Parsing**
+  - Added multi-word support for establishment names enclosed in double quotes (e.g., `/spend 14.50 GRO "Burger King"`).
+  - Improved command format validation, showing helpful examples and listing available categories upon receiving invalid input.
+
 ## [0.12.0] - 2026-06-23
 
 ### Added
