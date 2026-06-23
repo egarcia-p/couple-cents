@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.12.0] - 2026-06-23
+
+### Added
+
+- **Telegram Bot Integration**
+  - Added a Telegram webhook route at `/api/webhooks/telegram` to support logging expenses directly via Telegram using `/spend` or `/gasto` commands.
+  - Implemented secure token validation using `X-Telegram-Bot-Api-Secret-Token` headers.
+  - Implemented user mapping configuration (`TELEGRAM_USER_MAPPINGS`) to securely link Telegram chat IDs to application user accounts.
+  - Added detailed administrator setup and production deployment documentation in [telegram_setup.md](docs/telegram_setup.md).
+
 ## [0.11.6] - 2026-06-16
 
 ### Changed
