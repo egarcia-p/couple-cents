@@ -90,22 +90,44 @@ export async function POST(req: Request) {
 
     const text = payload.message.text.trim();
     const isSpendOrGasto = /^\/(spend|gasto)\b/i.test(text);
+    const isCategoriesCommand = /^\/(categories|categorias)\b/i.test(text);
+
+    // Handle /categories command
+    if (isCategoriesCommand) {
+      const categoryList = Object.entries(categories)
+        .map(([key, name]) => `• <b>${key}</b>: ${name}`)
+        .join("\n");
+      const categoriesMessage = `📋 <b>Available Categories</b>\n\nUse the code or the full name when logging a transaction:\n\n${categoryList}\n\n<b>Example:</b>\n<code>/spend 14.50 GRO Walmart</code>\n<code>/spend 14.50 Groceries Walmart</code>`;
+      await sendTelegramMessage(chatId, categoriesMessage);
+      return Response.json({ success: true, message: "Categories list sent" }, { status: 200 });
+    }
 
     if (!isSpendOrGasto) {
-      const helpMessage = `👋 <b>Welcome to couple-cents!</b>\n\nYou can log transactions directly from here.\n\n<b>Usage:</b>\n<code>/spend &lt;amount&gt; &lt;category&gt; &lt;establishment&gt; [note]</code>\n\n<b>Example:</b>\n<code>/spend 14.50 GRO Walmart weekly groceries</code>`;
+      const helpMessage = `👋 <b>Welcome to couple-cents!</b>\n\nYou can log transactions directly from here.\n\n<b>Commands:</b>\n• <code>/spend &lt;amount&gt; &lt;category&gt; &lt;establishment&gt; [essential] [note]</code>\n• <code>/categories</code> — list all category codes\n\n<b>Flags:</b>\n• Add <code>essential</code> after the establishment to mark as essential\n• Default is <b>non-essential</b> if omitted\n\n<b>Examples:</b>\n<code>/spend 14.50 GRO Walmart</code>\n<code>/spend 14.50 GRO Walmart essential weekly run</code>\n<code>/spend 18.50 DIN "Burger King" essential team lunch</code>`;
       await sendTelegramMessage(chatId, helpMessage);
       return Response.json({ success: true, message: "Help message sent" }, { status: 200 });
     }
 
     // 3. Parse command arguments
-    const match = text.match(/^\/(spend|gasto)\s+(\d+(?:\.\d+)?)\s+(\S+)\s+(\S+)(?:\s+(.+))?$/i);
+    // Supports: /spend 14.50 GRO Walmart note here
+    //           /spend 14.50 GRO "Burger King" note here
+    const match = text.match(/^\/(spend|gasto)\s+(\d+(?:\.\d+)?)\s+(\S+)\s+(?:"([^"]+)"|(\S+))(?:\s+(.+))?$/i);
     if (!match) {
-      const formatErrorMessage = `⚠️ <b>Invalid Command Format</b>\n\nPlease use the following format:\n<code>/spend &lt;amount&gt; &lt;category&gt; &lt;establishment&gt; [note]</code>\n\n<b>Example:</b>\n<code>/spend 14.50 GRO Walmart weekly groceries</code>`;
+      const formatErrorMessage = `⚠️ <b>Invalid Command Format</b>\n\nPlease use the following format:\n<code>/spend &lt;amount&gt; &lt;category&gt; &lt;establishment&gt; [essential] [note]</code>\n\nUse quotes for multi-word establishment names:\n<code>/spend 14.50 GRO "Burger King" essential lunch</code>\n\n<b>Examples:</b>\n<code>/spend 14.50 GRO Walmart</code>\n<code>/spend 14.50 GRO Walmart essential weekly run</code>`;
       await sendTelegramMessage(chatId, formatErrorMessage);
       return Response.json({ success: false, error: "Invalid command format" }, { status: 200 });
     }
 
-    const [, , amountStr, categoryStr, establishmentStr, noteStr] = match;
+    const [, , amountStr, categoryStr, quotedEstablishment, unquotedEstablishment, trailingStr] = match;
+    const establishmentStr = quotedEstablishment || unquotedEstablishment;
+
+    // 4a. Parse essential flag from trailing text
+    // "essential" or "esencial" as the first word marks the transaction as essential.
+    // The rest (if any) becomes the note.
+    const essentialRegex = /^(essential|esencial)(?:\s+(.+))?$/i;
+    const essentialMatch = trailingStr?.trim().match(essentialRegex);
+    const isEssential = !!essentialMatch;
+    const noteStr = essentialMatch ? (essentialMatch[2] ?? null) : (trailingStr?.trim() ?? null);
 
     const amountVal = parseFloat(amountStr);
     const amountInCents = Math.round(amountVal * 100);
@@ -148,7 +170,7 @@ export async function POST(req: Request) {
       note: noteStr ? noteStr.trim() : null,
       establishment: encrypt(establishmentStr.trim()),
       category: matchedKey,
-      isEssential: false,
+      isEssential,
       userId: userId,
       transactionDate: new Date(),
     };
@@ -162,8 +184,9 @@ export async function POST(req: Request) {
     // 6. Send confirmation message
     const formattedAmount = (amountInCents / 100).toFixed(2);
     const categoryName = (categories as any)[matchedKey];
-    const successMessage = `✅ <b>Transaction Logged!</b>\n\n<b>Amount:</b> $${formattedAmount}\n<b>Category:</b> ${categoryName} (${matchedKey})\n<b>Establishment:</b> ${escapeHtml(establishmentStr.trim())}${noteStr ? `\n<b>Note:</b> ${escapeHtml(noteStr.trim())}` : ""}`;
-    
+    const essentialLabel = isEssential ? "⭐ Essential" : "Non-essential";
+    const successMessage = `✅ <b>Transaction Logged!</b>\n\n<b>Amount:</b> $${formattedAmount}\n<b>Category:</b> ${categoryName} (${matchedKey})\n<b>Establishment:</b> ${escapeHtml(establishmentStr.trim())}\n<b>Type:</b> ${essentialLabel}${noteStr ? `\n<b>Note:</b> ${escapeHtml(noteStr.trim())}` : ""}`;
+
     await sendTelegramMessage(chatId, successMessage);
 
     return Response.json({ success: true, message: "Transaction logged" }, { status: 200 });
