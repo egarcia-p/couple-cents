@@ -111,7 +111,10 @@ export async function POST(req: Request) {
     // 3. Parse command arguments
     // Supports: /spend 14.50 GRO Walmart note here
     //           /spend 14.50 GRO "Burger King" note here
-    const match = text.match(/^\/(spend|gasto)\s+(\d+(?:\.\d+)?)\s+(\S+)\s+(?:"([^"]+)"|(\S+))(?:\s+(.+))?$/i);
+    // Normalize smart/curly quotes (\u201C \u201D) to straight ASCII quotes
+    // so phone keyboards that auto-correct quotes still parse correctly.
+    const normalizedText = text.replace(/[\u201C\u201D]/g, '"');
+    const match = normalizedText.match(/^\/(spend|gasto)\s+(\d+(?:\.\d+)?)\s+(\S+)\s+(?:"([^"]+)"|(\S+))(?:\s+(.+))?$/i);
     if (!match) {
       const formatErrorMessage = `⚠️ <b>Invalid Command Format</b>\n\nPlease use the following format:\n<code>/spend &lt;amount&gt; &lt;category&gt; &lt;establishment&gt; [essential] [note]</code>\n\nUse quotes for multi-word establishment names:\n<code>/spend 14.50 GRO "Burger King" essential lunch</code>\n\n<b>Examples:</b>\n<code>/spend 14.50 GRO Walmart</code>\n<code>/spend 14.50 GRO Walmart essential weekly run</code>`;
       await sendTelegramMessage(chatId, formatErrorMessage);
