@@ -109,14 +109,17 @@ export async function POST(req: Request) {
     }
 
     // 3. Parse command arguments
-    const match = text.match(/^\/(spend|gasto)\s+(\d+(?:\.\d+)?)\s+(\S+)\s+(\S+)(?:\s+(.+))?$/i);
+    // Supports: /spend 14.50 GRO Walmart note here
+    //           /spend 14.50 GRO "Burger King" note here
+    const match = text.match(/^\/(spend|gasto)\s+(\d+(?:\.\d+)?)\s+(\S+)\s+(?:"([^"]+)"|(\S+))(?:\s+(.+))?$/i);
     if (!match) {
-      const formatErrorMessage = `⚠️ <b>Invalid Command Format</b>\n\nPlease use the following format:\n<code>/spend &lt;amount&gt; &lt;category&gt; &lt;establishment&gt; [note]</code>\n\n<b>Example:</b>\n<code>/spend 14.50 GRO Walmart weekly groceries</code>`;
+      const formatErrorMessage = `⚠️ <b>Invalid Command Format</b>\n\nPlease use the following format:\n<code>/spend &lt;amount&gt; &lt;category&gt; &lt;establishment&gt; [note]</code>\n\nUse quotes for multi-word names:\n<code>/spend 14.50 GRO "Burger King" lunch</code>\n\n<b>Example:</b>\n<code>/spend 14.50 GRO Walmart weekly groceries</code>`;
       await sendTelegramMessage(chatId, formatErrorMessage);
       return Response.json({ success: false, error: "Invalid command format" }, { status: 200 });
     }
 
-    const [, , amountStr, categoryStr, establishmentStr, noteStr] = match;
+    const [, , amountStr, categoryStr, quotedEstablishment, unquotedEstablishment, noteStr] = match;
+    const establishmentStr = quotedEstablishment || unquotedEstablishment;
 
     const amountVal = parseFloat(amountStr);
     const amountInCents = Math.round(amountVal * 100);

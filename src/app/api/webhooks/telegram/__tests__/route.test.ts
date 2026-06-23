@@ -306,6 +306,62 @@ describe("Telegram Webhook Route", () => {
       expect(insertedData.userId).toBe("user_456");
     });
 
+    it("should support quoted multi-word establishment names", async () => {
+      const { db } = await import("@/app/lib/db");
+      const mockValues = vi.fn().mockResolvedValue(undefined);
+      vi.mocked(db.insert).mockReturnValue({ values: mockValues } as any);
+
+      const req = new Request("http://localhost:3000/api/webhooks/telegram", {
+        method: "POST",
+        body: JSON.stringify({
+          message: {
+            chat: { id: 12345 },
+            text: '/spend 18.50 DIN "Burger King" lunch with team',
+          },
+        }),
+      });
+
+      const response = await POST(req);
+      const body = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(body.success).toBe(true);
+
+      const insertedData = mockValues.mock.calls[0][0];
+      expect(decrypt(insertedData.amount)).toBe("1850");
+      expect(decrypt(insertedData.establishment)).toBe("Burger King");
+      expect(insertedData.category).toBe("DIN");
+      expect(insertedData.note).toBe("lunch with team");
+    });
+
+    it("should support quoted establishment without a note", async () => {
+      const { db } = await import("@/app/lib/db");
+      const mockValues = vi.fn().mockResolvedValue(undefined);
+      vi.mocked(db.insert).mockReturnValue({ values: mockValues } as any);
+
+      const req = new Request("http://localhost:3000/api/webhooks/telegram", {
+        method: "POST",
+        body: JSON.stringify({
+          message: {
+            chat: { id: 12345 },
+            text: '/spend 250 GRO "Costco Mexico"',
+          },
+        }),
+      });
+
+      const response = await POST(req);
+      const body = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(body.success).toBe(true);
+
+      const insertedData = mockValues.mock.calls[0][0];
+      expect(decrypt(insertedData.amount)).toBe("25000");
+      expect(decrypt(insertedData.establishment)).toBe("Costco Mexico");
+      expect(insertedData.category).toBe("GRO");
+      expect(insertedData.note).toBeNull();
+    });
+
     it("should handle system error gracefully when DB insert fails", async () => {
       const { db } = await import("@/app/lib/db");
       vi.mocked(db.insert).mockImplementation(() => {
