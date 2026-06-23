@@ -1,6 +1,6 @@
-# Telegram Bot - User Setup Guide
+# Telegram Bot - Setup & Production Deployment Guide
 
-This guide explains how to add new users to the Telegram bot integration and contains copy-pasteable instructions to send to users.
+This guide explains how to configure and deploy the Telegram bot integration in development and production environments, along with copy-pasteable instructions for end users.
 
 ---
 
@@ -9,7 +9,7 @@ This guide explains how to add new users to the Telegram bot integration and con
 To authorize a new user, you must map their Telegram Chat ID to their `couple-cents` Application User ID.
 
 ### Step 1: Retrieve IDs
-1. **Telegram Chat ID:** Ask the user to send you their Chat ID (see instructions below).
+1. **Telegram Chat ID:** Ask the user to send you their Chat ID (see instructions in Section 3).
 2. **App User ID:** Look up the user's ID in the `couple_cents` database:
    * Run Drizzle Studio:
      ```bash
@@ -19,7 +19,7 @@ To authorize a new user, you must map their Telegram Chat ID to their `couple-ce
    * Go to the `user` table and find the user's record to copy their `id` field.
 
 ### Step 2: Update Mappings
-1. Open your `.env.local` (or production environment configuration).
+1. Open your `.env.local` (or production dashboard).
 2. Find the `TELEGRAM_USER_MAPPINGS` variable.
 3. Append the new mapping in the format `telegram_chat_id:app_user_id` separated by a comma.
    
@@ -33,7 +33,60 @@ To authorize a new user, you must map their Telegram Chat ID to their `couple-ce
 
 ---
 
-## 2. Instructions to Send to the User
+## 2. Production Deployment Guide
+
+When deploying the bot to production, follow these steps to secure the integration and set up the production bot.
+
+### Step 1: Create a Production Telegram Bot
+1. Open Telegram and start a chat with **[BotFather](https://t.me/BotFather)**.
+2. Send `/newbot` and create your production bot (e.g. `couple_cents_prod_bot`).
+3. Save the **HTTP API Token** generated for your production bot.
+
+### Step 2: Generate a Webhook Secret Token
+To prevent unauthorized requests from invoking your webhook endpoint, we use a secret token shared between Telegram and your application server. Telegram will include this secret in the `X-Telegram-Bot-Api-Secret-Token` header.
+
+Generate a strong random alphanumeric string (characters `A-Z`, `a-z`, `0-9`, `_`, and `-` up to 256 bytes):
+```bash
+# Example generating a secure string
+openssl rand -base64 32 | tr -dc 'a-zA-Z0-9_-'
+```
+*Example Secret:* `Z6y7X7w1V7u3T4s5R6q7P8o9N0m1L2k3`
+
+### Step 3: Configure Production Environment Variables
+Set the following keys in your hosting platform's dashboard (e.g. Vercel, Railway, Render):
+
+| Environment Variable | Description |
+| :--- | :--- |
+| `TELEGRAM_BOT_TOKEN` | The production API token retrieved from `@BotFather`. |
+| `TELEGRAM_USER_MAPPINGS` | Comma-separated list of Telegram Chat IDs to App User IDs (`id:user_123,id:user_456`). |
+| `TELEGRAM_WEBHOOK_SECRET` | The secure secret token generated in Step 2. |
+
+### Step 4: Register the Webhook with Telegram
+Make a POST request to Telegram's API to bind the webhook URL to your production server and configure the secret token.
+
+Run this `curl` command (replace `<PROD_DOMAIN>`, `<TELEGRAM_WEBHOOK_SECRET>`, and `<TELEGRAM_BOT_TOKEN>` with your values):
+
+```bash
+curl -F "url=https://<PROD_DOMAIN>/api/webhooks/telegram" \
+     -F "secret_token=<TELEGRAM_WEBHOOK_SECRET>" \
+     https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook
+```
+
+*Verify that the response returns `{"ok":true,"result":true,"description":"Webhook was set"}`.*
+
+### Step 5: Verify Webhook Security
+You can verify the security setup is working by sending a manual test request to your production endpoint without the secret header. It should return a `403 Forbidden`:
+
+```bash
+curl -X POST https://<PROD_DOMAIN>/api/webhooks/telegram \
+     -H "Content-Type: application/json" \
+     -d '{"message": {"chat": {"id": 12345}}}'
+```
+*(Expected response: `{"success":false,"error":"Unauthorized origin"}`)*
+
+---
+
+## 3. Instructions to Send to the User
 
 *Copy and send the text below directly to the new user:*
 
